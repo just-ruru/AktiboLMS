@@ -15,4 +15,6 @@ public interface ModuleRepository extends JpaRepository<Module, UUID> {
     List<Module> findByCourseIdOrderByOrderIndexAsc(UUID courseId);
 
     Page<Module> findByCourseId(UUID courseId, Pageable pageable);
+
+    List<Module> findByCourseId(UUID courseId);
 }

@@ -1,13 +1,11 @@
-import { useAuth } from '../../hooks/useAuth'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { Plus, BookOpen, ArrowLeft, Save, Eye } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Plus, ArrowLeft, Save, Eye } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 export function InstructorCourseBuilder() {
-  const { user } = useAuth()
   const navigate = useNavigate()
   const [courseTitle, setCourseTitle] = useState('')
   const [courseDescription, setCourseDescription] = useState('')

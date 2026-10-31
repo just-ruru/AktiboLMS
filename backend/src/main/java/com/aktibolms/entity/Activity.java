@@ -1,11 +1,9 @@
 package com.aktibolms.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -31,9 +29,8 @@ public class Activity {
     @Column(name = "type", nullable = false)
     private Type type;
 
-    @Type(JsonBinaryType.class)
     @Column(name = "config", columnDefinition = "jsonb", nullable = false)
-    private Config config;
+    private String configJson;
 
     @Column(name = "order_index", nullable = false)
     private Integer orderIndex;

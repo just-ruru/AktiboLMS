@@ -1,7 +1,6 @@
 import { RichTextEditor } from '../editor/RichTextEditor'
 import { CodeEditor } from '../editor/CodeEditor'
-import { clsx } from 'clsx'
-import { Play, Image, Video, Code } from 'lucide-react'
+import { Image, Video, Code } from 'lucide-react'
 
 interface ContentBlockProps {
   block: {

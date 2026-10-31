@@ -1,11 +1,8 @@
-import { useAuth } from '../../hooks/useAuth'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { TrendingUp, BookOpen, CheckCircle, Clock, BarChart2 } from 'lucide-react'
 
 export function StudentProgress() {
-  const { user } = useAuth()
-
   const mockProgress = [
     { course: 'Introduction to Programming', progress: 45, completed: 5, total: 12, lastAccessed: '2 hours ago' },
     { course: 'Web Development Fundamentals', progress: 78, completed: 6, total: 8, lastAccessed: '1 day ago' },

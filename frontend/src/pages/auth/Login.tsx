@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
-import { BookOpen, Mail, Lock, User, AlertCircle } from 'lucide-react'
+import { BookOpen, AlertCircle, Mail, Lock, UserPlus } from 'lucide-react'
 
 export function Login() {
   const { login } = useAuth()
@@ -72,12 +72,16 @@ export function Login() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-primary-600 hover:text-primary-500 font-medium">
-              Sign up
+          <div className="mt-6 space-y-3">
+            <Link to="/register" className="block">
+              <Button variant="outline" className="w-full" icon={<UserPlus className="w-4 h-4 mr-2" />}>
+                Create an account
+              </Button>
             </Link>
-          </p>
+            <p className="text-center text-sm text-gray-600">
+              Don't have an account? Sign up to get started
+            </p>
+          </div>
         </CardBody>
       </Card>
     </div>

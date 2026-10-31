@@ -1,10 +1,8 @@
-import { useParams } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
-import { Card, CardBody, CardHeader } from '../../components/ui/Card'
+import { Card, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { ContentBlock } from '../../components/lesson/ContentBlock'
 import { ActivityBlock } from '../../components/lesson/ActivityBlock'
-import { ChevronLeft, ChevronRight, CheckCircle, BookOpen, PlayCircle } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const mockLesson = {
@@ -81,8 +79,6 @@ const mockLesson = {
 }
 
 export function StudentLessonView() {
-  const { lessonId } = useParams()
-  const { user } = useAuth()
   const [activeBlock, setActiveBlock] = useState(0)
 
   const allBlocks = [

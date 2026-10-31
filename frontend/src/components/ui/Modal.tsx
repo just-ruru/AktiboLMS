@@ -34,7 +34,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
           className={clsx('w-full bg-white rounded-xl shadow-xl overflow-hidden', sizes[size])}
           onClick={(e) => e.stopPropagation()}
         >
-          {(title || onClose) && (
+          {(title) && (
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               {title && <h2 id="modal-title" className="text-lg font-semibold text-gray-900">{title}</h2>}
               <button

@@ -8,6 +8,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL CHECK (role IN ('STUDENT', 'INSTRUCTOR')),
     avatar_url VARCHAR(500),
@@ -104,7 +105,7 @@ CREATE TABLE quiz_attempts (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     activity_id UUID NOT NULL REFERENCES activities(id) ON DELETE CASCADE,
-    answers INTEGER[] NOT NULL,
+    answers TEXT NOT NULL,
     score INTEGER NOT NULL,
     passed BOOLEAN NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

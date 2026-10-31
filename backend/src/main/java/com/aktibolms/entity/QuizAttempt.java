@@ -1,10 +1,8 @@
 package com.aktibolms.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -30,9 +28,8 @@ public class QuizAttempt {
     @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
 
-    @Type(JsonBinaryType.class)
     @Column(name = "answers", columnDefinition = "jsonb", nullable = false)
-    private Integer[] answers;
+    private String answersJson;
 
     @Column(name = "score", nullable = false)
     private Integer score;

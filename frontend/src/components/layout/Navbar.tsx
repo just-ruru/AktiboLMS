@@ -1,12 +1,11 @@
-import { Link, useLocation, NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
-import { LogOut, Menu, X, BookOpen, Users, BarChart2, LayoutDashboard, ChevronDown } from 'lucide-react'
+import { LogOut, Menu, X, BookOpen, BarChart2, LayoutDashboard, ChevronDown } from 'lucide-react'
 import { clsx } from 'clsx'
 import { useState } from 'react'
 
 export function Navbar() {
   const { user, logout } = useAuth()
-  const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 

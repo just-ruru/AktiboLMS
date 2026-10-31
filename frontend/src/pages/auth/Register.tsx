@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
-import { BookOpen, Mail, Lock, User, AlertCircle, Shield } from 'lucide-react'
+import { BookOpen, AlertCircle } from 'lucide-react'
 
 export function Register() {
   const { register } = useAuth()
@@ -47,7 +47,13 @@ export function Register() {
       })
       navigate('/dashboard')
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.')
+      const data = err.response?.data
+      const message = (data?.message
+        ?? (data != null && typeof data === 'object' && !Array.isArray(data)
+          ? Object.values(data).filter(Boolean).join(' ')
+          : null))
+        || 'Registration failed. Please try again.'
+      setError(message)
     } finally {
       setLoading(false)
     }
@@ -80,7 +86,6 @@ export function Register() {
               onChange={handleChange}
               placeholder="John Doe"
               required
-              icon={<User className="w-5 h-5" />}
             />
 
             <Input
@@ -91,7 +96,6 @@ export function Register() {
               onChange={handleChange}
               placeholder="you@example.com"
               required
-              icon={<Mail className="w-5 h-5" />}
             />
 
             <Input
@@ -102,7 +106,6 @@ export function Register() {
               onChange={handleChange}
               placeholder="••••••••"
               required
-              icon={<Lock className="w-5 h-5" />}
               helperText="At least 8 characters"
             />
 
@@ -114,7 +117,6 @@ export function Register() {
               onChange={handleChange}
               placeholder="••••••••"
               required
-              icon={<Lock className="w-5 h-5" />}
             />
 
             <div>

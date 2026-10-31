@@ -1,13 +1,9 @@
-import { useAuth } from '../../hooks/useAuth'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Plus, BookOpen, Users, TrendingUp, Search, Filter } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
 
 export function InstructorDashboard() {
-  const { user } = useAuth()
-
   const mockCourses = [
     { id: '1', title: 'Introduction to Programming', students: 45, published: true, progress: 67 },
     { id: '2', title: 'Web Development Fundamentals', students: 32, published: true, progress: 78 },
@@ -21,7 +17,7 @@ export function InstructorDashboard() {
           <h1 className="text-2xl font-bold text-gray-900">Instructor Dashboard</h1>
           <p className="text-gray-500 mt-1">Manage your courses and track student progress</p>
         </div>
-        <Button asChild variant="primary">
+        <Button variant="primary">
           <Link to="/instructor/courses/new">
             <Plus className="w-4 h-4 mr-1" />
             Create Course
@@ -136,12 +132,12 @@ export function InstructorDashboard() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="sm">
                           <Link to={`/instructor/courses/${course.id}/edit`}>
                             Edit
                           </Link>
                         </Button>
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="sm">
                           <Link to={`/instructor/courses/${course.id}/analytics`}>
                             Analytics
                           </Link>
@@ -158,7 +154,7 @@ export function InstructorDashboard() {
               <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900">No courses yet</h3>
               <p className="text-gray-500 mt-1">Create your first course to get started</p>
-              <Button asChild className="mt-4" variant="primary">
+              <Button variant="primary" className="mt-4">
                 <Link to="/instructor/courses/new">
                   <Plus className="w-4 h-4 mr-1" />
                   Create Course

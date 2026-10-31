@@ -47,7 +47,7 @@ export function CodeEditor({
   output,
   error,
 }: CodeEditorProps) {
-  const editorRef = useRef<Editor>(null)
+  const editorRef = useRef<any>(null)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -63,10 +63,6 @@ export function CodeEditor({
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
       if (onRun && !running) onRun()
     })
-  }
-
-  const handleEditorWillUnmount = () => {
-    editorRef.current = null
   }
 
   if (!mounted) {
@@ -124,7 +120,6 @@ export function CodeEditor({
           guides: { bracketPairs: true },
         }}
         onMount={handleEditorDidMount}
-        onBeforeUnmount={handleEditorWillUnmount}
       />
 
       {(output || error) && (

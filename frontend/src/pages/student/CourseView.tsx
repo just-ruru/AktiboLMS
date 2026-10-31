@@ -1,4 +1,3 @@
-import { useAuth } from '../../hooks/useAuth'
 import { Card, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { BookOpen, Search, Filter } from 'lucide-react'
@@ -6,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
 export function StudentCourseView() {
-  const { user } = useAuth()
   const [search, setSearch] = useState('')
 
   const mockCourses = [

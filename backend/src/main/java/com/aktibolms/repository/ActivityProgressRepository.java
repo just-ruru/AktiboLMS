@@ -25,4 +25,7 @@ public interface ActivityProgressRepository extends JpaRepository<ActivityProgre
     List<ActivityProgress> findCompletedByCourseId(@Param("courseId") UUID courseId);
 
     long countByUserIdAndStatus(UUID userId, String status);
+
+    @Query("SELECT ap FROM ActivityProgress ap JOIN ap.activity a WHERE a.lesson.id = :lessonId AND ap.user.id = :userId")
+    List<ActivityProgress> findByActivity_LessonIdAndUserId(@Param("lessonId") UUID lessonId, @Param("userId") UUID userId);
 }

@@ -1,13 +1,11 @@
 import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../../components/ui/Button'
-import { Card, CardBody, CardHeader } from '../../components/ui/Card'
+import { Card, CardBody } from '../../components/ui/Card'
 import { BookOpen, ArrowRight, TrendingUp, Clock, CheckCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { clsx } from 'clsx'
 
 export function StudentDashboard() {
   const { user } = useAuth()
-
   const mockCourses = [
     { id: '1', title: 'Introduction to Programming', progress: 45, lessons: 12, completed: 5 },
     { id: '2', title: 'Web Development Fundamentals', progress: 78, lessons: 8, completed: 6 },
@@ -99,19 +97,19 @@ export function StudentDashboard() {
       <div className="pt-8 border-t border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
         <div className="grid gap-4 md:grid-cols-3">
-          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2" asChild>
+          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
             <Link to="/catalog">
               <BookOpen className="w-8 h-8 text-gray-400" />
               <span className="font-medium text-gray-700">Browse Courses</span>
             </Link>
           </Button>
-          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2" asChild>
+          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
             <Link to="/progress">
               <TrendingUp className="w-8 h-8 text-gray-400" />
               <span className="font-medium text-gray-700">View Progress</span>
             </Link>
           </Button>
-          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2" asChild>
+          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
             <Link to="/settings">
               <Clock className="w-8 h-8 text-gray-400" />
               <span className="font-medium text-gray-700">Settings</span>

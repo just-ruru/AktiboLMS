@@ -1,13 +1,8 @@
-import { useAuth } from '../../hooks/useAuth'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
-import { Button } from '../../components/ui/Button'
 import { Badge } from '../../components/ui/Badge'
-import { Users, TrendingUp, BarChart2, AlertCircle, CheckCircle, Clock } from 'lucide-react'
-import { clsx } from 'clsx'
+import { Users, TrendingUp, BarChart2, AlertCircle, CheckCircle } from 'lucide-react'
 
 export function InstructorAnalytics() {
-  const { user } = useAuth()
-
   const mockAnalytics = {
     totalStudents: 77,
     activeStudents: 45,

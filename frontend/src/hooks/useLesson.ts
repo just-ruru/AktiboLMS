@@ -33,8 +33,8 @@ export function useUpdateLesson() {
       const response = await api.put<Lesson>(`/lessons/${id}`, data)
       return response.data
     },
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['lesson', id] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lesson'] })
     },
   })
 }
@@ -94,7 +94,7 @@ export function useUpdateContentBlock() {
       const response = await api.put<ContentBlock>(`/content-blocks/${id}`, data)
       return response.data
     },
-    onSuccess: (_, { id }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['content-blocks'] })
     },
   })

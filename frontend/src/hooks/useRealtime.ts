@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createClient, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js'
 import { useAuth } from './useAuth'
 
@@ -55,7 +55,7 @@ export function useRealtimeSubscription({
           table,
           filter,
         },
-        (payload) => {
+        (payload: { eventType: string; new: any; old: any }) => {
           switch (payload.eventType) {
             case 'INSERT':
               onInsert?.(payload.new)
@@ -69,7 +69,7 @@ export function useRealtimeSubscription({
           }
         }
       )
-      .subscribe((status) => {
+      .subscribe((status: string) => {
         setConnected(status === 'SUBSCRIBED')
         if (status === 'CHANNEL_ERROR') {
           setError('Failed to connect to realtime')

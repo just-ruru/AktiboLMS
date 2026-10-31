@@ -6,7 +6,7 @@ import { Badge } from '../ui/Badge'
 import { CheckCircle, XCircle, AlertCircle, Play, RotateCcw } from 'lucide-react'
 import { clsx } from 'clsx'
 import { api } from '../../services/api'
-import { Activity, ActivityProgress, CodeSubmission, QuizAttempt } from '../../types'
+import { Activity, ActivityProgress } from '../../types'
 
 interface ActivityBlockProps {
   activity: Activity
@@ -81,7 +81,7 @@ export function ActivityBlock({ activity, progress, onSubmit, readOnly = false }
             <h3 className="text-lg font-semibold text-gray-900">Code Exercise</h3>
             <p className="text-sm text-gray-500 mt-1">{config.language || 'python'}</p>
           </div>
-          <Badge variant={statusColors[progress?.status || 'not_started']}>
+          <Badge variant={statusColors[progress?.status || 'not_started'] as 'primary' | 'danger' | 'success' | 'warning' | 'gray'}>
             {statusLabels[progress?.status || 'not_started']}
           </Badge>
         </CardHeader>
@@ -165,7 +165,7 @@ export function ActivityBlock({ activity, progress, onSubmit, readOnly = false }
             <h3 className="text-lg font-semibold text-gray-900">Quiz</h3>
             <p className="text-sm text-gray-500 mt-1">{questions.length} questions</p>
           </div>
-          <Badge variant={statusColors[progress?.status || 'not_started']}>
+          <Badge variant={statusColors[progress?.status || 'not_started'] as 'primary' | 'danger' | 'success' | 'warning' | 'gray'}>
             {statusLabels[progress?.status || 'not_started']}
           </Badge>
         </CardHeader>
