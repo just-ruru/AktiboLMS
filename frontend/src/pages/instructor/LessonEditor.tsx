@@ -4,7 +4,7 @@ import { Input } from '../../components/ui/Input'
 import { Plus, ArrowLeft, Trash2, GripVertical, Loader2, AlertCircle, Type, Video, Image, Code, Terminal, HelpCircle } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { useLesson } from '../../hooks/useLesson'
+import { useLessonById } from '../../hooks/useLesson'
 import { useContentBlocks, useCreateContentBlock, useUpdateContentBlock, useDeleteContentBlock, useReorderContentBlocks } from '../../hooks/useContentBlocks'
 import { useActivities, useCreateActivity, useUpdateActivity, useDeleteActivity, useReorderActivities } from '../../hooks/useActivities'
 import { ContentBlock, Activity, ContentBlockContent, ActivityConfig, TestCase, QuizQuestion } from '../../types'
@@ -33,7 +33,7 @@ export function InstructorLessonEditor() {
   const [showActivityModal, setShowActivityModal] = useState<Activity | null>(null)
 
   // Lesson data
-  const { data: lesson, isLoading: loadingLesson } = useLesson(lessonId || '')
+  const { data: lesson, isLoading: loadingLesson } = useLessonById(lessonId || '')
 
   // Content blocks
   const { data: contentBlocks, isLoading: loadingContentBlocks, refetch: refetchContentBlocks } = useContentBlocks(lessonId || '')

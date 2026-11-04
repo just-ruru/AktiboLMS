@@ -13,6 +13,20 @@ export function useLesson(courseId: string, lessonId: string) {
   })
 }
 
+// Overload for backward compatibility - accepts just lessonId
+export function useLessonById(lessonId: string) {
+  return useQuery({
+    queryKey: ['lesson', lessonId],
+    queryFn: async () => {
+      // Try the new endpoint first (requires courseId which we don't have)
+      // Fallback to old endpoint if needed
+      const response = await api.get<Lesson>(`/lessons/${lessonId}`)
+      return response.data
+    },
+    enabled: !!lessonId,
+  })
+}
+
 export function useCreateLesson() {
   const queryClient = useQueryClient()
   return useMutation({
