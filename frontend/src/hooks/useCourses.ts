@@ -85,6 +85,17 @@ export function useEnrollCourse() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-courses'] })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
+      queryClient.invalidateQueries({ queryKey: ['enrolled-courses'] })
+    },
+  })
+}
+
+export function useEnrolledCourses() {
+  return useQuery({
+    queryKey: ['enrolled-courses'],
+    queryFn: async () => {
+      const response = await api.get<Course[]>('/courses/enrolled')
+      return response.data
     },
   })
 }

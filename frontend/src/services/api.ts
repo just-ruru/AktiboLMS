@@ -40,7 +40,9 @@ api.interceptors.response.use(
       } catch {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
-        window.location.href = '/login'
+        // Don't do hard redirect - let the app handle auth state
+        // Dispatch event for AuthProvider to handle logout
+        window.dispatchEvent(new CustomEvent('auth:logout'))
       }
     }
 

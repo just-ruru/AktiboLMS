@@ -8,6 +8,7 @@ import com.aktibolms.entity.Module;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import com.aktibolms.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

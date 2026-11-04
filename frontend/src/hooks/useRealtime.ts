@@ -18,23 +18,30 @@ export function useSupabase() {
   return getSupabaseClient()
 }
 
-interface RealtimeSubscriptionOptions {
+// Type for Supabase realtime payload
+interface PostgresChangePayload<T = Record<string, unknown>> {
+  eventType: 'INSERT' | 'UPDATE' | 'DELETE'
+  new: T | null
+  old: T | null
+}
+
+interface RealtimeSubscriptionOptions<T = Record<string, unknown>> {
   table: string
   event?: 'INSERT' | 'UPDATE' | 'DELETE' | '*'
   filter?: string
-  onInsert?: (payload: any) => void
-  onUpdate?: (payload: any) => void
-  onDelete?: (payload: any) => void
+  onInsert?: (payload: T) => void
+  onUpdate?: (payload: T) => void
+  onDelete?: (payload: T) => void
 }
 
-export function useRealtimeSubscription({
+export function useRealtimeSubscription<T = Record<string, unknown>>({
   table,
   event = '*',
   filter,
   onInsert,
   onUpdate,
   onDelete,
-}: RealtimeSubscriptionOptions) {
+}: RealtimeSubscriptionOptions<T>) {
   const { user } = useAuth()
   const channelRef = useRef<RealtimeChannel | null>(null)
   const [connected, setConnected] = useState(false)
@@ -47,7 +54,7 @@ export function useRealtimeSubscription({
 
     const channel = supabase
       .channel(`realtime:${table}`)
-      .on(
+      .on<PostgresChangePayload<T>>(
         'postgres_changes',
         {
           event,
@@ -55,16 +62,16 @@ export function useRealtimeSubscription({
           table,
           filter,
         },
-        (payload: { eventType: string; new: any; old: any }) => {
+        (payload) => {
           switch (payload.eventType) {
             case 'INSERT':
-              onInsert?.(payload.new)
+              onInsert?.(payload.new as T)
               break
             case 'UPDATE':
-              onUpdate?.(payload.new)
+              onUpdate?.(payload.new as T)
               break
             case 'DELETE':
-              onDelete?.(payload.old)
+              onDelete?.(payload.old as T)
               break
           }
         }
@@ -90,10 +97,23 @@ export function useRealtimeSubscription({
   return { connected, error }
 }
 
-export function useRealtimeProgress(userId: string) {
-  const [progress, setProgress] = useState<any[]>([])
+// Type for ActivityProgress from database
+interface ActivityProgressRealtime {
+  id: string
+  user_id: string
+  activity_id: string
+  status: 'not_started' | 'in_progress' | 'submitted' | 'completed'
+  score?: number
+  submitted_at?: string
+  completed_at?: string
+  created_at: string
+  updated_at: string
+}
 
-  useRealtimeSubscription({
+export function useRealtimeProgress(userId: string) {
+  const [progress, setProgress] = useState<ActivityProgressRealtime[]>([])
+
+  useRealtimeSubscription<ActivityProgressRealtime>({
     table: 'activity_progress',
     filter: `user_id=eq.${userId}`,
     onInsert: (newProgress) => {
@@ -107,10 +127,22 @@ export function useRealtimeProgress(userId: string) {
   return progress
 }
 
-export function useRealtimeQuizSubmissions(courseId: string) {
-  const [submissions, setSubmissions] = useState<any[]>([])
+// Type for QuizAttempt from database
+interface QuizAttemptRealtime {
+  id: string
+  user_id: string
+  activity_id: string
+  course_id: string
+  answers_json: string
+  score: number
+  passed: boolean
+  created_at: string
+}
 
-  useRealtimeSubscription({
+export function useRealtimeQuizSubmissions(courseId: string) {
+  const [submissions, setSubmissions] = useState<QuizAttemptRealtime[]>([])
+
+  useRealtimeSubscription<QuizAttemptRealtime>({
     table: 'quiz_attempts',
     filter: `course_id=eq.${courseId}`,
     onInsert: (newSubmission) => {

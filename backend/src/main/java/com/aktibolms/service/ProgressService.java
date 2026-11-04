@@ -2,8 +2,10 @@ package com.aktibolms.service;
 
 import com.aktibolms.dto.request.QuizSubmitRequest;
 import com.aktibolms.entity.Activity;
+import com.aktibolms.entity.ActivityProgress;
 import com.aktibolms.entity.QuizAttempt;
 import com.aktibolms.entity.User;
+import com.aktibolms.repository.ActivityProgressRepository;
 import com.aktibolms.repository.ActivityRepository;
 import com.aktibolms.repository.QuizAttemptRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -22,8 +25,31 @@ import java.util.UUID;
 public class ProgressService {
 
     private final QuizAttemptRepository quizAttemptRepository;
+    private final ActivityProgressRepository activityProgressRepository;
     private final ActivityRepository activityRepository;
     private final ObjectMapper objectMapper;
+
+    public void submitCode(UUID userId, UUID activityId, User user, String code, String language, String output, Boolean passed, Long executionTimeMs) {
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+
+        // Update or create ActivityProgress
+        ActivityProgress progress = activityProgressRepository.findByUserIdAndActivityId(userId, activityId)
+                .orElseGet(() -> ActivityProgress.builder()
+                        .id(UUID.randomUUID())
+                        .user(user)
+                        .activity(activity)
+                        .status(ActivityProgress.Status.NOT_STARTED)
+                        .build());
+
+        progress.setStatus(passed ? ActivityProgress.Status.COMPLETED : ActivityProgress.Status.SUBMITTED);
+        progress.setScore(passed ? 100 : 0);
+        progress.setSubmittedAt(LocalDateTime.now());
+        if (passed) {
+            progress.setCompletedAt(LocalDateTime.now());
+        }
+        activityProgressRepository.save(progress);
+    }
 
     public QuizAttempt submitQuiz(UUID userId, UUID activityId, QuizSubmitRequest request, User user) {
         Activity activity = activityRepository.findById(activityId)
@@ -72,6 +98,25 @@ public class ProgressService {
                 .passed(passed)
                 .build();
 
-        return quizAttemptRepository.save(attempt);
+        quizAttemptRepository.save(attempt);
+
+        // Update or create ActivityProgress
+        ActivityProgress progress = activityProgressRepository.findByUserIdAndActivityId(userId, activityId)
+                .orElseGet(() -> ActivityProgress.builder()
+                        .id(UUID.randomUUID())
+                        .user(user)
+                        .activity(activity)
+                        .status(ActivityProgress.Status.NOT_STARTED)
+                        .build());
+
+        progress.setStatus(passed ? ActivityProgress.Status.COMPLETED : ActivityProgress.Status.SUBMITTED);
+        progress.setScore(finalScore);
+        progress.setSubmittedAt(LocalDateTime.now());
+        if (passed) {
+            progress.setCompletedAt(LocalDateTime.now());
+        }
+        activityProgressRepository.save(progress);
+
+        return attempt;
     }
 }

@@ -1,19 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { api } from '../services/api'
-
-export interface User {
-  id: string
-  email: string
-  fullName: string
-  role: 'student' | 'instructor'
-  avatarUrl?: string
-}
+import { User } from '../types'
 
 interface AuthContextType {
   user: User | null
   loading: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (data: RegisterData) => Promise<void>
+  login: (email: string, password: string) => Promise<User>
+  register: (data: RegisterData) => Promise<User>
   logout: () => void
   refreshUser: () => Promise<void>
 }
@@ -34,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshUser = async () => {
     try {
       const response = await api.get('/auth/me')
-      setUser(response.data)
+      setUser(normalizeUser(response.data))
     } catch {
       setUser(null)
       localStorage.removeItem('accessToken')
@@ -44,6 +37,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    setUser(null)
+  }
+
   useEffect(() => {
     const token = localStorage.getItem('accessToken')
     if (token) {
@@ -51,14 +50,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       setLoading(false)
     }
+
+    // Listen for auth logout event from axios interceptor
+    const handleAuthLogout = () => handleLogout()
+    window.addEventListener('auth:logout', handleAuthLogout)
+    return () => window.removeEventListener('auth:logout', handleAuthLogout)
   }, [])
+
+  const normalizeUser = (userData: User) => ({
+    ...userData,
+    role: userData.role.toLowerCase() as 'student' | 'instructor'
+  })
 
   const login = async (email: string, password: string) => {
     const response = await api.post('/auth/login', { email, password })
     const { accessToken, refreshToken, user: userData } = response.data
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('refreshToken', refreshToken)
-    setUser(userData)
+    const normalizedUser = normalizeUser(userData)
+    setUser(normalizedUser)
+    return normalizedUser
   }
 
   const register = async (data: RegisterData) => {
@@ -66,13 +77,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { accessToken, refreshToken, user: userData } = response.data
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('refreshToken', refreshToken)
-    setUser(userData)
+    const normalizedUser = normalizeUser(userData)
+    setUser(normalizedUser)
+    return normalizedUser
   }
 
   const logout = () => {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-    setUser(null)
+    handleLogout()
   }
 
   return (

@@ -2,24 +2,35 @@ import { RichTextEditor } from '../editor/RichTextEditor'
 import { CodeEditor } from '../editor/CodeEditor'
 import { Image, Video, Code } from 'lucide-react'
 
+interface ContentBlockContent {
+  text?: string
+  videoUrl?: string
+  imageUrl?: string
+  language?: string
+  code?: string
+}
+
 interface ContentBlockProps {
   block: {
     id: string
     type: 'text' | 'video' | 'image' | 'code_snippet'
-    content: {
-      text?: string
-      videoUrl?: string
-      imageUrl?: string
-      language?: string
-      code?: string
-    }
+    content: ContentBlockContent
     orderIndex: number
   }
   readOnly?: boolean
+  onChange?: (blockId: string, content: ContentBlockContent) => void
 }
 
-export function ContentBlock({ block, readOnly = true }: ContentBlockProps) {
-  const { type, content } = block
+export function ContentBlock({ block, readOnly = true, onChange }: ContentBlockProps) {
+  const { type, content, id } = block
+
+  const handleTextChange = (text: string) => {
+    onChange?.(id, { ...content, text })
+  }
+
+  const handleCodeChange = (code: string) => {
+    onChange?.(id, { ...content, code })
+  }
 
   switch (type) {
     case 'text':
@@ -27,7 +38,7 @@ export function ContentBlock({ block, readOnly = true }: ContentBlockProps) {
         <div className="prose prose-sm sm:prose lg:prose-xl max-w-none">
           <RichTextEditor
             content={content.text || ''}
-            onChange={() => {}}
+            onChange={handleTextChange}
             readOnly={readOnly}
             editable={!readOnly}
             placeholder="Write your lesson content here..."
@@ -87,9 +98,9 @@ export function ContentBlock({ block, readOnly = true }: ContentBlockProps) {
           </div>
           <CodeEditor
             value={content.code || ''}
-            onChange={() => {}}
+            onChange={handleCodeChange}
             language={content.language || 'plaintext'}
-            readOnly={true}
+            readOnly={readOnly}
             theme="vs"
             height="auto"
             className="min-h-[200px]"

@@ -5,13 +5,18 @@ import com.aktibolms.dto.request.ContentBlockRequest;
 import com.aktibolms.dto.request.LessonRequest;
 import com.aktibolms.dto.request.ReorderRequest;
 import com.aktibolms.entity.ContentBlock;
+import com.aktibolms.entity.Enrollment;
 import com.aktibolms.entity.Lesson;
 import com.aktibolms.entity.Module;
 import com.aktibolms.entity.User;
+import com.aktibolms.repository.ActivityProgressRepository;
+import com.aktibolms.repository.ActivityRepository;
 import com.aktibolms.repository.ContentBlockRepository;
 import com.aktibolms.repository.CourseRepository;
+import com.aktibolms.repository.EnrollmentRepository;
 import com.aktibolms.repository.LessonRepository;
 import com.aktibolms.repository.ModuleRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,6 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +39,10 @@ public class CourseService {
     private final ModuleRepository moduleRepository;
     private final LessonRepository lessonRepository;
     private final ContentBlockRepository contentBlockRepository;
+    private final EnrollmentRepository enrollmentRepository;
+    private final ActivityRepository activityRepository;
+    private final ActivityProgressRepository activityProgressRepository;
+    private final ObjectMapper objectMapper;
 
     public Course createCourse(Course course, User instructor) {
         course.setInstructor(instructor);
@@ -90,6 +101,10 @@ public class CourseService {
 
     public Page<Course> getMyCourses(UUID instructorId, Pageable pageable) {
         return courseRepository.findByInstructorId(instructorId, pageable);
+    }
+
+    public List<Course> getMyCourses(UUID instructorId) {
+        return courseRepository.findByInstructorId(instructorId);
     }
 
     public Page<Course> getPublishedCourses(Pageable pageable) {
@@ -167,10 +182,35 @@ public class CourseService {
     }
 
     public long getCourseCount(UUID instructorId) {
-        return courseRepository.countByInstructorId(instructorId);
-    }
+            return courseRepository.countByInstructorId(instructorId);
+        }
 
-    /* ---------- Lesson CRUD ---------- */
+        public Enrollment enrollStudent(UUID courseId, UUID studentId) {
+            Course course = courseRepository.findById(courseId)
+                    .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+
+            if (!course.getPublished()) {
+                throw new IllegalArgumentException("Cannot enroll in unpublished course");
+            }
+
+            if (enrollmentRepository.existsByUserIdAndCourseId(studentId, courseId)) {
+                throw new IllegalArgumentException("Already enrolled in this course");
+            }
+
+            User student = new User();
+            student.setId(studentId);
+
+            Enrollment enrollment = Enrollment.builder()
+                    .id(UUID.randomUUID())
+                    .user(student)
+                    .course(course)
+                    .enrolledAt(LocalDateTime.now())
+                    .build();
+
+            return enrollmentRepository.save(enrollment);
+        }
+
+        /* ---------- Lesson CRUD ---------- */
 
     public Lesson createLesson(UUID moduleId, LessonRequest request, UUID instructorId) {
         Module module = moduleRepository.findById(moduleId)
@@ -243,68 +283,123 @@ public class CourseService {
 
     /* ---------- Content Block CRUD ---------- */
 
-    public ContentBlock createContentBlock(UUID lessonId, ContentBlockRequest request, UUID instructorId) {
-        Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+        public ContentBlock createContentBlock(UUID lessonId, ContentBlockRequest request, UUID instructorId) {
+            Lesson lesson = lessonRepository.findById(lessonId)
+                    .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
 
-        if (!lesson.getModule().getCourse().getInstructor().getId().equals(instructorId)) {
-            throw new SecurityException("Not authorized to add content blocks to this lesson");
+            if (!lesson.getModule().getCourse().getInstructor().getId().equals(instructorId)) {
+                throw new SecurityException("Not authorized to add content blocks to this lesson");
+            }
+
+            String contentJson;
+            try {
+                contentJson = objectMapper.writeValueAsString(request.getContent());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Invalid content format: " + e.getMessage());
+            }
+
+            ContentBlock block = ContentBlock.builder()
+                    .id(UUID.randomUUID())
+                    .lesson(lesson)
+                    .type(ContentBlock.Type.valueOf(request.getType()))
+                    .contentJson(contentJson)
+                    .orderIndex(request.getOrderIndex())
+                    .build();
+
+            return contentBlockRepository.save(block);
         }
 
-        ContentBlock block = ContentBlock.builder()
-                .id(UUID.randomUUID())
-                .lesson(lesson)
-                .type(ContentBlock.Type.valueOf(request.getType()))
-                .contentJson("")
-                .orderIndex(request.getOrderIndex())
-                .build();
+        public ContentBlock updateContentBlock(UUID blockId, ContentBlockRequest request, UUID instructorId) {
+            ContentBlock block = contentBlockRepository.findById(blockId)
+                    .orElseThrow(() -> new IllegalArgumentException("Content block not found"));
 
-        return contentBlockRepository.save(block);
-    }
+            if (!block.getLesson().getModule().getCourse().getInstructor().getId().equals(instructorId)) {
+                throw new SecurityException("Not authorized to update this content block");
+            }
 
-    public ContentBlock updateContentBlock(UUID blockId, ContentBlockRequest request, UUID instructorId) {
-        ContentBlock block = contentBlockRepository.findById(blockId)
-                .orElseThrow(() -> new IllegalArgumentException("Content block not found"));
+            if (request.getType() != null) {
+                block.setType(ContentBlock.Type.valueOf(request.getType()));
+            }
+            if (request.getContent() != null) {
+                try {
+                    block.setContentJson(objectMapper.writeValueAsString(request.getContent()));
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid content format: " + e.getMessage());
+                }
+            }
+            if (request.getOrderIndex() != null) {
+                block.setOrderIndex(request.getOrderIndex());
+            }
 
-        if (!block.getLesson().getModule().getCourse().getInstructor().getId().equals(instructorId)) {
-            throw new SecurityException("Not authorized to update this content block");
+            return contentBlockRepository.save(block);
         }
 
-        if (request.getType() != null) {
-            block.setType(ContentBlock.Type.valueOf(request.getType()));
-        }
-        if (request.getOrderIndex() != null) {
-            block.setOrderIndex(request.getOrderIndex());
-        }
+        public void deleteContentBlock(UUID blockId, UUID instructorId) {
+            ContentBlock block = contentBlockRepository.findById(blockId)
+                    .orElseThrow(() -> new IllegalArgumentException("Content block not found"));
 
-        return contentBlockRepository.save(block);
-    }
+            if (!block.getLesson().getModule().getCourse().getInstructor().getId().equals(instructorId)) {
+                throw new SecurityException("Not authorized to delete this content block");
+            }
 
-    public void deleteContentBlock(UUID blockId, UUID instructorId) {
-        ContentBlock block = contentBlockRepository.findById(blockId)
-                .orElseThrow(() -> new IllegalArgumentException("Content block not found"));
-
-        if (!block.getLesson().getModule().getCourse().getInstructor().getId().equals(instructorId)) {
-            throw new SecurityException("Not authorized to delete this content block");
+            contentBlockRepository.delete(block);
         }
 
-        contentBlockRepository.delete(block);
-    }
+        public void reorderContentBlocks(UUID lessonId, List<ReorderRequest.Item> items, UUID instructorId) {
+            Lesson lesson = lessonRepository.findById(lessonId)
+                    .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
 
-    public void reorderContentBlocks(UUID lessonId, List<ReorderRequest.Item> items, UUID instructorId) {
-        Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+            if (!lesson.getModule().getCourse().getInstructor().getId().equals(instructorId)) {
+                throw new SecurityException("Not authorized to reorder content blocks in this lesson");
+            }
 
-        if (!lesson.getModule().getCourse().getInstructor().getId().equals(instructorId)) {
-            throw new SecurityException("Not authorized to reorder content blocks in this lesson");
+            for (int i = 0; i < items.size(); i++) {
+                ReorderRequest.Item item = items.get(i);
+                ContentBlock block = contentBlockRepository.findById(item.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Content block not found: " + item.getId()));
+                block.setOrderIndex(i);
+                contentBlockRepository.save(block);
+            }
         }
 
-        for (int i = 0; i < items.size(); i++) {
-            ReorderRequest.Item item = items.get(i);
-            ContentBlock block = contentBlockRepository.findById(item.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Content block not found: " + item.getId()));
-            block.setOrderIndex(i);
-            contentBlockRepository.save(block);
+    @Transactional(readOnly = true)
+    public List<Course> getEnrolledCoursesWithProgress(UUID studentId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByUserId(studentId);
+        List<Course> courses = new ArrayList<>();
+
+        for (Enrollment enrollment : enrollments) {
+            Course course = courseRepository.findByIdWithModules(enrollment.getCourse().getId())
+                    .orElse(null);
+            if (course != null) {
+                // Calculate progress for this course
+                int totalActivities = 0;
+                int completedActivities = 0;
+
+                if (course.getModules() != null) {
+                    for (Module module : course.getModules()) {
+                        if (module.getLessons() != null) {
+                            for (Lesson lesson : module.getLessons()) {
+                                if (lesson.getActivities() != null) {
+                                    totalActivities += lesson.getActivities().size();
+                                    for (com.aktibolms.entity.Activity activity : lesson.getActivities()) {
+                                        // Check if activity is completed by this student
+                                        var progress = activityProgressRepository.findByUserIdAndActivityId(studentId, activity.getId());
+                                        if (progress.isPresent() && progress.get().getStatus() == com.aktibolms.entity.ActivityProgress.Status.COMPLETED) {
+                                            completedActivities++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                int progress = totalActivities > 0 ? (completedActivities * 100 / totalActivities) : 0;
+                // Progress is calculated in the controller and set on the DTO
+                courses.add(course);
+            }
         }
+
+        return courses;
     }
 }

@@ -3,6 +3,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Bold, Italic, Code, Heading1, Heading2, Heading3, List, ListOrdered, Quote, Undo, Redo, Link, Image } from 'lucide-react'
 import { clsx } from 'clsx'
+import DOMPurify from 'dompurify'
 
 interface RichTextEditorProps {
   content: string
@@ -199,9 +200,15 @@ export function RichTextEditor({
   })
 
   if (readOnly || !editable) {
+    // SECURITY: Sanitize HTML content to prevent XSS attacks
+    const sanitizedContent = DOMPurify.sanitize(content, {
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 's', 'code', 'pre', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'img'],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target', 'rel'],
+      ALLOW_DATA_ATTR: false,
+    })
     return (
       <div className={clsx('prose prose-sm sm:prose lg:prose-xl max-w-none p-4', className)}>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
       </div>
     )
   }

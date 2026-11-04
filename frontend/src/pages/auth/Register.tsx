@@ -39,13 +39,18 @@ export function Register() {
 
     setLoading(true)
     try {
-      await register({
+      const user = await register({
         email: formData.email,
         password: formData.password,
         fullName: formData.fullName,
         role: formData.role,
       })
-      navigate('/dashboard')
+      // Redirect based on registered role
+      if (user?.role === 'instructor') {
+        navigate('/instructor')
+      } else {
+        navigate('/dashboard')
+      }
     } catch (err: any) {
       const data = err.response?.data
       const message = (data?.message

@@ -1,4 +1,5 @@
 com\aktibolms\entity\Enrollment.class
+com\aktibolms\repository\RefreshTokenRepository.class
 com\aktibolms\dto\request\ReorderRequest$Item.class
 com\aktibolms\dto\request\ReorderRequest$ReorderRequestBuilder.class
 com\aktibolms\repository\ActivityRepository.class
@@ -9,6 +10,7 @@ com\aktibolms\dto\auth\TokenRefreshRequest.class
 com\aktibolms\entity\CodeSubmission$CodeSubmissionBuilder.class
 com\aktibolms\entity\User$Role.class
 com\aktibolms\security\SecurityConfig.class
+com\aktibolms\config\AuthRateLimitFilter.class
 com\aktibolms\entity\Activity$Config$ConfigBuilder.class
 com\aktibolms\dto\request\ReorderRequest$Item$ItemBuilder.class
 com\aktibolms\repository\EnrollmentRepository.class
@@ -38,6 +40,7 @@ com\aktibolms\controller\CourseController.class
 com\aktibolms\entity\ContentBlock$Content.class
 com\aktibolms\dto\request\LessonRequest$LessonRequestBuilder.class
 com\aktibolms\dto\request\ModuleRequest.class
+com\aktibolms\config\AuthRateLimitFilter$WindowCounter.class
 com\aktibolms\controller\AuthController.class
 com\aktibolms\dto\request\ModuleRequest$ModuleRequestBuilder.class
 com\aktibolms\entity\Module.class
@@ -64,6 +67,7 @@ com\aktibolms\entity\ActivityProgress$ActivityProgressBuilder.class
 com\aktibolms\service\CourseService.class
 com\aktibolms\repository\ContentBlockRepository.class
 com\aktibolms\dto\response\ProgressResponse$ProgressResponseBuilder.class
+com\aktibolms\entity\RefreshToken$RefreshTokenBuilder.class
 com\aktibolms\dto\auth\AuthResponse$UserDTO.class
 com\aktibolms\entity\ContentBlock$ContentBlockBuilder.class
 com\aktibolms\entity\QuizAttempt$QuizAttemptBuilder.class
@@ -83,6 +87,7 @@ com\aktibolms\dto\response\CodeExecutionResponse$CodeExecutionResponseBuilder.cl
 com\aktibolms\repository\LessonRepository.class
 com\aktibolms\entity\Lesson.class
 com\aktibolms\repository\QuizAttemptRepository.class
+com\aktibolms\entity\RefreshToken.class
 com\aktibolms\exception\GlobalExceptionHandler.class
 com\aktibolms\dto\response\ModuleResponse.class
 com\aktibolms\dto\response\CodeExecutionResponse.class

@@ -7,14 +7,18 @@ import com.aktibolms.entity.User;
 import com.aktibolms.repository.ActivityRepository;
 import com.aktibolms.repository.CodeSubmissionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.util.TimeValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -39,9 +44,51 @@ public class CodeExecutionService {
     @Value("${piston.timeout:30000}")
     private int pistonTimeout;
 
-    public CodeExecutionResponse executeCode(String code, String language) {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+    private CloseableHttpClient httpClient;
+    private PoolingHttpClientConnectionManager connectionManager;
 
+    @PostConstruct
+    public void init() {
+        // Create connection manager with pooling
+        connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(20);
+        connectionManager.setDefaultMaxPerRoute(10);
+
+        // Create shared HttpClient with connection pooling
+        httpClient = HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .evictExpiredConnections()
+                .evictIdleConnections(TimeValue.ofSeconds(30))
+                .build();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        try {
+            if (httpClient != null) {
+                httpClient.close();
+            }
+            if (connectionManager != null) {
+                connectionManager.close();
+            }
+        } catch (Exception e) {
+            log.error("Error closing HttpClient", e);
+        }
+    }
+
+    public CodeExecutionResponse executeCode(String code, String language) {
+        // Validate code size limit (e.g., 100KB)
+        if (code.getBytes().length > 100_000) {
+            return CodeExecutionResponse.builder()
+                    .output("")
+                    .error("Code size exceeds maximum allowed limit of 100KB")
+                    .executionTimeMs(0L)
+                    .exitCode(-1)
+                    .passed(false)
+                    .build();
+        }
+
+        try {
             HttpPost post = new HttpPost(pistonApiUrl + "/execute");
 
             Map<String, Object> requestBody = new HashMap<>();

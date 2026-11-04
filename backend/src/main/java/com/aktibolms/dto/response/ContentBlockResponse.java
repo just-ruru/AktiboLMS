@@ -17,6 +17,7 @@ public class ContentBlockResponse {
     private String type;
     private Object content;
     private Integer orderIndex;
+    private UUID lessonId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -1,14 +1,40 @@
+import { useMyCourses } from '../../hooks/useCourses'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
-import { Plus, BookOpen, Users, TrendingUp, Search, Filter } from 'lucide-react'
+import { Plus, BookOpen, Users, TrendingUp, Search, Filter, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export function InstructorDashboard() {
-  const mockCourses = [
-    { id: '1', title: 'Introduction to Programming', students: 45, published: true, progress: 67 },
-    { id: '2', title: 'Web Development Fundamentals', students: 32, published: true, progress: 78 },
-    { id: '3', title: 'Advanced Python', students: 0, published: false, progress: 0 },
-  ]
+  const { data: myCourses, isLoading, error } = useMyCourses()
+
+  const courses = myCourses || []
+  const totalCourses = courses.length
+  const totalStudents = courses.reduce((sum, course) => sum + (course.enrolledCount || 0), 0)
+  const avgCompletion = courses.length > 0
+    ? Math.round(courses.reduce((sum, c) => sum + (c.progress || 0), 0) / courses.length)
+    : 0
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-center min-h-[300px]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center py-12">
+          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900">Unable to load courses</h3>
+          <p className="text-gray-500 mt-1">Please try again later</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8">
@@ -31,7 +57,7 @@ export function InstructorDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Total Courses</p>
-                <p className="text-3xl font-bold text-gray-900">{mockCourses.length}</p>
+                <p className="text-3xl font-bold text-gray-900">{totalCourses}</p>
               </div>
               <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-primary-600" />
@@ -44,7 +70,7 @@ export function InstructorDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Total Students</p>
-                <p className="text-3xl font-bold text-gray-900">77</p>
+                <p className="text-3xl font-bold text-gray-900">{totalStudents}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                 <Users className="w-6 h-6 text-green-600" />
@@ -57,7 +83,7 @@ export function InstructorDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Avg. Completion</p>
-                <p className="text-3xl font-bold text-gray-900">72%</p>
+                <p className="text-3xl font-bold text-gray-900">{avgCompletion}%</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-purple-600" />
@@ -98,7 +124,7 @@ export function InstructorDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {mockCourses.map((course) => (
+                {courses.map((course) => (
                   <tr key={course.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -111,7 +137,7 @@ export function InstructorDashboard() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-gray-900">{course.students}</td>
+                    <td className="px-6 py-4 text-gray-900">{course.enrolledCount || 0}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
                         course.published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
@@ -124,10 +150,10 @@ export function InstructorDashboard() {
                         <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div
                             className="bg-primary-600 h-2 rounded-full"
-                            style={{ width: `${course.progress}%` }}
+                            style={{ width: `${course.progress || 0}%` }}
                           />
                         </div>
-                        <span className="text-sm text-gray-500">{course.progress}%</span>
+                        <span className="text-sm text-gray-500">{course.progress || 0}%</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -149,7 +175,7 @@ export function InstructorDashboard() {
               </tbody>
             </table>
           </div>
-          {mockCourses.length === 0 && (
+          {courses.length === 0 && (
             <div className="py-12 text-center">
               <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900">No courses yet</h3>

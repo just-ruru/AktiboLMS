@@ -1,11 +1,11 @@
-import { HTMLAttributes, forwardRef } from 'react'
+import { HTMLAttributes, forwardRef, memo } from 'react'
 import { clsx } from 'clsx'
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: 'primary' | 'success' | 'warning' | 'danger' | 'gray'
 }
 
-export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
+const BadgeComponent = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'primary', children, ...props }, ref) => {
     const variants = {
       primary: 'bg-primary-100 text-primary-800',
@@ -27,4 +27,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   }
 )
 
+const Badge = memo(BadgeComponent)
 Badge.displayName = 'Badge'
+
+export { Badge }

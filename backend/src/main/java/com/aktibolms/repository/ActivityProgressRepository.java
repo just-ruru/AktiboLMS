@@ -28,4 +28,8 @@ public interface ActivityProgressRepository extends JpaRepository<ActivityProgre
 
     @Query("SELECT ap FROM ActivityProgress ap JOIN ap.activity a WHERE a.lesson.id = :lessonId AND ap.user.id = :userId")
     List<ActivityProgress> findByActivity_LessonIdAndUserId(@Param("lessonId") UUID lessonId, @Param("userId") UUID userId);
+
+    List<ActivityProgress> findByActivityId(UUID activityId);
+
+    List<ActivityProgress> findByActivityIdIn(List<UUID> activityIds);
 }

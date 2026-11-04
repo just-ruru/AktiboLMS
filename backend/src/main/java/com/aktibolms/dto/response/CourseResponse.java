@@ -26,4 +26,5 @@ public class CourseResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<ModuleResponse> modules;
+    private Integer progress; // For student enrolled courses
 }

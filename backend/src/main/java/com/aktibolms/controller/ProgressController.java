@@ -12,6 +12,7 @@ import com.aktibolms.service.ActivityService;
 import com.aktibolms.service.CodeExecutionService;
 import com.aktibolms.service.ProgressService;
 import com.aktibolms.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +38,7 @@ public class ProgressController {
     public ResponseEntity<CodeExecutionResponse> submitCode(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID activityId,
-            @RequestBody CodeSubmitRequest request) {
+            @Valid @RequestBody CodeSubmitRequest request) {
 
         User user = userService.findById(userDetails.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -52,6 +53,10 @@ public class ProgressController {
         codeExecutionService.saveCodeSubmissionWithUser(user, activity, request.getCode(), request.getLanguage(),
                 result.getOutput(), result.getPassed(), result.getExecutionTimeMs());
 
+        // Update progress
+        progressService.submitCode(userDetails.getId(), activityId, user, request.getCode(), request.getLanguage(),
+                result.getOutput(), result.getPassed(), result.getExecutionTimeMs());
+
         return ResponseEntity.ok(result);
     }
 
@@ -60,7 +65,7 @@ public class ProgressController {
     public ResponseEntity<Void> submitQuiz(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID activityId,
-            @RequestBody QuizSubmitRequest request) {
+            @Valid @RequestBody QuizSubmitRequest request) {
 
         User user = userService.findById(userDetails.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

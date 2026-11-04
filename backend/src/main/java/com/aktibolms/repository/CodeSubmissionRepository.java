@@ -19,4 +19,6 @@ public interface CodeSubmissionRepository extends JpaRepository<CodeSubmission, 
 
     @Query("SELECT cs FROM CodeSubmission cs WHERE cs.user.id = :userId AND cs.passed = true")
     List<CodeSubmission> findPassedByUserId(@Param("userId") UUID userId);
+
+    List<CodeSubmission> findByActivityIdInOrderByCreatedAtDesc(List<UUID> activityIds);
 }

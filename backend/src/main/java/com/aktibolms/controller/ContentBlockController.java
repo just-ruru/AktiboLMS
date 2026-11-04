@@ -6,6 +6,7 @@ import com.aktibolms.dto.response.ContentBlockResponse;
 import com.aktibolms.entity.ContentBlock;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +27,7 @@ public class ContentBlockController {
     public ResponseEntity<ContentBlockResponse> createContentBlock(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID lessonId,
-            @RequestBody ContentBlockRequest request) {
+            @Valid @RequestBody ContentBlockRequest request) {
 
         ContentBlock block = courseService.createContentBlock(lessonId, request, userDetails.getId());
         return ResponseEntity.ok(toResponse(block));
@@ -38,7 +39,7 @@ public class ContentBlockController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID lessonId,
             @PathVariable UUID blockId,
-            @RequestBody ContentBlockRequest request) {
+            @Valid @RequestBody ContentBlockRequest request) {
 
         ContentBlock block = courseService.updateContentBlock(blockId, request, userDetails.getId());
         return ResponseEntity.ok(toResponse(block));
@@ -59,7 +60,7 @@ public class ContentBlockController {
     public ResponseEntity<Void> reorderContentBlocks(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID lessonId,
-            @RequestBody ReorderRequest request) {
+            @Valid @RequestBody ReorderRequest request) {
 
         courseService.reorderContentBlocks(lessonId, request.getItems(), userDetails.getId());
         return ResponseEntity.ok().build();

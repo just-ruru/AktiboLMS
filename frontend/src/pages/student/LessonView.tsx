@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Card, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { ContentBlock } from '../../components/lesson/ContentBlock'
@@ -161,5 +162,3 @@ export function StudentLessonView() {
     </div>
   )
 }
-
-import { useState } from 'react'

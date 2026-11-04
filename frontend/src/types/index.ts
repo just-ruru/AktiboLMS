@@ -17,6 +17,7 @@ export interface Course {
   published: boolean
   modules: Module[]
   enrolledCount?: number
+  moduleCount?: number
   progress?: number
   createdAt: string
   updatedAt: string
@@ -47,7 +48,7 @@ export interface ContentBlock {
   id: string
   lessonId: string
   type: 'text' | 'video' | 'image' | 'code_snippet'
-  content: ContentBlockContent
+  content: string  // JSON string from backend
   orderIndex: number
 }
 
@@ -63,7 +64,7 @@ export interface Activity {
   id: string
   lessonId: string
   type: 'code_exercise' | 'quiz'
-  config: ActivityConfig
+  config: string  // JSON string from backend
   orderIndex: number
   points: number
   progress?: ActivityProgress

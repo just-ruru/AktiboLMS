@@ -19,8 +19,13 @@ export function Login() {
     setError('')
     setLoading(true)
     try {
-      await login(email, password)
-      navigate('/dashboard')
+      const user = await login(email, password)
+      // Redirect based on user role
+      if (user?.role === 'instructor') {
+        navigate('/instructor')
+      } else {
+        navigate('/dashboard')
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.')
     } finally {

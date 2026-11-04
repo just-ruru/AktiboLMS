@@ -2,11 +2,18 @@ package com.aktibolms.controller;
 
 import com.aktibolms.dto.request.CourseRequest;
 import com.aktibolms.dto.response.CourseResponse;
+import com.aktibolms.entity.Activity;
+import com.aktibolms.entity.ActivityProgress;
 import com.aktibolms.entity.Course;
+import com.aktibolms.entity.Lesson;
+import com.aktibolms.entity.Module;
 import com.aktibolms.entity.User;
+import com.aktibolms.repository.ActivityProgressRepository;
+import com.aktibolms.repository.EnrollmentRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import com.aktibolms.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +23,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,12 +34,14 @@ public class CourseController {
 
     private final CourseService courseService;
     private final UserService userService;
+    private final ActivityProgressRepository activityProgressRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<CourseResponse> createCourse(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody CourseRequest request) {
+            @Valid @RequestBody CourseRequest request) {
 
         User instructor = userService.findById(userDetails.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -68,11 +79,50 @@ public class CourseController {
 
     @GetMapping("/my")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Page<CourseResponse>> myCourses(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PageableDefault(size = 20) Pageable pageable) {
-        Page<Course> courses = courseService.getMyCourses(userDetails.getId(), pageable);
-        return ResponseEntity.ok(courses.map(this::toResponse));
+    public ResponseEntity<List<CourseResponse>> myCourses(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<Course> courses = courseService.getMyCourses(userDetails.getId());
+        return ResponseEntity.ok(courses.stream().map(this::toResponse).toList());
+    }
+
+    @GetMapping("/enrolled")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<List<CourseResponse>> getEnrolledCourses(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<Course> courses = courseService.getEnrolledCoursesWithProgress(userDetails.getId());
+        List<CourseResponse> responses = new ArrayList<>();
+        for (Course course : courses) {
+            // Calculate progress for this course
+            int totalActivities = 0;
+            int completedActivities = 0;
+
+            if (course.getModules() != null) {
+                for (Module module : course.getModules()) {
+                    if (module.getLessons() != null) {
+                        for (Lesson lesson : module.getLessons()) {
+                            if (lesson.getActivities() != null) {
+                                totalActivities += lesson.getActivities().size();
+                                for (com.aktibolms.entity.Activity activity : lesson.getActivities()) {
+                                    var progress = activityProgressRepository.findByUserIdAndActivityId(userDetails.getId(), activity.getId());
+                                    if (progress.isPresent() && progress.get().getStatus() == com.aktibolms.entity.ActivityProgress.Status.COMPLETED) {
+                                        completedActivities++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            int progress = totalActivities > 0 ? (completedActivities * 100 / totalActivities) : 0;
+            CourseResponse response = toResponse(course);
+            // Get enrolled count for this course
+            long enrolledCount = enrollmentRepository.countByCourseId(course.getId());
+            response.setEnrolledCount((int) enrolledCount);
+            response.setProgress(progress);
+            responses.add(response);
+        }
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}")
@@ -86,7 +136,7 @@ public class CourseController {
     public ResponseEntity<CourseResponse> updateCourse(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID id,
-            @RequestBody CourseRequest request) {
+            @Valid @RequestBody CourseRequest request) {
 
         Course updates = Course.builder()
                 .title(request.getTitle())
@@ -121,7 +171,7 @@ public class CourseController {
     public ResponseEntity<Void> enroll(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID id) {
-        // Enrollment handled via service; placeholder for now
+        courseService.enrollStudent(id, userDetails.getId());
         return ResponseEntity.ok().build();
     }
 

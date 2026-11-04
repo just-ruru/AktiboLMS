@@ -1,9 +1,9 @@
-import { HTMLAttributes, forwardRef } from 'react'
+import { HTMLAttributes, forwardRef, memo } from 'react'
 import { clsx } from 'clsx'
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {}
 
-export const Card = forwardRef<HTMLDivElement, CardProps>(({ className, children, ...props }, ref) => {
+const CardComponent = forwardRef<HTMLDivElement, CardProps>(({ className, children, ...props }, ref) => {
   return (
     <div
       ref={ref}
@@ -15,9 +15,10 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ className, children
   )
 })
 
+const Card = memo(CardComponent)
 Card.displayName = 'Card'
 
-export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+const CardHeaderComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     return (
       <div
@@ -31,9 +32,10 @@ export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
   }
 )
 
+const CardHeader = memo(CardHeaderComponent)
 CardHeader.displayName = 'CardHeader'
 
-export const CardBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+const CardBodyComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     return (
       <div
@@ -47,9 +49,10 @@ export const CardBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement
   }
 )
 
+const CardBody = memo(CardBodyComponent)
 CardBody.displayName = 'CardBody'
 
-export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+const CardFooterComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     return (
       <div
@@ -63,4 +66,7 @@ export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
   }
 )
 
+const CardFooter = memo(CardFooterComponent)
 CardFooter.displayName = 'CardFooter'
+
+export { Card, CardHeader, CardBody, CardFooter }

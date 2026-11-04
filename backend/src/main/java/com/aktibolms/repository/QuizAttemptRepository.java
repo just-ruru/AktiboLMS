@@ -21,4 +21,6 @@ public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, UUID> 
     List<QuizAttempt> findPassedByUserId(@Param("userId") UUID userId);
 
     long countByActivityIdAndPassedTrue(UUID activityId);
+
+    List<QuizAttempt> findByActivityIdInOrderByCreatedAtDesc(List<UUID> activityIds);
 }

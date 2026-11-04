@@ -6,6 +6,7 @@ import com.aktibolms.entity.Activity;
 import com.aktibolms.repository.ActivityRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.ActivityService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +33,7 @@ public class ActivityController {
     public ResponseEntity<ActivityResponse> createActivity(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID lessonId,
-            @RequestBody ActivityRequest request) {
+            @Valid @RequestBody ActivityRequest request) {
 
         Activity activity = activityService.createActivity(lessonId, request, userDetails.getId());
         return ResponseEntity.ok(toResponse(activity));
@@ -44,7 +45,7 @@ public class ActivityController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID lessonId,
             @PathVariable UUID activityId,
-            @RequestBody ActivityRequest request) {
+            @Valid @RequestBody ActivityRequest request) {
 
         Activity activity = activityService.updateActivity(activityId, request, userDetails.getId());
         return ResponseEntity.ok(toResponse(activity));
