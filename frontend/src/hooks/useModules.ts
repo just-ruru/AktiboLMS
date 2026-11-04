@@ -13,17 +13,6 @@ export function useModules(courseId: string) {
   })
 }
 
-export function useModule(moduleId: string) {
-  return useQuery({
-    queryKey: ['module', moduleId],
-    queryFn: async () => {
-      const response = await api.get<Module>(`/modules/${moduleId}`)
-      return response.data
-    },
-    enabled: !!moduleId,
-  })
-}
-
 export function useCreateModule() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -45,9 +34,8 @@ export function useUpdateModule() {
       const response = await api.put<Module>(`/modules/${id}`, data)
       return response.data
     },
-    onSuccess: (_, { id }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules'] })
-      queryClient.invalidateQueries({ queryKey: ['module', id] })
     },
   })
 }

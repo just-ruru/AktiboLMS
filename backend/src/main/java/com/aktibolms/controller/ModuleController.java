@@ -5,6 +5,7 @@ import com.aktibolms.dto.response.ModuleResponse;
 import com.aktibolms.dto.request.ReorderRequest;
 import com.aktibolms.entity.Course;
 import com.aktibolms.entity.Module;
+import com.aktibolms.repository.ModuleRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import com.aktibolms.service.UserService;
@@ -28,6 +29,20 @@ public class ModuleController {
 
     private final CourseService courseService;
     private final UserService userService;
+    private final ModuleRepository moduleRepository;
+
+    @GetMapping
+    public ResponseEntity<List<ModuleResponse>> listModules(@PathVariable UUID courseId) {
+        List<Module> modules = moduleRepository.findByCourseIdOrderByOrderIndexAsc(courseId);
+        return ResponseEntity.ok(modules.stream().map(this::toResponse).toList());
+    }
+
+    @GetMapping("/{moduleId}")
+    public ResponseEntity<ModuleResponse> getModule(@PathVariable UUID courseId, @PathVariable UUID moduleId) {
+        Module module = moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new IllegalArgumentException("Module not found"));
+        return ResponseEntity.ok(toResponse(module));
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")

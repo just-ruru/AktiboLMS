@@ -17,7 +17,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lessons/{lessonId}/activities")
@@ -27,6 +29,12 @@ public class ActivityController {
     private final ActivityService activityService;
     private final ActivityRepository activityRepository;
     private final ObjectMapper objectMapper;
+
+    @GetMapping
+    public ResponseEntity<List<ActivityResponse>> listActivities(@PathVariable UUID lessonId) {
+        List<Activity> activities = activityRepository.findByLessonIdOrderByOrderIndexAsc(lessonId);
+        return ResponseEntity.ok(activities.stream().map(this::toResponse).collect(Collectors.toList()));
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
@@ -65,6 +73,7 @@ public class ActivityController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ActivityResponse> getActivity(
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable UUID lessonId,
             @PathVariable UUID activityId) {
 
         Activity activity = activityRepository.findById(activityId)

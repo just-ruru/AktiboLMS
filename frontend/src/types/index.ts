@@ -14,6 +14,7 @@ export interface Course {
   thumbnailUrl?: string
   instructorId: string
   instructor?: User
+  instructorName?: string
   published: boolean
   modules: Module[]
   enrolledCount?: number

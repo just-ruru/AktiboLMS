@@ -2,11 +2,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../services/api'
 import { Course, PaginatedResponse } from '../types'
 
-export function useCourses(params?: { page?: number; size?: number; published?: boolean }) {
+// For student catalog - browse published courses
+export function useCourses(params?: { page?: number; size?: number; search?: string }) {
   return useQuery({
     queryKey: ['courses', params],
     queryFn: async () => {
-      const response = await api.get<PaginatedResponse<Course>>('/courses', { params })
+      const response = await api.get<PaginatedResponse<Course>>('/courses/public', { params })
       return response.data
     },
   })
@@ -23,11 +24,12 @@ export function useCourse(courseId: string) {
   })
 }
 
+// For instructor dashboard - get instructor's own courses
 export function useMyCourses() {
   return useQuery({
     queryKey: ['my-courses'],
     queryFn: async () => {
-      const response = await api.get<Course[]>('/my-courses')
+      const response = await api.get<Course[]>('/courses/my')
       return response.data
     },
   })
@@ -71,6 +73,7 @@ export function usePublishCourse() {
     onSuccess: (_, courseId) => {
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       queryClient.invalidateQueries({ queryKey: ['course', courseId] })
+      queryClient.invalidateQueries({ queryKey: ['my-courses'] })
     },
   })
 }

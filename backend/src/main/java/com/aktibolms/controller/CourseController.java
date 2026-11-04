@@ -1,15 +1,20 @@
 package com.aktibolms.controller;
 
 import com.aktibolms.dto.request.CourseRequest;
+import com.aktibolms.dto.response.ContentBlockResponse;
+import com.aktibolms.dto.response.ActivityResponse;
 import com.aktibolms.dto.response.CourseResponse;
+import com.aktibolms.dto.response.LessonResponse;
 import com.aktibolms.entity.Activity;
 import com.aktibolms.entity.ActivityProgress;
+import com.aktibolms.entity.ContentBlock;
 import com.aktibolms.entity.Course;
 import com.aktibolms.entity.Lesson;
 import com.aktibolms.entity.Module;
 import com.aktibolms.entity.User;
 import com.aktibolms.repository.ActivityProgressRepository;
 import com.aktibolms.repository.EnrollmentRepository;
+import com.aktibolms.repository.LessonRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import com.aktibolms.service.UserService;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/courses")
@@ -34,6 +40,7 @@ public class CourseController {
 
     private final CourseService courseService;
     private final UserService userService;
+    private final LessonRepository lessonRepository;
     private final ActivityProgressRepository activityProgressRepository;
     private final EnrollmentRepository enrollmentRepository;
 
@@ -129,6 +136,67 @@ public class CourseController {
     public ResponseEntity<CourseResponse> getCourse(@PathVariable UUID id) {
         Course course = courseService.getCourseWithModules(id);
         return ResponseEntity.ok(toResponse(course));
+    }
+
+    @GetMapping("/{courseId}/lessons/{lessonId}")
+    public ResponseEntity<LessonResponse> getLesson(
+            @PathVariable UUID courseId,
+            @PathVariable UUID lessonId) {
+        // Verify the course exists
+        courseService.getCourseWithModules(courseId);
+
+        // Fetch lesson with content blocks and activities
+        Lesson lesson = lessonRepository.findByIdWithContentBlocksAndActivities(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+
+        // Verify the lesson belongs to the course
+        if (!lesson.getModule().getCourse().getId().equals(courseId)) {
+            throw new IllegalArgumentException("Lesson not found in this course");
+        }
+
+        return ResponseEntity.ok(toLessonResponse(lesson));
+    }
+
+    private LessonResponse toLessonResponse(Lesson lesson) {
+        List<ContentBlock> blocks = lesson.getContentBlocks() != null ? lesson.getContentBlocks() : List.of();
+        List<Activity> activities = lesson.getActivities() != null ? lesson.getActivities() : List.of();
+
+        return LessonResponse.builder()
+                .id(lesson.getId())
+                .title(lesson.getTitle())
+                .description(lesson.getDescription())
+                .orderIndex(lesson.getOrderIndex())
+                .moduleId(lesson.getModule().getId())
+                .contentBlocks(blocks.stream().map(this::toContentBlockResponse).collect(Collectors.toList()))
+                .activities(activities.stream().map(this::toActivityResponse).collect(Collectors.toList()))
+                .createdAt(lesson.getCreatedAt())
+                .build();
+    }
+
+    private ContentBlockResponse toContentBlockResponse(ContentBlock block) {
+        return ContentBlockResponse.builder()
+                .id(block.getId())
+                .type(block.getType().name())
+                .content(block.getContentJson())
+                .orderIndex(block.getOrderIndex())
+                .lessonId(block.getLesson().getId())
+                .createdAt(block.getCreatedAt())
+                .updatedAt(block.getUpdatedAt())
+                .build();
+    }
+
+    private ActivityResponse toActivityResponse(Activity activity) {
+        return ActivityResponse.builder()
+                .id(activity.getId())
+                .title(activity.getType().name())
+                .type(activity.getType().name())
+                .config(activity.getConfigJson())
+                .orderIndex(activity.getOrderIndex())
+                .points(activity.getPoints())
+                .lessonId(activity.getLesson().getId())
+                .createdAt(activity.getCreatedAt())
+                .updatedAt(activity.getUpdatedAt())
+                .build();
     }
 
     @PutMapping("/{id}")

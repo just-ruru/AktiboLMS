@@ -30,6 +30,19 @@ public class LessonController {
     private final CourseService courseService;
     private final LessonRepository lessonRepository;
 
+    @GetMapping
+    public ResponseEntity<List<LessonResponse>> listLessons(@PathVariable UUID moduleId) {
+        List<Lesson> lessons = lessonRepository.findByModuleIdOrderByOrderIndexAsc(moduleId);
+        return ResponseEntity.ok(lessons.stream().map(this::toResponse).toList());
+    }
+
+    @GetMapping("/{lessonId}")
+    public ResponseEntity<LessonResponse> getLesson(@PathVariable UUID moduleId, @PathVariable UUID lessonId) {
+        Lesson lesson = lessonRepository.findByIdWithContentBlocksAndActivities(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+        return ResponseEntity.ok(toResponse(lesson));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<LessonResponse> createLesson(

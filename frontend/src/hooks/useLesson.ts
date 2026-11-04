@@ -2,14 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../services/api'
 import { Lesson } from '../types'
 
-export function useLesson(lessonId: string) {
+export function useLesson(courseId: string, lessonId: string) {
   return useQuery({
-    queryKey: ['lesson', lessonId],
+    queryKey: ['lesson', courseId, lessonId],
     queryFn: async () => {
-      const response = await api.get<Lesson>(`/lessons/${lessonId}`)
+      const response = await api.get<Lesson>(`/courses/${courseId}/lessons/${lessonId}`)
       return response.data
     },
-    enabled: !!lessonId,
+    enabled: !!courseId && !!lessonId,
   })
 }
 

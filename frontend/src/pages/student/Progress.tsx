@@ -1,20 +1,57 @@
+import { useEnrolledCourses } from '../../hooks/useCourses'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
-import { TrendingUp, BookOpen, CheckCircle, Clock, BarChart2 } from 'lucide-react'
+import { TrendingUp, BookOpen, CheckCircle, Clock, BarChart2, Loader2 } from 'lucide-react'
+import { useMemo } from 'react'
 
 export function StudentProgress() {
-  const mockProgress = [
-    { course: 'Introduction to Programming', progress: 45, completed: 5, total: 12, lastAccessed: '2 hours ago' },
-    { course: 'Web Development Fundamentals', progress: 78, completed: 6, total: 8, lastAccessed: '1 day ago' },
-    { course: 'Data Structures & Algorithms', progress: 12, completed: 2, total: 15, lastAccessed: '1 week ago' },
-  ]
+  const { data: enrolledCourses, isLoading, error } = useEnrolledCourses()
 
-  const mockActivityHistory = [
-    { activity: 'Variables Quiz', course: 'Intro to Programming', type: 'quiz', score: 85, date: '2 hours ago', status: 'completed' },
-    { activity: 'Hello World Exercise', course: 'Intro to Programming', type: 'code', score: 100, date: '1 day ago', status: 'completed' },
-    { activity: 'Data Types Quiz', course: 'Intro to Programming', type: 'quiz', score: 70, date: '2 days ago', status: 'completed' },
-    { activity: 'HTML Basics Exercise', course: 'Web Dev Fundamentals', type: 'code', score: 90, date: '3 days ago', status: 'completed' },
-  ]
+  const courses = enrolledCourses || []
+
+  // Calculate overall stats
+  const totalActiveCourses = courses.length
+  const totalLessonsCompleted = useMemo(() => {
+    return courses.reduce((sum, course) => {
+      // We'll estimate based on progress - this is a rough calculation
+      return sum + Math.round((course.progress || 0) / 100 * 10)
+    }, 0)
+  }, [courses])
+
+  const avgProgress = courses.length > 0
+    ? Math.round(courses.reduce((sum, c) => sum + (c.progress || 0), 0) / courses.length)
+    : 0
+
+  const avgScore = useMemo(() => {
+    // This would require fetching activity progress data
+    // For now, return a placeholder
+    return 0
+  }, [courses])
+
+  // Recent activity would need a separate API call
+  // For now, we'll show empty state
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-center min-h-[300px]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center py-12">
+          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900">Unable to load progress</h3>
+          <p className="text-gray-500 mt-1">Please try again later</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8">
@@ -29,7 +66,7 @@ export function StudentProgress() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Active Courses</p>
-                <p className="text-3xl font-bold text-gray-900">3</p>
+                <p className="text-3xl font-bold text-gray-900">{totalActiveCourses}</p>
               </div>
               <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-primary-600" />
@@ -41,8 +78,8 @@ export function StudentProgress() {
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Activities Completed</p>
-                <p className="text-3xl font-bold text-gray-900">13</p>
+                <p className="text-sm font-medium text-gray-500">Lessons Completed</p>
+                <p className="text-3xl font-bold text-gray-900">{totalLessonsCompleted}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-600" />
@@ -54,8 +91,8 @@ export function StudentProgress() {
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Avg. Score</p>
-                <p className="text-3xl font-bold text-gray-900">86%</p>
+                <p className="text-sm font-medium text-gray-500">Avg. Progress</p>
+                <p className="text-3xl font-bold text-gray-900">{avgProgress}%</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-purple-600" />
@@ -74,32 +111,40 @@ export function StudentProgress() {
             </h2>
           </CardHeader>
           <CardBody>
-            <div className="space-y-6">
-              {mockProgress.map((course) => (
-                <div key={course.course}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                        <BookOpen className="w-5 h-5 text-primary-600" />
+            {courses.length === 0 ? (
+              <div className="text-center py-8">
+                <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900">No courses yet</h3>
+                <p className="text-gray-500 mt-1">Enroll in courses to track your progress</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {courses.map((course) => (
+                  <div key={course.id}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                          <BookOpen className="w-5 h-5 text-primary-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{course.title}</p>
+                          <p className="text-sm text-gray-500">{course.moduleCount || 0} modules</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{course.course}</p>
-                        <p className="text-sm text-gray-500">{course.completed}/{course.total} lessons • {course.lastAccessed}</p>
-                      </div>
+                      <Badge variant={course.progress > 50 ? 'success' : course.progress > 25 ? 'primary' : 'warning'}>
+                        {course.progress || 0}%
+                      </Badge>
                     </div>
-                    <Badge variant={course.progress > 50 ? 'success' : course.progress > 25 ? 'primary' : 'warning'}>
-                      {course.progress}%
-                    </Badge>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-primary-600 h-2 rounded-full transition-all"
+                        style={{ width: `${course.progress || 0}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-primary-600 h-2 rounded-full transition-all"
-                      style={{ width: `${course.progress}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardBody>
         </Card>
 
@@ -111,32 +156,10 @@ export function StudentProgress() {
             </h2>
           </CardHeader>
           <CardBody>
-            <div className="space-y-4">
-              {mockActivityHistory.map((activity, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{
-                      backgroundColor: activity.type === 'code' ? '#e0f2fe' : '#fef3c7',
-                    }}
-                  >
-                    {activity.type === 'code' ? (
-                      <BarChart2 className="w-5 h-5 text-primary-600" />
-                    ) : (
-                      <CheckCircle className="w-5 h-5 text-yellow-600" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{activity.activity}</p>
-                    <p className="text-sm text-gray-500">{activity.course} • {activity.date}</p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant={activity.score >= 80 ? 'success' : activity.score >= 60 ? 'warning' : 'danger'}>
-                      {activity.score}%
-                    </Badge>
-                    <p className="text-xs text-gray-500 mt-1 capitalize">{activity.status}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="text-center py-8">
+              <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900">Activity tracking coming soon</h3>
+              <p className="text-gray-500 mt-1">Your recent activity will appear here once you start completing lessons and activities.</p>
             </div>
           </CardBody>
         </Card>

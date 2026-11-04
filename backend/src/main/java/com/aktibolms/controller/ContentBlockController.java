@@ -4,6 +4,7 @@ import com.aktibolms.dto.request.ContentBlockRequest;
 import com.aktibolms.dto.request.ReorderRequest;
 import com.aktibolms.dto.response.ContentBlockResponse;
 import com.aktibolms.entity.ContentBlock;
+import com.aktibolms.repository.ContentBlockRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import jakarta.validation.Valid;
@@ -13,7 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lessons/{lessonId}/content-blocks")
@@ -21,6 +24,13 @@ import java.util.UUID;
 public class ContentBlockController {
 
     private final CourseService courseService;
+    private final ContentBlockRepository contentBlockRepository;
+
+    @GetMapping
+    public ResponseEntity<List<ContentBlockResponse>> listContentBlocks(@PathVariable UUID lessonId) {
+        List<ContentBlock> blocks = contentBlockRepository.findByLessonIdOrderByOrderIndexAsc(lessonId);
+        return ResponseEntity.ok(blocks.stream().map(this::toResponse).collect(Collectors.toList()));
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")

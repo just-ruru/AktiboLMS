@@ -7,6 +7,7 @@ import { StudentCourseView } from './pages/student/CourseView'
 import { StudentLessonView } from './pages/student/LessonView'
 import { StudentProgress } from './pages/student/Progress'
 import { StudentMyCourses } from './pages/student/MyCourses'
+import { StudentCatalog } from './pages/student/Catalog'
 import { InstructorDashboard } from './pages/instructor/Dashboard'
 import { InstructorCourseBuilder } from './pages/instructor/CourseBuilder'
 import { InstructorAnalytics } from './pages/instructor/Analytics'
@@ -30,6 +31,7 @@ function App() {
         {/* Student routes - protected with student role */}
         <Route element={<PrivateRoute allowedRoles={['student']} />}>
           <Route path="/dashboard" element={<StudentDashboard />} />
+          <Route path="/catalog" element={<StudentCatalog />} />
           <Route path="/my-courses" element={<StudentMyCourses />} />
           <Route path="/courses/:courseId" element={<StudentCourseView />} />
           <Route path="/courses/:courseId/lessons/:lessonId" element={<StudentLessonView />} />
@@ -39,6 +41,7 @@ function App() {
         {/* Instructor routes - protected with instructor role */}
         <Route element={<PrivateRoute allowedRoles={['instructor']} />}>
           <Route path="/instructor" element={<InstructorDashboard />} />
+          <Route path="/instructor/courses/new" element={<InstructorCourseBuilder />} />
           <Route path="/instructor/courses/:courseId/edit" element={<InstructorCourseBuilder />} />
           <Route path="/instructor/courses/:courseId/analytics" element={<InstructorAnalytics />} />
         </Route>

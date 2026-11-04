@@ -17,7 +17,7 @@ export function useActivity(activityId: string) {
   return useQuery({
     queryKey: ['activity', activityId],
     queryFn: async () => {
-      const response = await api.get<Activity>(`/lessons/activities/${activityId}`)
+      const response = await api.get<Activity>(`/activities/${activityId}`)
       return response.data
     },
     enabled: !!activityId,
