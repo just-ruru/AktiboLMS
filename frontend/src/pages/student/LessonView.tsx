@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, Loader2, AlertCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { useLesson } from '../../hooks/useLesson'
-import { Lesson, ContentBlock as ContentBlockType, Activity } from '../../types'
+import { Lesson } from '../../types'
 
 export function StudentLessonView() {
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>()

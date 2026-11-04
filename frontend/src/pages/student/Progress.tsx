@@ -22,12 +22,6 @@ export function StudentProgress() {
     ? Math.round(courses.reduce((sum, c) => sum + (c.progress || 0), 0) / courses.length)
     : 0
 
-  const avgScore = useMemo(() => {
-    // This would require fetching activity progress data
-    // For now, return a placeholder
-    return 0
-  }, [courses])
-
   // Recent activity would need a separate API call
   // For now, we'll show empty state
 
@@ -119,30 +113,33 @@ export function StudentProgress() {
               </div>
             ) : (
               <div className="space-y-6">
-                {courses.map((course) => (
-                  <div key={course.id}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                          <BookOpen className="w-5 h-5 text-primary-600" />
+                {courses.map((course) => {
+                  const progress = course.progress || 0
+                  return (
+                    <div key={course.id}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <BookOpen className="w-5 h-5 text-primary-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">{course.title}</p>
+                            <p className="text-sm text-gray-500">{course.moduleCount || 0} modules</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{course.title}</p>
-                          <p className="text-sm text-gray-500">{course.moduleCount || 0} modules</p>
-                        </div>
+                        <Badge variant={progress > 50 ? 'success' : progress > 25 ? 'primary' : 'warning'}>
+                          {progress}%
+                        </Badge>
                       </div>
-                      <Badge variant={course.progress > 50 ? 'success' : course.progress > 25 ? 'primary' : 'warning'}>
-                        {course.progress || 0}%
-                      </Badge>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-primary-600 h-2 rounded-full transition-all"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-primary-600 h-2 rounded-full transition-all"
-                        style={{ width: `${course.progress || 0}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </CardBody>

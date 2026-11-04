@@ -2,13 +2,11 @@ import { useCourses } from '../../hooks/useCourses'
 import { useEnrollCourse } from '../../hooks/useCourses'
 import { Card, CardBody } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
-import { BookOpen, Search, Filter, Loader2, UserPlus, AlertCircle } from 'lucide-react'
+import { BookOpen, Search, Filter, Loader2, UserPlus } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { useAuth } from '../../hooks/useAuth'
 
 export function StudentCatalog() {
-  const { user } = useAuth()
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
   const pageSize = 12
