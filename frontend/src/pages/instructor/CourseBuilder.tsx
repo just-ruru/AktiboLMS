@@ -38,22 +38,22 @@ export function InstructorCourseBuilder() {
   const [error, setError] = useState<string | null>(null)
 
   // Course hooks
-    const { isLoading: loadingCourse } = useCourse(courseId || '')
-    const createCourse = useCreateCourse()
-    const updateCourse = useUpdateCourse()
-    const publishCourse = usePublishCourse()
+  const { isLoading: loadingCourse } = useCourse(courseId || '')
+  const createCourse = useCreateCourse()
+  const updateCourse = useUpdateCourse()
+  const publishCourse = usePublishCourse()
 
-    // Module hooks
-    const { data: modules, isLoading: loadingModules, refetch: refetchModules } = useModules(courseId || '')
-    const createModule = useCreateModule()
-    const updateModule = useUpdateModule()
-    const deleteModule = useDeleteModule()
+  // Module hooks
+  const { data: modules, isLoading: loadingModules, refetch: refetchModules } = useModules(courseId || '')
+  const createModule = useCreateModule()
+  const updateModule = useUpdateModule()
+  const deleteModule = useDeleteModule()
 
-    // Lesson hooks
-    const createLesson = useCreateLesson()
-    const updateLesson = useUpdateLesson()
-    const deleteLesson = useDeleteLesson()
-    const reorderLessons = useReorderLessons()
+  // Lesson hooks
+  const createLesson = useCreateLesson()
+  const updateLesson = useUpdateLesson()
+  const deleteLesson = useDeleteLesson()
+  const reorderLessons = useReorderLessons()
 
   const handleSaveCourse = async () => {
     if (!courseTitle.trim()) {
@@ -156,21 +156,21 @@ export function InstructorCourseBuilder() {
     }
   }
 
-    const handleReorderLessons = async (newOrder: { id: string; orderIndex: number }[]) => {
-        try {
-          await reorderLessons.mutateAsync(newOrder)
-          refetchModules()
-        } catch (err) {
-          setError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to reorder lessons')
-        }
-      }
+  const handleReorderLessons = async (newOrder: { id: string; orderIndex: number }[]) => {
+    try {
+      await reorderLessons.mutateAsync(newOrder)
+      refetchModules()
+    } catch (err) {
+      setError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to reorder lessons')
+    }
+  }
 
   const sortedModules = modules?.slice().sort((a, b) => a.orderIndex - b.orderIndex) || []
 
   if (isEditing && loadingCourse) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-brand-600 dark:text-brand-400" />
       </div>
     )
   }
@@ -200,16 +200,16 @@ export function InstructorCourseBuilder() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div className="flex items-center gap-2 p-3 rounded-lg animate-slide-down bg-error-50 border border-error-500/20 text-error-600 dark:bg-error-500/10 dark:border-error-500/30 dark:text-error-400">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           <span>{error}</span>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>Dismiss</Button>
         </div>
       )}
 
-      <Card>
+      <Card variant="bordered">
         <CardHeader>
-          <h2 className="text-lg font-semibold text-gray-900">Course Details</h2>
+          <h2 className="text-lg font-semibold text-fg-primary">Course Details</h2>
         </CardHeader>
         <CardBody className="space-y-4">
           <Input
@@ -220,21 +220,21 @@ export function InstructorCourseBuilder() {
             error={error?.includes('title') ? error : undefined}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-fg-secondary mb-1">Description</label>
             <textarea
               value={courseDescription}
               onChange={(e) => setCourseDescription(e.target.value)}
               placeholder="Describe what students will learn..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent min-h-[100px] resize-y"
+              className="w-full px-3 py-2 input min-h-[100px] resize-y"
               rows={4}
             />
           </div>
         </CardBody>
       </Card>
 
-      <Card>
+      <Card variant="bordered">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h2 className="text-lg font-semibold text-gray-900">Curriculum</h2>
+          <h2 className="text-lg font-semibold text-fg-primary">Curriculum</h2>
           {courseId && (
             <Button variant="outline" size="sm" onClick={handleAddModule} disabled={createModule.isPending}>
               <Plus className="w-4 h-4 mr-1" />
@@ -245,10 +245,10 @@ export function InstructorCourseBuilder() {
         <CardBody>
           {loadingModules ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
+              <Loader2 className="w-8 h-8 animate-spin text-brand-600 dark:text-brand-400" />
             </div>
           ) : sortedModules.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-fg-tertiary">
               <p className="mb-2">No modules yet</p>
               {courseId && (
                 <Button variant="outline" size="sm" onClick={handleAddModule}>
@@ -260,28 +260,28 @@ export function InstructorCourseBuilder() {
           ) : (
             <div className="space-y-6">
               {sortedModules.map((module) => (
-                              <ModuleCard
-                                key={module.id}
-                                module={module}
-                                isActive={activeModuleId === module.id}
-                                onToggle={() => setActiveModuleId(activeModuleId === module.id ? null : module.id)}
-                                onUpdateTitle={(title) => handleUpdateModule(module.id, title)}
-                                onDelete={() => handleDeleteModule(module.id)}
-                                onAddLesson={() => handleAddLesson(module.id)}
-                                onUpdateLesson={(lessonId, title) => handleUpdateLesson(lessonId, title)}
-                                onDeleteLesson={(lessonId) => handleDeleteLesson(lessonId)}
-                                onReorderLessons={(lessons) => handleReorderLessons(lessons)}
-                                creatingLesson={createLesson.isPending}
-                                deletingModule={deleteModule.isPending}
-                              />
-                            ))}
+                <ModuleCard
+                  key={module.id}
+                  module={module}
+                  isActive={activeModuleId === module.id}
+                  onToggle={() => setActiveModuleId(activeModuleId === module.id ? null : module.id)}
+                  onUpdateTitle={(title) => handleUpdateModule(module.id, title)}
+                  onDelete={() => handleDeleteModule(module.id)}
+                  onAddLesson={() => handleAddLesson(module.id)}
+                  onUpdateLesson={(lessonId, title) => handleUpdateLesson(lessonId, title)}
+                  onDeleteLesson={(lessonId) => handleDeleteLesson(lessonId)}
+                  onReorderLessons={(lessons) => handleReorderLessons(lessons)}
+                  creatingLesson={createLesson.isPending}
+                  deletingModule={deleteModule.isPending}
+                />
+              ))}
             </div>
           )}
         </CardBody>
       </Card>
 
       {!courseId && (
-        <div className="text-center text-gray-500 text-sm">
+        <div className="text-center text-fg-tertiary text-sm">
           Save the course first to add modules and lessons
         </div>
       )}
@@ -320,14 +320,14 @@ function ModuleCard({
   const [draggingId, setDraggingId] = useState<string | null>(null)
 
   const handleTitleBlur = () => {
-      if (editTitle.trim() && editTitle !== module.title) {
-        setSavingTitle(true)
-        onUpdateTitle(editTitle.trim())
-        setSavingTitle(false)
-      } else {
-        setEditTitle(module.title)
-      }
+    if (editTitle.trim() && editTitle !== module.title) {
+      setSavingTitle(true)
+      onUpdateTitle(editTitle.trim())
+      setSavingTitle(false)
+    } else {
+      setEditTitle(module.title)
     }
+  }
 
   const handleLessonTitleBlur = (lessonId: string, title: string) => {
     if (title.trim() && title !== lessons.find(l => l.id === lessonId)?.title) {
@@ -353,16 +353,16 @@ function ModuleCard({
   const sortedLessons = lessons.slice().sort((a, b) => a.orderIndex - b.orderIndex)
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+    <div className="border border-border-primary rounded-lg overflow-hidden">
+      <div className="bg-tertiary/50 px-4 py-3 border-b border-border-primary flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="w-8 h-8 bg-primary-100 text-primary-700 rounded-lg flex items-center justify-center font-medium cursor-pointer"
+          <span className="w-8 h-8 bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-lg flex items-center justify-center font-medium cursor-pointer"
                 onClick={onToggle}>
             {isActive ? '−' : '+'}
           </span>
           <div>
             {savingTitle ? (
-              <Loader2 className="w-4 h-4 animate-spin text-primary-500 inline-block" />
+              <Loader2 className="w-4 h-4 animate-spin text-brand-600 dark:text-brand-400 inline-block" />
             ) : (
               <input
                 type="text"
@@ -371,10 +371,10 @@ function ModuleCard({
                 onBlur={handleTitleBlur}
                 onKeyDown={(e) => e.key === 'Enter' && handleTitleBlur()}
                 autoFocus
-                className="font-medium text-gray-900 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary-500 rounded px-1"
+                className="font-medium text-fg-primary bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-1"
               />
             )}
-            <p className="text-sm text-gray-500">{sortedLessons.length} lessons</p>
+            <p className="text-sm text-fg-tertiary">{sortedLessons.length} lessons</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -382,7 +382,7 @@ function ModuleCard({
             <Plus className="w-4 h-4" />
             Add Lesson
           </Button>
-          <Button variant="ghost" size="sm" onClick={onDelete} disabled={deletingModule} className="text-red-600 hover:text-red-700">
+          <Button variant="ghost" size="sm" onClick={onDelete} disabled={deletingModule} className="text-error-600 hover:text-error-700 dark:text-error-400 dark:hover:text-error-300">
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
@@ -391,7 +391,7 @@ function ModuleCard({
       {isActive && (
         <div className="p-4 space-y-3">
           {sortedLessons.length === 0 ? (
-            <div className="text-center py-6 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
+            <div className="text-center py-6 text-fg-tertiary border-2 border-dashed border-border-primary rounded-lg">
               <p className="mb-2">No lessons in this module</p>
               <Button variant="outline" size="sm" onClick={onAddLesson}>
                 <Plus className="w-4 h-4 mr-1" />
@@ -449,12 +449,12 @@ function LessonRow({
       onDragStart={() => onDragStart(lesson.id)}
       onDragOver={onDragOver}
       onDrop={() => onDrop(lesson.id)}
-      className={`flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg transition-colors ${
-        isDragging ? 'border-primary-300 bg-primary-50 opacity-75' : 'hover:border-primary-300'
+      className={`flex items-center gap-3 p-3 bg-white dark:bg-bg-secondary border border-border-primary rounded-lg transition-colors ${
+        isDragging ? 'border-brand-300 dark:border-brand-700 bg-brand-50 dark:bg-brand-900/20 opacity-75' : 'hover:border-brand-300 dark:hover:border-brand-700'
       }`}
     >
-      <GripVertical className="w-6 h-6 bg-gray-100 text-gray-400 rounded flex items-center justify-center text-sm cursor-grab active:cursor-grabbing" />
-      <span className="w-6 h-6 bg-gray-100 text-gray-600 rounded flex items-center justify-center text-sm font-medium">
+      <GripVertical className="w-6 h-6 bg-tertiary text-fg-tertiary rounded flex items-center justify-center text-sm cursor-grab active:cursor-grabbing" />
+      <span className="w-6 h-6 bg-tertiary text-fg-secondary rounded flex items-center justify-center text-sm font-medium">
         {index + 1}
       </span>
       <input
@@ -463,12 +463,11 @@ function LessonRow({
         onChange={(e) => setEditTitle(e.target.value)}
         onBlur={() => onUpdateTitle(lesson.id, editTitle)}
         onKeyDown={(e) => e.key === 'Enter' && onUpdateTitle(lesson.id, editTitle)}
-        className="flex-1 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
+        className="flex-1 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-brand-500 rounded"
       />
-      <Button variant="ghost" size="sm" onClick={() => onDelete(lesson.id)} className="text-red-600 hover:text-red-700">
+      <Button variant="ghost" size="sm" onClick={() => onDelete(lesson.id)} className="text-error-600 hover:text-error-700 dark:text-error-400 dark:hover:text-error-300">
         <Trash2 className="w-4 h-4" />
       </Button>
     </div>
   )
 }
-

@@ -1,3 +1,4 @@
+com\aktibolms\dto\response\SubmissionSummary$SubmissionSummaryBuilder.class
 com\aktibolms\entity\Enrollment.class
 com\aktibolms\repository\RefreshTokenRepository.class
 com\aktibolms\dto\request\ReorderRequest$Item.class
@@ -37,6 +38,7 @@ com\aktibolms\entity\User.class
 com\aktibolms\dto\auth\LoginRequest.class
 com\aktibolms\entity\ContentBlock$Type.class
 com\aktibolms\controller\CourseController.class
+com\aktibolms\controller\ModuleByIdController.class
 com\aktibolms\entity\ContentBlock$Content.class
 com\aktibolms\dto\request\LessonRequest$LessonRequestBuilder.class
 com\aktibolms\dto\request\ModuleRequest.class
@@ -53,6 +55,7 @@ com\aktibolms\dto\response\ProgressResponse.class
 com\aktibolms\controller\ModuleController.class
 com\aktibolms\dto\auth\AuthResponse$AuthResponseBuilder.class
 com\aktibolms\security\CustomUserDetailsService.class
+com\aktibolms\dto\request\CodeExecutionRequest.class
 com\aktibolms\controller\LessonController.class
 com\aktibolms\entity\Course.class
 com\aktibolms\security\JwtAuthenticationFilter.class
@@ -67,10 +70,12 @@ com\aktibolms\entity\ActivityProgress$ActivityProgressBuilder.class
 com\aktibolms\service\CourseService.class
 com\aktibolms\repository\ContentBlockRepository.class
 com\aktibolms\dto\response\ProgressResponse$ProgressResponseBuilder.class
+com\aktibolms\controller\LessonByIdController.class
 com\aktibolms\entity\RefreshToken$RefreshTokenBuilder.class
 com\aktibolms\dto\auth\AuthResponse$UserDTO.class
 com\aktibolms\entity\ContentBlock$ContentBlockBuilder.class
 com\aktibolms\entity\QuizAttempt$QuizAttemptBuilder.class
+com\aktibolms\dto\response\SubmissionSummary.class
 com\aktibolms\entity\Activity$QuizQuestion$QuizQuestionBuilder.class
 com\aktibolms\dto\response\CourseAnalytics.class
 com\aktibolms\exception\ApiException.class
@@ -100,6 +105,7 @@ com\aktibolms\repository\UserRepository.class
 com\aktibolms\dto\auth\TokenRefreshRequest$TokenRefreshRequestBuilder.class
 com\aktibolms\dto\response\CourseResponse.class
 com\aktibolms\service\CodeExecutionService.class
+com\aktibolms\dto\request\CodeExecutionRequest$CodeExecutionRequestBuilder.class
 com\aktibolms\repository\ActivityProgressRepository.class
 com\aktibolms\dto\response\ActivityAnalytics.class
 com\aktibolms\dto\response\CourseAnalytics$CourseAnalyticsBuilder.class
@@ -109,6 +115,7 @@ com\aktibolms\entity\Activity.class
 com\aktibolms\entity\ContentBlock$Content$ContentBuilder.class
 com\aktibolms\controller\ContentBlockController.class
 com\aktibolms\dto\request\CourseRequest.class
+com\aktibolms\controller\ContentBlockByIdController.class
 com\aktibolms\dto\auth\AuthResponse$UserDTO$UserDTOBuilder.class
 com\aktibolms\entity\ContentBlock.class
 com\aktibolms\entity\Activity$QuizQuestion.class

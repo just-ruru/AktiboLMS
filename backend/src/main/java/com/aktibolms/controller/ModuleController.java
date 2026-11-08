@@ -6,6 +6,7 @@ import com.aktibolms.dto.request.ReorderRequest;
 import com.aktibolms.entity.Course;
 import com.aktibolms.entity.Module;
 import com.aktibolms.repository.ModuleRepository;
+import com.aktibolms.repository.EnrollmentRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import com.aktibolms.service.UserService;
@@ -30,15 +31,49 @@ public class ModuleController {
     private final CourseService courseService;
     private final UserService userService;
     private final ModuleRepository moduleRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @GetMapping
-    public ResponseEntity<List<ModuleResponse>> listModules(@PathVariable UUID courseId) {
+    public ResponseEntity<List<ModuleResponse>> listModules(
+            @PathVariable UUID courseId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Course course = courseService.getCourseWithModules(courseId);
+
+        // Authorization: published courses are readable by anyone;
+        // unpublished courses require instructor ownership or enrollment
+        if (!course.getPublished()) {
+            boolean isInstructor = userDetails != null
+                    && course.getInstructor().getId().equals(userDetails.getId());
+            boolean isEnrolled = userDetails != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userDetails.getId(), courseId);
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Course not found or not accessible");
+            }
+        }
+
         List<Module> modules = moduleRepository.findByCourseIdOrderByOrderIndexAsc(courseId);
         return ResponseEntity.ok(modules.stream().map(this::toResponse).toList());
     }
 
     @GetMapping("/{moduleId}")
-    public ResponseEntity<ModuleResponse> getModule(@PathVariable UUID courseId, @PathVariable UUID moduleId) {
+    public ResponseEntity<ModuleResponse> getModule(
+            @PathVariable UUID courseId,
+            @PathVariable UUID moduleId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Course course = courseService.getCourseWithModules(courseId);
+
+        // Authorization: published courses are readable by anyone;
+        // unpublished courses require instructor ownership or enrollment
+        if (!course.getPublished()) {
+            boolean isInstructor = userDetails != null
+                    && course.getInstructor().getId().equals(userDetails.getId());
+            boolean isEnrolled = userDetails != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userDetails.getId(), courseId);
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Course not found or not accessible");
+            }
+        }
+
         Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new IllegalArgumentException("Module not found"));
         return ResponseEntity.ok(toResponse(module));
@@ -49,7 +84,7 @@ public class ModuleController {
     public ResponseEntity<ModuleResponse> createModule(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID courseId,
-            @RequestBody ModuleRequest request) {
+            @Valid @RequestBody ModuleRequest request) {
 
         User instructor = userService.findById(userDetails.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -71,7 +106,7 @@ public class ModuleController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID courseId,
             @PathVariable UUID moduleId,
-            @RequestBody ModuleRequest request) {
+            @Valid @RequestBody ModuleRequest request) {
 
         Module updates = Module.builder()
                 .title(request.getTitle())
@@ -98,9 +133,9 @@ public class ModuleController {
     public ResponseEntity<Void> reorderModules(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID courseId,
-            @RequestBody ReorderRequest request) {
+            @RequestBody List<ReorderRequest.Item> items) {
 
-        List<Module> modules = request.getItems().stream()
+        List<Module> modules = items.stream()
                 .map(item -> Module.builder()
                         .id(item.getId())
                         .orderIndex(item.getOrderIndex())

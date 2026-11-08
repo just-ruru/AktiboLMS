@@ -1,7 +1,9 @@
 package com.aktibolms.controller;
 
+import com.aktibolms.dto.request.ActivityRequest;
 import com.aktibolms.dto.request.CodeSubmitRequest;
 import com.aktibolms.dto.request.QuizSubmitRequest;
+import com.aktibolms.dto.request.ReorderRequest;
 import com.aktibolms.dto.response.CodeExecutionResponse;
 import com.aktibolms.dto.response.ProgressResponse;
 import com.aktibolms.entity.Activity;
@@ -71,6 +73,42 @@ public class ProgressController {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         progressService.submitQuiz(userDetails.getId(), activityId, request, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{activityId}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<Void> updateActivity(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable UUID activityId,
+            @Valid @RequestBody ActivityRequest request) {
+
+        activityService.updateActivity(activityId, request, userDetails.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{activityId}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<Void> deleteActivity(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable UUID activityId) {
+
+        activityService.deleteActivity(activityId, userDetails.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/reorder")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<Void> reorderActivities(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody List<ReorderRequest.Item> items) {
+
+        if (items == null || items.isEmpty()) {
+            return ResponseEntity.ok().build();
+        }
+
+        UUID lessonId = activityService.findLessonIdByActivityId(items.get(0).getId());
+        activityService.reorderActivities(lessonId, items, userDetails.getId());
         return ResponseEntity.ok().build();
     }
 

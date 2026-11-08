@@ -61,14 +61,14 @@ public class CourseController {
                 .build();
 
         Course created = courseService.createCourse(course, instructor);
-        return ResponseEntity.ok(toResponse(created));
+        return ResponseEntity.ok(toResponse(created, instructor.getId(), instructor.getFullName()));
     }
 
     @GetMapping("/public")
     public ResponseEntity<Page<CourseResponse>> listPublished(
             @PageableDefault(size = 20) Pageable pageable) {
         Page<Course> courses = courseService.getPublishedCourses(pageable);
-        return ResponseEntity.ok(courses.map(this::toResponse));
+        return ResponseEntity.ok(courses.map(c -> toResponse(c, null, null)));
     }
 
     @GetMapping("/public/search")
@@ -81,7 +81,7 @@ public class CourseController {
         } else {
             courses = courseService.getPublishedCourses(pageable);
         }
-        return ResponseEntity.ok(courses.map(this::toResponse));
+        return ResponseEntity.ok(courses.map(c -> toResponse(c, null, null)));
     }
 
     @GetMapping("/my")
@@ -89,7 +89,9 @@ public class CourseController {
     public ResponseEntity<List<CourseResponse>> myCourses(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         List<Course> courses = courseService.getMyCourses(userDetails.getId());
-        return ResponseEntity.ok(courses.stream().map(this::toResponse).toList());
+        return ResponseEntity.ok(courses.stream()
+                .map(c -> toResponse(c, c.getInstructor().getId(), c.getInstructor().getFullName()))
+                .toList());
     }
 
     @GetMapping("/enrolled")
@@ -122,7 +124,7 @@ public class CourseController {
             }
 
             int progress = totalActivities > 0 ? (completedActivities * 100 / totalActivities) : 0;
-            CourseResponse response = toResponse(course);
+            CourseResponse response = toResponse(course, null, null);
             // Get enrolled count for this course
             long enrolledCount = enrollmentRepository.countByCourseId(course.getId());
             response.setEnrolledCount((int) enrolledCount);
@@ -133,9 +135,24 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseResponse> getCourse(@PathVariable UUID id) {
+    public ResponseEntity<CourseResponse> getCourse(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         Course course = courseService.getCourseWithModules(id);
-        return ResponseEntity.ok(toResponse(course));
+
+        // Authorization: published courses are readable by anyone;
+        // unpublished courses require instructor ownership or enrollment
+        if (!course.getPublished()) {
+            boolean isInstructor = userDetails != null
+                    && course.getInstructor().getId().equals(userDetails.getId());
+            boolean isEnrolled = userDetails != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userDetails.getId(), id);
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Course not found or not accessible");
+            }
+        }
+
+        return ResponseEntity.ok(toResponse(course, null, null));
     }
 
     @GetMapping("/{courseId}/lessons/{lessonId}")
@@ -213,7 +230,7 @@ public class CourseController {
                 .build();
 
         Course updated = courseService.updateCourse(id, updates, userDetails.getId());
-        return ResponseEntity.ok(toResponse(updated));
+        return ResponseEntity.ok(toResponse(updated, null, null));
     }
 
     @DeleteMapping("/{id}")
@@ -231,7 +248,16 @@ public class CourseController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID id) {
         Course published = courseService.publishCourse(id, userDetails.getId());
-        return ResponseEntity.ok(toResponse(published));
+        return ResponseEntity.ok(toResponse(published, null, null));
+    }
+
+    @PostMapping("/{id}/unpublish")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<CourseResponse> unpublishCourse(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable UUID id) {
+        Course unpublished = courseService.unpublishCourse(id, userDetails.getId());
+        return ResponseEntity.ok(toResponse(unpublished, null, null));
     }
 
     @PostMapping("/{id}/enroll")
@@ -243,14 +269,14 @@ public class CourseController {
         return ResponseEntity.ok().build();
     }
 
-    private CourseResponse toResponse(Course course) {
+    private CourseResponse toResponse(Course course, UUID instructorId, String instructorName) {
         return CourseResponse.builder()
                 .id(course.getId())
                 .title(course.getTitle())
                 .description(course.getDescription())
                 .thumbnailUrl(course.getThumbnailUrl())
-                .instructorId(course.getInstructor().getId().toString())
-                .instructorName(course.getInstructor().getFullName())
+                .instructorId(instructorId != null ? instructorId.toString() : null)
+                .instructorName(instructorName)
                 .published(course.getPublished())
                 .moduleCount(course.getModules() != null ? course.getModules().size() : 0)
                 .createdAt(course.getCreatedAt())

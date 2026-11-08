@@ -1,3 +1,26 @@
+/* ============================================================================
+   STUDY NOTES — pages/auth/Register.tsx  (sign-up page)
+   ----------------------------------------------------------------------------
+   WHAT: Registration form. Public route (/register). Collects full name,
+         email, password, confirm password, and role (student/instructor).
+   HOW IT WORKS:
+     1. Controlled form via handleChange (single handler for all fields using
+        e.target.name).
+     2. Client validation: passwords match, password ≥ 8 chars.
+     3. Calls useAuth().register(data) → POST /auth/register with
+        { email, password, fullName, role }.
+     4. On success: role-based redirect (instructor → /instructor, student →
+        /dashboard).
+     5. Error extraction uses a complex ternary (QA LOW finding — simplify
+       with optional chaining when you touch this file).
+   WHERE THE API CONTRACT LIVES: POST /auth/register (backend AuthController),
+     response shape = AuthResponse { accessToken, refreshToken, user }.
+   WHAT TO CHANGE FOR THE NEW UI:
+     • Keep the logic; restyle to the new design system (centered card,
+       segmented role control instead of a plain <select>, inline validation).
+     • QA LOW: replace the err.message extraction ternary with:
+         const message = err.response?.data?.message ?? 'Registration failed. Please try again.'
+   ============================================================================ */
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
@@ -65,19 +88,19 @@ export function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center page-container px-4 py-12">
+      <Card variant="elevated" className="w-full max-w-md">
+        <CardHeader className="text-center pb-6">
+          <div className="mx-auto mb-4 w-12 h-12 gradient-brand rounded-lg flex items-center justify-center">
             <BookOpen className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
-          <p className="text-gray-500 mt-1">Join AktiboLMS and start learning</p>
+          <h1 className="text-2xl font-bold text-fg-primary">Create an account</h1>
+          <p className="text-fg-secondary mt-1">Join AktiboLMS and start learning</p>
         </CardHeader>
-        <CardBody>
+        <CardBody className="space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+              <div className="flex items-center gap-2 p-3 rounded-lg animate-slide-down bg-error-50 border border-error-500/20 text-error-600 dark:bg-error-500/10 dark:border-error-500/30 dark:text-error-400 text-sm">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 <span>{error}</span>
               </div>
@@ -111,7 +134,7 @@ export function Register() {
               onChange={handleChange}
               placeholder="••••••••"
               required
-              helperText="At least 8 characters"
+              hint="At least 8 characters"
             />
 
             <Input
@@ -124,29 +147,27 @@ export function Register() {
               required
             />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                I am a
-              </label>
+            <div className="input-wrapper">
+              <label className="label">I am a</label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="input appearance-none"
               >
                 <option value="student">Student</option>
                 <option value="instructor">Instructor</option>
               </select>
             </div>
 
-            <Button type="submit" className="w-full" loading={loading}>
+            <Button type="submit" className="w-full" size="md" loading={loading}>
               Create account
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-fg-tertiary">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-600 hover:text-primary-500 font-medium">
+            <Link to="/login" className="font-medium text-brand-600 dark:text-brand-400 hover:underline">
               Sign in
             </Link>
           </p>

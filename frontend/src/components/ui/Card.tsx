@@ -1,19 +1,62 @@
 import { HTMLAttributes, forwardRef, memo } from 'react'
 import { clsx } from 'clsx'
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {}
+/* ============================================================================
+   STUDY NOTES — components/ui/Card.tsx  (design-system card)
+   ----------------------------------------------------------------------------
+   WHAT: Card + CardHeader + CardBody + CardFooter, all forwardRef + memoized.
+         The main content container used on dashboards, course pages, and auth
+         forms.
+   HOW IT WORKS:
+     1. Each sub-component forwards a ref and merges className via clsx.
+     2. Default: bg-white, rounded-xl, shadow-sm, 1px border gray-100.
+     3. CardBody is plain padding; CardHeader/CardFooter add bordered sections.
+   WHERE THE API CONTRACT LIVES: none here (pure UI).
+   WHAT TO CHANGE FOR THE NEW UI:
+     • Restyle surface colors: bg-white → new --bg-surface token (dark theme),
+       border-gray-100 → --border, shadow-sm → new shadow scale.
+     • Keep all four sub-components memoized (good practice already in place).
+     • Add variants if the new design needs them (e.g. 'elevated', 'outlined',
+       'accent-border' — see the worktree index.css card system for the token
+       naming pattern).
+   ============================================================================ */
 
-const CardComponent = forwardRef<HTMLDivElement, CardProps>(({ className, children, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={clsx('bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden', className)}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-})
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'bordered' | 'elevated' | 'outlined'
+  accent?: 'brand' | 'success' | 'warning' | 'error' | 'info'
+  interactive?: boolean
+}
+
+const CardComponent = forwardRef<HTMLDivElement, CardProps>(
+  ({ className, children, variant = 'default', accent, interactive, ...props }, ref) => {
+    const variantClasses = {
+      default: 'card',
+      bordered: 'card card-bordered',
+      elevated: 'card card-elevated',
+      outlined: 'card card-outlined',
+    }
+
+    const accentClasses = {
+      brand: 'card-accent-border',
+      success: 'card-accent-border-success',
+      warning: 'card-accent-border-warning',
+      error: 'card-accent-border-error',
+      info: 'card-accent-border-info',
+    }
+
+    const interactiveClass = interactive ? 'card-interactive' : ''
+
+    return (
+      <div
+        ref={ref}
+        className={clsx(variantClasses[variant], accent && accentClasses[accent], interactiveClass, className)}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  }
+)
 
 const Card = memo(CardComponent)
 Card.displayName = 'Card'
@@ -21,11 +64,7 @@ Card.displayName = 'Card'
 const CardHeaderComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={clsx('px-6 py-4 border-b border-gray-100', className)}
-        {...props}
-      >
+      <div ref={ref} className={clsx('card-header', className)} {...props}>
         {children}
       </div>
     )
@@ -38,11 +77,7 @@ CardHeader.displayName = 'CardHeader'
 const CardBodyComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={clsx('p-6', className)}
-        {...props}
-      >
+      <div ref={ref} className={clsx('card-body', className)} {...props}>
         {children}
       </div>
     )
@@ -55,11 +90,7 @@ CardBody.displayName = 'CardBody'
 const CardFooterComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={clsx('px-6 py-4 border-t border-gray-100 bg-gray-50', className)}
-        {...props}
-      >
+      <div ref={ref} className={clsx('card-footer', className)} {...props}>
         {children}
       </div>
     )

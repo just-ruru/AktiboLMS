@@ -2,23 +2,24 @@ import { HTMLAttributes, forwardRef, memo } from 'react'
 import { clsx } from 'clsx'
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: 'primary' | 'success' | 'warning' | 'danger' | 'gray'
+  variant?: 'primary' | 'success' | 'warning' | 'error' | 'info' | 'gray'
 }
 
 const BadgeComponent = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'primary', children, ...props }, ref) => {
-    const variants = {
-      primary: 'bg-primary-100 text-primary-800',
-      success: 'bg-green-100 text-green-800',
-      warning: 'bg-yellow-100 text-yellow-800',
-      danger: 'bg-red-100 text-red-800',
-      gray: 'bg-gray-100 text-gray-800',
+    const variantClasses = {
+      primary: 'badge-primary',
+      success: 'badge-success',
+      warning: 'badge-warning',
+      error: 'badge-error',
+      info: 'badge-info',
+      gray: 'badge-gray',
     }
 
     return (
       <span
         ref={ref}
-        className={clsx('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium', variants[variant], className)}
+        className={clsx('badge', variantClasses[variant], className)}
         {...props}
       >
         {children}

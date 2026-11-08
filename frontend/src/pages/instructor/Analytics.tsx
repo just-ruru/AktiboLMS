@@ -34,7 +34,7 @@ export function InstructorAnalytics() {
     switch (status) {
       case 'active': return { variant: 'success' as const, label: 'Active' }
       case 'struggling': return { variant: 'warning' as const, label: 'Struggling' }
-      case 'at_risk': return { variant: 'danger' as const, label: 'At Risk' }
+      case 'at_risk': return { variant: 'error' as const, label: 'At Risk' }
       default: return { variant: 'gray' as const, label: 'Unknown' }
     }
   }
@@ -42,59 +42,59 @@ export function InstructorAnalytics() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Course Analytics</h1>
-        <p className="text-gray-500 mt-1">Track student performance and identify areas for improvement</p>
+        <h1 className="text-2xl font-bold text-fg-primary">Course Analytics</h1>
+        <p className="text-fg-secondary mt-1">Track student performance and identify areas for improvement</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-4">
-        <Card>
+        <Card variant="bordered" accent="brand">
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Students</p>
-                <p className="text-3xl font-bold text-gray-900">{mockAnalytics.totalStudents}</p>
+                <p className="text-sm font-medium text-fg-secondary">Total Students</p>
+                <p className="text-3xl font-bold text-fg-primary">{mockAnalytics.totalStudents}</p>
               </div>
-              <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary-600" />
+              <div className="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-brand-600 dark:text-brand-400" />
               </div>
             </div>
           </CardBody>
         </Card>
-        <Card>
+        <Card variant="bordered" accent="success">
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Active This Week</p>
-                <p className="text-3xl font-bold text-gray-900">{mockAnalytics.activeStudents}</p>
+                <p className="text-sm font-medium text-fg-secondary">Active This Week</p>
+                <p className="text-3xl font-bold text-fg-primary">{mockAnalytics.activeStudents}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-success-50 dark:bg-success-500/10 rounded-xl flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-success-600 dark:text-success-500" />
               </div>
             </div>
           </CardBody>
         </Card>
-        <Card>
+        <Card variant="bordered" accent="info">
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Completion Rate</p>
-                <p className="text-3xl font-bold text-gray-900">{mockAnalytics.completionRate}%</p>
+                <p className="text-sm font-medium text-fg-secondary">Completion Rate</p>
+                <p className="text-3xl font-bold text-fg-primary">{mockAnalytics.completionRate}%</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-info-50 dark:bg-info-500/10 rounded-xl flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-info-600 dark:text-info-500" />
               </div>
             </div>
           </CardBody>
         </Card>
-        <Card>
+        <Card variant="bordered" accent="warning">
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Avg. Score</p>
-                <p className="text-3xl font-bold text-gray-900">{mockAnalytics.averageScore}%</p>
+                <p className="text-sm font-medium text-fg-secondary">Avg. Score</p>
+                <p className="text-3xl font-bold text-fg-primary">{mockAnalytics.averageScore}%</p>
               </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                <BarChart2 className="w-6 h-6 text-yellow-600" />
+              <div className="w-12 h-12 bg-warning-50 dark:bg-warning-500/10 rounded-xl flex items-center justify-center">
+                <BarChart2 className="w-6 h-6 text-warning-600 dark:text-warning-500" />
               </div>
             </div>
           </CardBody>
@@ -102,9 +102,9 @@ export function InstructorAnalytics() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card variant="bordered">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-fg-primary flex items-center gap-2">
               <BarChart2 className="w-5 h-5" />
               Activity Performance
             </h2>
@@ -112,42 +112,42 @@ export function InstructorAnalytics() {
           <CardBody>
             <div className="space-y-4">
               {mockActivityStats.map((stat, index) => (
-                <div key={index} className="p-4 bg-gray-50 rounded-lg">
+                <div key={index} className="p-4 bg-tertiary rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        stat.type === 'code' ? 'bg-blue-100' : 'bg-yellow-100'
+                        stat.type === 'code' ? 'bg-brand-100 dark:bg-brand-900/30' : 'bg-warning-50 dark:bg-warning-500/10'
                       }`}>
                         {stat.type === 'code' ? (
-                          <BarChart2 className="w-4 h-4 text-blue-600" />
+                          <BarChart2 className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                         ) : (
-                          <CheckCircle className="w-4 h-4 text-yellow-600" />
+                          <CheckCircle className="w-4 h-4 text-warning-600 dark:text-warning-500" />
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{stat.activity}</p>
-                        <p className="text-sm text-gray-500 capitalize">{stat.type}</p>
+                        <p className="font-medium text-fg-primary">{stat.activity}</p>
+                        <p className="text-sm text-fg-tertiary capitalize">{stat.type}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-gray-900">{stat.avgScore}%</p>
-                      <p className="text-xs text-gray-500">avg score</p>
+                      <p className="font-bold text-fg-primary">{stat.avgScore}%</p>
+                      <p className="text-xs text-fg-tertiary">avg score</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">
+                    <span className="text-fg-tertiary">
                       {stat.completions}/{stat.attempts} completed ({Math.round(stat.completions/stat.attempts*100)}%)
                     </span>
                     {stat.commonIssue && (
-                      <span className="flex items-center gap-1 text-orange-600">
+                      <span className="flex items-center gap-1 text-warning-600 dark:text-warning-400">
                         <AlertCircle className="w-3.5 h-3.5" />
                         {stat.commonIssue}
                       </span>
                     )}
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div className="w-full bg-border-primary rounded-full h-2 mt-2">
                     <div
-                      className="bg-primary-600 h-2 rounded-full"
+                      className="bg-brand-600 h-2 rounded-full"
                       style={{ width: `${Math.round(stat.completions/stat.attempts*100)}%` }}
                     />
                   </div>
@@ -157,9 +157,9 @@ export function InstructorAnalytics() {
           </CardBody>
         </Card>
 
-        <Card>
+        <Card variant="bordered">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-fg-primary flex items-center gap-2">
               <Users className="w-5 h-5" />
               Student Progress
             </h2>
@@ -167,41 +167,41 @@ export function InstructorAnalytics() {
           <CardBody>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg. Score</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Active</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <thead>
+                  <tr className="border-b border-border-primary bg-tertiary/50">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-fg-tertiary uppercase tracking-wider">Student</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-fg-tertiary uppercase tracking-wider">Progress</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-fg-tertiary uppercase tracking-wider">Avg. Score</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-fg-tertiary uppercase tracking-wider">Last Active</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-fg-tertiary uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-border-primary">
                   {mockStudentProgress.map((student, index) => {
                     const badge = getStatusBadge(student.status)
                     return (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={index} className="hover:bg-tertiary/30 transition-colors">
                         <td className="px-4 py-4">
                           <div>
-                            <p className="font-medium text-gray-900">{student.name}</p>
-                            <p className="text-sm text-gray-500">{student.email}</p>
+                            <p className="font-medium text-fg-primary">{student.name}</p>
+                            <p className="text-sm text-fg-tertiary">{student.email}</p>
                           </div>
                         </td>
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2">
-                            <div className="w-20 bg-gray-200 rounded-full h-2">
+                            <div className="w-20 bg-border-primary rounded-full h-2">
                               <div
                                 className={`h-2 rounded-full ${
-                                  student.progress > 70 ? 'bg-green-600' : student.progress > 40 ? 'bg-yellow-600' : 'bg-red-600'
+                                  student.progress > 70 ? 'bg-success-600' : student.progress > 40 ? 'bg-warning-600' : 'bg-error-600'
                                 }`}
                                 style={{ width: `${student.progress}%` }}
                               />
                             </div>
-                            <span className="text-sm text-gray-500">{student.progress}%</span>
+                            <span className="text-sm text-fg-tertiary">{student.progress}%</span>
                           </div>
                         </td>
-                        <td className="px-4 py-4 text-gray-900">{student.avgScore}%</td>
-                        <td className="px-4 py-4 text-sm text-gray-500">{student.lastActive}</td>
+                        <td className="px-4 py-4 text-fg-primary">{student.avgScore}%</td>
+                        <td className="px-4 py-4 text-sm text-fg-tertiary">{student.lastActive}</td>
                         <td className="px-4 py-4">
                           <Badge variant={badge.variant}>{badge.label}</Badge>
                         </td>

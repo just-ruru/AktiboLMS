@@ -43,7 +43,7 @@ export function StudentCatalog() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-center min-h-[300px]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-600 dark:text-brand-400" />
         </div>
       </div>
     )
@@ -53,9 +53,9 @@ export function StudentCatalog() {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
-          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">Unable to load courses</h3>
-          <p className="text-gray-500 mt-1">Please try again later</p>
+          <BookOpen className="w-12 h-12 text-fg-tertiary mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-fg-primary">Unable to load courses</h3>
+          <p className="text-fg-tertiary mt-1">Please try again later</p>
         </div>
       </div>
     )
@@ -64,19 +64,19 @@ export function StudentCatalog() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Course Catalog</h1>
-        <p className="text-gray-500">Browse available courses and enroll to start learning</p>
+        <h1 className="text-2xl font-bold text-fg-primary">Course Catalog</h1>
+        <p className="text-fg-secondary">Browse available courses and enroll to start learning</p>
       </div>
 
       <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-fg-tertiary" />
           <input
             type="text"
             placeholder="Search courses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="pl-10 pr-4 py-2 input w-full"
           />
         </div>
         <Button type="submit" variant="outline">
@@ -86,13 +86,13 @@ export function StudentCatalog() {
       </form>
 
       {courses.length === 0 ? (
-        <Card>
+        <Card variant="bordered">
           <CardBody className="py-12 text-center">
-            <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">
+            <BookOpen className="w-12 h-12 text-fg-tertiary mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-fg-primary">
               {search ? 'No courses found' : 'No courses available'}
             </h3>
-            <p className="text-gray-500 mt-1">
+            <p className="text-fg-tertiary mt-1">
               {search
                 ? 'Try adjusting your search'
                 : 'Check back later for new courses'}
@@ -104,16 +104,16 @@ export function StudentCatalog() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {courses.map((course) => (
               <Link key={course.id} to={`/courses/${course.id}`} className="block">
-                <Card className="h-full hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                <Card variant="bordered" className="h-full hover:shadow-lg transition-shadow">
+                  <div className="aspect-video bg-tertiary relative overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <BookOpen className="w-12 h-12 text-gray-300" />
+                      <BookOpen className="w-12 h-12 text-fg-tertiary" />
                     </div>
                   </div>
                   <CardBody className="p-5">
-                    <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">{course.title}</h3>
-                    <p className="text-sm text-gray-500 mb-3 line-clamp-2">{course.description || 'No description'}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
+                    <h3 className="font-semibold text-fg-primary mb-1 line-clamp-1">{course.title}</h3>
+                    <p className="text-sm text-fg-tertiary mb-3 line-clamp-2">{course.description || 'No description'}</p>
+                    <div className="flex items-center gap-4 text-xs text-fg-tertiary mb-3">
                       <span className="flex items-center gap-1">{course.instructorName || 'Unknown Instructor'}</span>
                       <span className="flex items-center gap-1">{course.moduleCount || 0} modules</span>
                       {course.enrolledCount !== undefined && (
@@ -150,7 +150,7 @@ export function StudentCatalog() {
               >
                 Previous
               </Button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-fg-tertiary">
                 Page {currentPage + 1} of {totalPages} ({totalElements} courses)
               </span>
               <Button

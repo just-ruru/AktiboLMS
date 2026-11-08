@@ -14,15 +14,19 @@ E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\ak
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\controller\InstructorAnalyticsController.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\request\QuizSubmitRequest.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\response\LessonResponse.java
+E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\controller\LessonByIdController.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\service\CodeExecutionService.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\request\CourseRequest.java
+E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\controller\ModuleByIdController.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\request\LessonRequest.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\service\InstructorAnalyticsService.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\service\UserService.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\repository\EnrollmentRepository.java
+E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\response\SubmissionSummary.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\entity\Lesson.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\controller\ModuleController.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\entity\QuizAttempt.java
+E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\request\CodeExecutionRequest.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\request\CodeSubmitRequest.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\entity\ActivityProgress.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\entity\ContentBlock.java
@@ -56,6 +60,7 @@ E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\ak
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\auth\AuthResponse.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\repository\UserRepository.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\security\CustomUserDetailsService.java
+E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\controller\ContentBlockByIdController.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\repository\RefreshTokenRepository.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\request\ContentBlockRequest.java
 E:\KAiRU\00 - Brain\Programming\AktiboLMS\AktiboLMS\backend\src\main\java\com\aktibolms\dto\request\ModuleRequest.java

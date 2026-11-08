@@ -4,6 +4,10 @@ import com.aktibolms.entity.Course;
 import com.aktibolms.dto.request.ContentBlockRequest;
 import com.aktibolms.dto.request.LessonRequest;
 import com.aktibolms.dto.request.ReorderRequest;
+import com.aktibolms.dto.response.ActivityResponse;
+import com.aktibolms.dto.response.ContentBlockResponse;
+import com.aktibolms.dto.response.LessonResponse;
+import com.aktibolms.entity.Activity;
 import com.aktibolms.entity.ContentBlock;
 import com.aktibolms.entity.Enrollment;
 import com.aktibolms.entity.Lesson;
@@ -28,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -142,14 +147,16 @@ public class CourseService {
     public Module updateModule(UUID moduleId, Module updates, UUID instructorId) {
         Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new IllegalArgumentException("Module not found"));
-        
+
         if (!module.getCourse().getInstructor().getId().equals(instructorId)) {
             throw new SecurityException("Not authorized to update this module");
         }
-        
+
         module.setTitle(updates.getTitle());
         module.setDescription(updates.getDescription());
-        module.setOrderIndex(updates.getOrderIndex());
+        if (updates.getOrderIndex() != null) {
+            module.setOrderIndex(updates.getOrderIndex());
+        }
         return moduleRepository.save(module);
     }
 
@@ -262,6 +269,77 @@ public class CourseService {
         }
 
         lessonRepository.delete(lesson);
+    }
+
+    /* ---------- Lesson by id (top-level endpoint) ---------- */
+
+    public LessonResponse getLessonById(UUID lessonId, UUID userId) {
+        Lesson lesson = lessonRepository.findByIdWithContentBlocksAndActivities(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+
+        Course course = lesson.getModule().getCourse();
+        if (!course.getPublished()) {
+            boolean isInstructor = userId != null && course.getInstructor().getId().equals(userId);
+            boolean isEnrolled = userId != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userId, course.getId());
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Lesson not found or not accessible");
+            }
+        }
+
+        return toLessonResponse(lesson);
+    }
+
+    private LessonResponse toLessonResponse(Lesson lesson) {
+        List<ContentBlock> blocks = lesson.getContentBlocks() != null ? lesson.getContentBlocks() : List.of();
+        List<Activity> activities = lesson.getActivities() != null ? lesson.getActivities() : List.of();
+        return LessonResponse.builder()
+                .id(lesson.getId())
+                .title(lesson.getTitle())
+                .description(lesson.getDescription())
+                .orderIndex(lesson.getOrderIndex())
+                .moduleId(lesson.getModule().getId())
+                .contentBlocks(blocks.stream().map(this::toContentBlockResponse).collect(Collectors.toList()))
+                .activities(activities.stream().map(this::toActivityResponse).collect(Collectors.toList()))
+                .createdAt(lesson.getCreatedAt())
+                .build();
+    }
+
+    private ContentBlockResponse toContentBlockResponse(ContentBlock block) {
+        return ContentBlockResponse.builder()
+                .id(block.getId())
+                .type(block.getType().name())
+                .content(block.getContentJson())
+                .orderIndex(block.getOrderIndex())
+                .lessonId(block.getLesson().getId())
+                .createdAt(block.getCreatedAt())
+                .build();
+    }
+
+    private ActivityResponse toActivityResponse(Activity activity) {
+        return ActivityResponse.builder()
+                .id(activity.getId())
+                .title(activity.getType().name())
+                .type(activity.getType().name())
+                .config(activity.getConfigJson())
+                .orderIndex(activity.getOrderIndex())
+                .points(activity.getPoints())
+                .lessonId(activity.getLesson().getId())
+                .createdAt(activity.getCreatedAt())
+                .updatedAt(activity.getUpdatedAt())
+                .build();
+    }
+
+    public UUID findModuleIdByLessonId(UUID lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+        return lesson.getModule().getId();
+    }
+
+    public UUID findLessonIdByContentBlockId(UUID blockId) {
+        ContentBlock block = contentBlockRepository.findById(blockId)
+                .orElseThrow(() -> new IllegalArgumentException("Content block not found"));
+        return block.getLesson().getId();
     }
 
     public void reorderLessons(UUID moduleId, List<ReorderRequest.Item> items, UUID instructorId) {

@@ -5,8 +5,38 @@ import { Card, CardBody, CardHeader } from '../ui/Card'
 import { Badge } from '../ui/Badge'
 import { CheckCircle, XCircle, AlertCircle, Play, RotateCcw } from 'lucide-react'
 import { clsx } from 'clsx'
-import { api } from '../../services/api'
 import { Activity, ActivityProgress, QuizQuestion } from '../../types'
+
+/* ============================================================================
+   STUDY NOTES — components/lesson/ActivityBlock.tsx  (interactive activity renderer)
+   ----------------------------------------------------------------------------
+   WHAT: Renders a single interactive activity within a lesson. Supports two
+         types: code_exercise (Monaco editor + run/submit) and quiz
+         (multiple-choice + instant feedback). Used by StudentLessonView.
+   SURFACE (per claude-design): Operate — the student is acting on the
+         activity. Action affordances (run, submit, reset) dominate.
+   HOW IT WORKS:
+     1. Parses activity.config JSON (with try/catch fallback for safety).
+     2. For code_exercise: renders Monaco editor, "Run Code" button, "Submit
+        Solution" button, progress badge, score display.
+     3. For quiz: renders question cards with radio options, "Submit Quiz"
+        button, answer reveal with explanations.
+     4. onSubmit callback (provided by parent LessonView) handles the actual
+        API call to POST /activities/{id}/code/submit or /quiz/submit.
+   WHERE THE API CONTRACT LIVES:
+     • POST /activities/{id}/code/submit (backend #38) — execute code + save
+     • POST /activities/{id}/quiz/submit (backend #39) — submit quiz answers
+   WHAT TO CHANGE FOR THE NEW UI:
+     • The "Run Code" button calls api.post('/code/execute', ...) which was a
+       PUBLIC endpoint that has been REMOVED from the backend (security fix).
+       Code execution now only happens through the authenticated submit flow.
+       The runCode() function will need to be updated to use the submit
+       endpoint or removed.
+     • SubmissionData type is exported and shared with LessonView via import.
+     • JSON.parse has try/catch fallback (was a QA finding — already fixed).
+   QA LINK: qa-report.json — JSON.parse try/catch added; SubmissionData type
+            extracted and exported (was 'any').
+   ============================================================================ */
 
 interface CodeSubmissionData {
   code: string
@@ -17,7 +47,7 @@ interface QuizSubmissionData {
   answers: number[]
 }
 
-type SubmissionData = CodeSubmissionData | QuizSubmissionData
+export type SubmissionData = CodeSubmissionData | QuizSubmissionData
 
 interface ActivityBlockProps {
   activity: Activity
@@ -71,25 +101,9 @@ export function ActivityBlock({ activity, progress, onSubmit, readOnly = false }
 
   if (type === 'code_exercise') {
       const [code, setCode] = useState(parsedConfig.starterCode || '')
-      const [output, setOutput] = useState<string | undefined>(undefined)
-      const [error, setError] = useState<string | undefined>(undefined)
-      const [running, setRunning] = useState(false)
 
       const runCode = async () => {
-        setRunning(true)
-        setOutput(undefined)
-        setError(undefined)
-        try {
-          const response = await api.post('/code/execute', {
-            code,
-            language: parsedConfig.language || 'python',
-          })
-          setOutput(response.data.output)
-        } catch (err: any) {
-          setError(err.response?.data?.message || 'Execution failed')
-        } finally {
-          setRunning(false)
-        }
+        await handleSubmit({ code, language: parsedConfig.language || 'python' })
       }
 
       const submitCode = async () => {
@@ -103,7 +117,7 @@ export function ActivityBlock({ activity, progress, onSubmit, readOnly = false }
               <h3 className="text-lg font-semibold text-gray-900">Code Exercise</h3>
               <p className="text-sm text-gray-500 mt-1">{parsedConfig.language || 'python'}</p>
             </div>
-            <Badge variant={statusColors[progress?.status || 'not_started'] as 'primary' | 'danger' | 'success' | 'warning' | 'gray'}>
+            <Badge variant={statusColors[progress?.status || 'not_started'] as 'primary' | 'error' | 'success' | 'warning' | 'gray'}>
               {statusLabels[progress?.status || 'not_started']}
             </Badge>
           </CardHeader>
@@ -113,10 +127,6 @@ export function ActivityBlock({ activity, progress, onSubmit, readOnly = false }
               onChange={setCode}
               language={parsedConfig.language || 'python'}
               readOnly={readOnly}
-              onRun={runCode}
-              running={running}
-              output={output}
-              error={error}
               height="350px"
             />
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
@@ -127,7 +137,7 @@ export function ActivityBlock({ activity, progress, onSubmit, readOnly = false }
               <Button
                 variant="primary"
                 onClick={runCode}
-                disabled={running || readOnly}
+                disabled={readOnly}
                 className="gap-2"
               >
                 <Play className="w-4 h-4" />
@@ -187,7 +197,7 @@ export function ActivityBlock({ activity, progress, onSubmit, readOnly = false }
             <h3 className="text-lg font-semibold text-gray-900">Quiz</h3>
             <p className="text-sm text-gray-500 mt-1">{questions.length} questions</p>
           </div>
-          <Badge variant={statusColors[progress?.status || 'not_started'] as 'primary' | 'danger' | 'success' | 'warning' | 'gray'}>
+          <Badge variant={statusColors[progress?.status || 'not_started'] as 'primary' | 'error' | 'success' | 'warning' | 'gray'}>
             {statusLabels[progress?.status || 'not_started']}
           </Badge>
         </CardHeader>

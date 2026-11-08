@@ -7,8 +7,12 @@ import com.aktibolms.dto.response.ContentBlockResponse;
 import com.aktibolms.dto.response.LessonResponse;
 import com.aktibolms.entity.Activity;
 import com.aktibolms.entity.ContentBlock;
+import com.aktibolms.entity.Course;
 import com.aktibolms.entity.Lesson;
+import com.aktibolms.entity.Module;
+import com.aktibolms.repository.EnrollmentRepository;
 import com.aktibolms.repository.LessonRepository;
+import com.aktibolms.repository.ModuleRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import jakarta.validation.Valid;
@@ -29,15 +33,54 @@ public class LessonController {
 
     private final CourseService courseService;
     private final LessonRepository lessonRepository;
+    private final ModuleRepository moduleRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @GetMapping
-    public ResponseEntity<List<LessonResponse>> listLessons(@PathVariable UUID moduleId) {
+    public ResponseEntity<List<LessonResponse>> listLessons(
+            @PathVariable UUID moduleId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Module module = moduleRepository.findByIdWithCourse(moduleId)
+                .orElseThrow(() -> new IllegalArgumentException("Module not found"));
+        Course course = module.getCourse();
+
+        // Authorization: published courses are readable by anyone;
+        // unpublished courses require instructor ownership or enrollment
+        if (!course.getPublished()) {
+            boolean isInstructor = userDetails != null
+                    && course.getInstructor().getId().equals(userDetails.getId());
+            boolean isEnrolled = userDetails != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userDetails.getId(), course.getId());
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Course not found or not accessible");
+            }
+        }
+
         List<Lesson> lessons = lessonRepository.findByModuleIdOrderByOrderIndexAsc(moduleId);
         return ResponseEntity.ok(lessons.stream().map(this::toResponse).toList());
     }
 
     @GetMapping("/{lessonId}")
-    public ResponseEntity<LessonResponse> getLesson(@PathVariable UUID moduleId, @PathVariable UUID lessonId) {
+    public ResponseEntity<LessonResponse> getLesson(
+            @PathVariable UUID moduleId,
+            @PathVariable UUID lessonId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Module module = moduleRepository.findByIdWithCourse(moduleId)
+                .orElseThrow(() -> new IllegalArgumentException("Module not found"));
+        Course course = module.getCourse();
+
+        // Authorization: published courses are readable by anyone;
+        // unpublished courses require instructor ownership or enrollment
+        if (!course.getPublished()) {
+            boolean isInstructor = userDetails != null
+                    && course.getInstructor().getId().equals(userDetails.getId());
+            boolean isEnrolled = userDetails != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userDetails.getId(), course.getId());
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Course not found or not accessible");
+            }
+        }
+
         Lesson lesson = lessonRepository.findByIdWithContentBlocksAndActivities(lessonId)
                 .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
         return ResponseEntity.ok(toResponse(lesson));
@@ -83,9 +126,9 @@ public class LessonController {
     public ResponseEntity<Void> reorderLessons(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID moduleId,
-            @RequestBody ReorderRequest request) {
+            @RequestBody List<ReorderRequest.Item> items) {
 
-        courseService.reorderLessons(moduleId, request.getItems(), userDetails.getId());
+        courseService.reorderLessons(moduleId, items, userDetails.getId());
         return ResponseEntity.ok().build();
     }
 

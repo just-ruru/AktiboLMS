@@ -100,17 +100,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<MessageResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
-        var cause = ex.getMostSpecificCause();
-        String detail = cause != null ? cause.getMessage() : ex.getMessage();
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(new MessageResponse("Data integrity violation: " + detail));
+                .body(new MessageResponse("Data integrity violation. Please check your input and try again."));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<MessageResponse> handleGlobal(Exception ex, WebRequest request) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new MessageResponse("Internal server error: " + ex.getMessage()));
+                .body(new MessageResponse("An unexpected error occurred. Please try again later."));
     }
 }

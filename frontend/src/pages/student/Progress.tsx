@@ -29,7 +29,7 @@ export function StudentProgress() {
     return (
       <div className="space-y-8">
         <div className="flex items-center justify-center min-h-[300px]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-600 dark:text-brand-400" />
         </div>
       </div>
     )
@@ -39,9 +39,9 @@ export function StudentProgress() {
     return (
       <div className="space-y-8">
         <div className="text-center py-12">
-          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">Unable to load progress</h3>
-          <p className="text-gray-500 mt-1">Please try again later</p>
+          <BookOpen className="w-12 h-12 text-fg-tertiary mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-fg-primary">Unable to load progress</h3>
+          <p className="text-fg-tertiary mt-1">Please try again later</p>
         </div>
       </div>
     )
@@ -50,46 +50,46 @@ export function StudentProgress() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Your Progress</h1>
-        <p className="text-gray-500 mt-1">Track your learning journey</p>
+        <h1 className="text-2xl font-bold text-fg-primary">Your Progress</h1>
+        <p className="text-fg-secondary mt-1">Track your learning journey</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <Card>
+        <Card variant="bordered" accent="brand">
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Active Courses</p>
-                <p className="text-3xl font-bold text-gray-900">{totalActiveCourses}</p>
+                <p className="text-sm font-medium text-fg-secondary">Active Courses</p>
+                <p className="text-3xl font-bold text-fg-primary">{totalActiveCourses}</p>
               </div>
-              <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-primary-600" />
+              <div className="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-brand-600 dark:text-brand-400" />
               </div>
             </div>
           </CardBody>
         </Card>
-        <Card>
+        <Card variant="bordered" accent="success">
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Lessons Completed</p>
-                <p className="text-3xl font-bold text-gray-900">{totalLessonsCompleted}</p>
+                <p className="text-sm font-medium text-fg-secondary">Lessons Completed</p>
+                <p className="text-3xl font-bold text-fg-primary">{totalLessonsCompleted}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-success-50 dark:bg-success-500/10 rounded-xl flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-success-600 dark:text-success-500" />
               </div>
             </div>
           </CardBody>
         </Card>
-        <Card>
+        <Card variant="bordered" accent="info">
           <CardBody className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Avg. Progress</p>
-                <p className="text-3xl font-bold text-gray-900">{avgProgress}%</p>
+                <p className="text-sm font-medium text-fg-secondary">Avg. Progress</p>
+                <p className="text-3xl font-bold text-fg-primary">{avgProgress}%</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-info-50 dark:bg-info-500/10 rounded-xl flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-info-600 dark:text-info-500" />
               </div>
             </div>
           </CardBody>
@@ -97,9 +97,9 @@ export function StudentProgress() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card variant="bordered">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-fg-primary flex items-center gap-2">
               <BarChart2 className="w-5 h-5" />
               Course Progress
             </h2>
@@ -107,9 +107,9 @@ export function StudentProgress() {
           <CardBody>
             {courses.length === 0 ? (
               <div className="text-center py-8">
-                <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900">No courses yet</h3>
-                <p className="text-gray-500 mt-1">Enroll in courses to track your progress</p>
+                <BookOpen className="w-12 h-12 text-fg-tertiary mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-fg-primary">No courses yet</h3>
+                <p className="text-fg-tertiary mt-1">Enroll in courses to track your progress</p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -119,21 +119,21 @@ export function StudentProgress() {
                     <div key={course.id}>
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                            <BookOpen className="w-5 h-5 text-primary-600" />
+                          <div className="w-10 h-10 bg-brand-100 dark:bg-brand-900/30 rounded-lg flex items-center justify-center">
+                            <BookOpen className="w-5 h-5 text-brand-600 dark:text-brand-400" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{course.title}</p>
-                            <p className="text-sm text-gray-500">{course.moduleCount || 0} modules</p>
+                            <p className="font-medium text-fg-primary">{course.title}</p>
+                            <p className="text-sm text-fg-tertiary">{course.moduleCount || 0} modules</p>
                           </div>
                         </div>
                         <Badge variant={progress > 50 ? 'success' : progress > 25 ? 'primary' : 'warning'}>
                           {progress}%
                         </Badge>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-border-primary rounded-full h-2">
                         <div
-                          className="bg-primary-600 h-2 rounded-full transition-all"
+                          className="bg-brand-600 h-2 rounded-full transition-all"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -145,18 +145,18 @@ export function StudentProgress() {
           </CardBody>
         </Card>
 
-        <Card>
+        <Card variant="bordered">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-fg-primary flex items-center gap-2">
               <Clock className="w-5 h-5" />
               Recent Activity
             </h2>
           </CardHeader>
           <CardBody>
             <div className="text-center py-8">
-              <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">Activity tracking coming soon</h3>
-              <p className="text-gray-500 mt-1">Your recent activity will appear here once you start completing lessons and activities.</p>
+              <Clock className="w-12 h-12 text-fg-tertiary mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-fg-primary">Activity tracking coming soon</h3>
+              <p className="text-fg-tertiary mt-1">Your recent activity will appear here once you start completing lessons and activities.</p>
             </div>
           </CardBody>
         </Card>

@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { LogOut, Menu, X, BookOpen, BarChart2, LayoutDashboard, ChevronDown } from 'lucide-react'
 import { clsx } from 'clsx'
 import { useState } from 'react'
+import { ThemeToggleWrapper } from '../ui/ThemeToggle'
 
 export function Navbar() {
   const { user, logout } = useAuth()
@@ -20,70 +21,74 @@ export function Navbar() {
   ]
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+    <header className="navbar" aria-label="Main navigation">
+      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center gap-2" aria-label="AktiboLMS Home">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 gradient-brand rounded-lg flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900 hidden sm:block">AktiboLMS</span>
+              <span className="text-xl font-bold text-fg-primary hidden sm:block">AktiboLMS</span>
             </Link>
+
+            {/* Desktop navigation */}
+            <div className="hidden md:flex md:items-center md:gap-1">
+              {navigation.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.href}
+                  className={({ isActive }) =>
+                    clsx(
+                      'nav-link',
+                      isActive && 'nav-link-active'
+                    )
+                  }
+                >
+                  <item.icon className="w-4 h-4" aria-hidden="true" />
+                  {item.name}
+                </NavLink>
+              ))}
+            </div>
           </div>
 
-          <div className="hidden md:flex md:items-center md:gap-6">
-            {navigation.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.href}
-                className={({ isActive }) =>
-                  clsx(
-                    'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  )
-                }
-              >
-                <item.icon className="w-4 h-4" aria-hidden="true" />
-                {item.name}
-              </NavLink>
-            ))}
-          </div>
+          <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
+            <ThemeToggleWrapper />
 
-          <div className="flex items-center gap-4">
+            {/* User Menu */}
             <div className="relative">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-tertiary transition-colors"
                 aria-expanded={userMenuOpen}
                 aria-haspopup="true"
+                aria-label="User menu"
               >
-                <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center">
                   {user?.avatarUrl ? (
                     <img src={user.avatarUrl} alt="" className="w-8 h-8 rounded-full" />
                   ) : (
-                    <span className="text-sm font-medium text-primary-700">
+                    <span className="text-sm font-medium text-brand-700 dark:text-brand-300">
                       {user?.fullName?.charAt(0).toUpperCase() || 'U'}
                     </span>
                   )}
                 </div>
-                <span className="hidden sm:block text-sm font-medium text-gray-700">
+                <span className="hidden sm:block text-sm font-medium text-fg-primary">
                   {user?.fullName}
                 </span>
-                <ChevronDown className="w-4 h-4 text-gray-500" aria-hidden="true" />
+                <ChevronDown className="w-4 h-4 text-fg-tertiary" aria-hidden="true" />
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-900">{user?.fullName}</p>
-                    <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                <div className="dropdown animate-scale-in">
+                  <div className="px-4 py-2 border-b border-border-primary">
+                    <p className="text-sm font-medium text-fg-primary">{user?.fullName}</p>
+                    <p className="text-xs text-fg-tertiary capitalize">{user?.role}</p>
                   </div>
                   <button
                     onClick={() => { logout(); setUserMenuOpen(false); }}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors"
+                    className="dropdown-item w-full text-red-600 dark:text-red-400"
                   >
                     <LogOut className="w-4 h-4" aria-hidden="true" />
                     Sign out
@@ -92,9 +97,10 @@ export function Navbar() {
               )}
             </div>
 
+            {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+              className="md:hidden p-2 rounded-lg text-fg-secondary hover:bg-tertiary hover:text-fg-primary transition-colors"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
               aria-label="Toggle menu"
@@ -104,9 +110,10 @@ export function Navbar() {
           </div>
         </div>
 
+        {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div id="mobile-menu" className="md:hidden py-4 border-t border-gray-100">
-            <div className="flex flex-col gap-2">
+          <div id="mobile-menu" className="md:hidden py-4 border-t border-border-primary animate-slide-down">
+            <div className="flex flex-col gap-1">
               {navigation.map((item) => (
                 <NavLink
                   key={item.name}
@@ -114,10 +121,10 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
                     clsx(
-                      'flex items-center gap-3 px-3 py-2 rounded-lg text-base font-medium',
+                      'flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium transition-colors',
                       isActive
-                        ? 'bg-primary-50 text-primary-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        ? 'bg-brand-50 text-brand-700 dark:bg-brand-900 dark:text-brand-300'
+                        : 'text-fg-secondary hover:text-fg-primary hover:bg-tertiary'
                     )
                   }
                 >

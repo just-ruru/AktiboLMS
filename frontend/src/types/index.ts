@@ -1,3 +1,30 @@
+/* ============================================================================
+   STUDY NOTES — types/index.ts  (shared data model)
+   ----------------------------------------------------------------------------
+   WHAT: Central TypeScript interfaces that mirror the backend DTOs / domain
+         model. Every hook, component, and page should import from here
+         instead of re-declaring shapes inline.
+   HOW IT WORKS:
+     • User, Course, Module, Lesson, ContentBlock, Activity, ActivityConfig,
+       TestCase, QuizQuestion, ActivityProgress, CodeSubmission, QuizAttempt,
+       Enrollment, CourseAnalytics, ActivityAnalytics, PaginatedResponse<T>,
+       ApiError.
+     • ContentBlock.type and Activity.type are string literals matching the
+       backend CHECK constraints (TEXT/VIDEO/IMAGE/CODE_SNIPPET;
+       CODE_EXERCISE/QUIZ).
+     • ActivityConfig covers both code_exercise (language, starterCode,
+       solutionCode, testCases) and quiz (questions[]) shapes.
+   WHERE THE API CONTRACT LIVES: backend DTOs under com.aktibolms.dto and
+     controller responses; DB schema in backend/…/db/migration/V1__initial_schema.sql.
+   WHAT TO CHANGE FOR THE NEW UI:
+     • Add any new fields the new design needs (e.g. course thumbnail handling,
+       instructor name display) here so every page stays consistent.
+     • QA HIGH: User is ALSO defined in hooks/useAuth.tsx (local copy, fewer
+       fields). Import User from here and delete the duplicate in useAuth.tsx.
+     • Keep these in sync with ENDPOINT-AUDIT.md — if you change a backend
+     response DTO, update the matching interface here.
+   ============================================================================ */
+
 export interface User {
   id: string
   email: string

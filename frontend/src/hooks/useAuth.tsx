@@ -1,4 +1,36 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+
+/* ============================================================================
+   STUDY NOTES — hooks/useAuth.tsx  (authentication context)
+   ----------------------------------------------------------------------------
+   WHAT: React context that holds the signed-in user and auth actions
+         (login, register, logout, refreshUser). Provided once in main.tsx
+         and consumed by pages/components via the useAuth() hook.
+   HOW IT WORKS:
+     1. AuthProvider keeps user/loading in React state; tokens (accessToken,
+        refreshToken) live in localStorage.
+     2. On mount with a stored accessToken it calls refreshUser() →
+        GET /auth/me to hydrate the user object.
+     3. login(email, password) → POST /auth/login; register(data) →
+        POST /auth/register. Both store tokens + set the normalized user.
+     4. logout() clears localStorage + state; the axios interceptor also
+        dispatches a window "auth:logout" event on refresh failure, which
+        AuthProvider listens for.
+     5. normalizeUser() lowercases the role so role checks are case-insensitive.
+   WHERE THE API CONTRACT LIVES: POST /auth/register, POST /auth/login,
+     POST /auth/refresh, GET /auth/me (backend AuthController).
+   WHAT TO CHANGE FOR THE NEW UI:
+     • Keep the hook as-is; the new Login/Register pages call the same
+       login()/register() and handle the returned { accessToken, refreshToken,
+       user }.
+     • Role-based redirect after login already exists in Login.tsx/Register.tsx
+       (instructor → /instructor, student → /dashboard).
+     • QA HIGH: User interface is duplicated here and in types/index.ts
+       (this copy lacks avatarUrl? / createdAt). Prefer importing User from
+       types/index.ts and removing the local duplicate.
+     • QA MEDIUM: refreshUser used in useEffect without being wrapped in
+       useCallback — harmless but worth fixing when you touch this file.
+   ============================================================================ */
 import { api } from '../services/api'
 import { User } from '../types'
 

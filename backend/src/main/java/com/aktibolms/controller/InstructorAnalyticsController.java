@@ -1,6 +1,7 @@
 package com.aktibolms.controller;
 
 import com.aktibolms.dto.response.CourseAnalytics;
+import com.aktibolms.dto.response.SubmissionSummary;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.InstructorAnalyticsService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,11 +32,10 @@ public class InstructorAnalyticsController {
 
     @GetMapping("/activities/{activityId}/submissions")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Void> getActivitySubmissions(
+    public ResponseEntity<List<SubmissionSummary>> getActivitySubmissions(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID activityId) {
-        // Return all submissions for an activity (instructor only)
-        // TODO: implement with CodeSubmissionRepository and QuizAttemptRepository
-        return ResponseEntity.ok().build();
+        List<SubmissionSummary> submissions = analyticsService.getActivitySubmissions(activityId);
+        return ResponseEntity.ok(submissions);
     }
 }

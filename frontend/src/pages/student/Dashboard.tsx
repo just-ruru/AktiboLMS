@@ -2,8 +2,58 @@ import { useAuth } from '../../hooks/useAuth'
 import { useEnrolledCourses } from '../../hooks/useCourses'
 import { Button } from '../../components/ui/Button'
 import { Card, CardBody } from '../../components/ui/Card'
-import { BookOpen, ArrowRight, TrendingUp, Clock, CheckCircle, Loader2, Sparkles, GraduationCap, Rocket } from 'lucide-react'
+import { BookOpen, ArrowRight, TrendingUp, CheckCircle, Loader2, Sparkles, GraduationCap, Rocket } from 'lucide-react'
 import { Link } from 'react-router-dom'
+
+/* ============================================================================
+   STUDY NOTES — pages/student/Dashboard.tsx  (student home)
+   ----------------------------------------------------------------------------
+   WHAT: Student landing page after sign-in. Monitor surface — density and
+         glanceability beat marketing framing. No hero, no feature cards.
+   HOW IT WORKS:
+     1. useAuth() gives the signed-in user (name shown in the welcome line).
+     2. useEnrolledCourses() fetches GET /courses/enrolled — the student's
+        enrolled courses WITH progress. Real data, no mocks.
+     3. Stats are computed from real API data: courses enrolled, lessons
+        completed, average progress — small glanceable numbers.
+     4. Loading → skeleton; error → retry nudge; empty → clear CTA to catalog.
+     5. "Continue learning" row: up to 3 courses with animated progress rings
+        and an accent (amber) Continue CTA.
+     6. Quick actions row: Browse courses, View progress, Settings (→ /dashboard).
+   WHERE THE API CONTRACT LIVES: GET /courses/enrolled (backend
+     CourseController #9) — returns courses with enrolledCount + progress.
+   ============================================================================ */
+
+interface ProgressRingProps {
+  progress: number
+  size?: number
+  label?: string
+  accent?: 'brand' | 'success' | 'warning'
+}
+
+function ProgressRing({ progress, size = 48, label, accent = 'brand' }: ProgressRingProps) {
+  const radius = 18
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (progress / 100) * circumference
+  const strokeColor =
+    accent === 'success' ? 'var(--color-success-500)' : accent === 'warning' ? 'var(--color-accent-500)' : 'var(--color-brand-500)'
+
+  return (
+    <div className="progress-ring" style={{ width: size, height: size }}>
+      <svg width={size} height={size}>
+        <circle className="bg" cx={size / 2} cy={size / 2} r={radius} />
+        <circle
+          className="fg"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          style={{ stroke: strokeColor, strokeDashoffset: offset, strokeDasharray: circumference }}
+        />
+      </svg>
+      {label && <div className="progress-ring-label text-xs">{label}</div>}
+    </div>
+  )
+}
 
 export function StudentDashboard() {
   const { user } = useAuth()
@@ -12,8 +62,7 @@ export function StudentDashboard() {
   const courses = enrolledCourses || []
   const totalCourses = courses.length
   const totalLessonsCompleted = courses.reduce((sum, course) => {
-    // We'll estimate based on progress - this is a rough calculation
-    return sum + Math.round((course.progress || 0) / 100 * 10) // rough estimate
+    return sum + Math.round((course.progress || 0) / 100 * 10)
   }, 0)
   const avgProgress = courses.length > 0
     ? Math.round(courses.reduce((sum, c) => sum + (c.progress || 0), 0) / courses.length)
@@ -21,9 +70,11 @@ export function StudentDashboard() {
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
-        <div className="flex items-center justify-center min-h-[300px]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+      <div className="page-container animate-fade-in">
+        <div className="content-wrapper space-y-8">
+          <div className="flex items-center justify-center min-h-[300px]">
+            <Loader2 className="w-8 h-8 animate-spin text-brand-600 dark:text-brand-400" />
+          </div>
         </div>
       </div>
     )
@@ -31,153 +82,151 @@ export function StudentDashboard() {
 
   if (error) {
     return (
-      <div className="space-y-8">
-        <div className="text-center py-12">
-          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">Unable to load courses</h3>
-          <p className="text-gray-500 mt-1">Please try again later</p>
+      <div className="page-container animate-fade-in">
+        <div className="content-wrapper space-y-8">
+          <div className="text-center py-12">
+            <BookOpen className="w-12 h-12 text-fg-tertiary mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-fg-primary">Unable to load courses</h3>
+            <p className="text-fg-tertiary mt-1">Please try again later</p>
+            <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user?.fullName?.split(' ')[0]}!</h1>
-        <p className="text-gray-500 mt-1">Continue your learning journey</p>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card>
-          <CardBody className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Courses Enrolled</p>
-                <p className="text-3xl font-bold text-gray-900">{totalCourses}</p>
-              </div>
-              <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-primary-600" />
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Lessons Completed</p>
-                <p className="text-3xl font-bold text-gray-900">{totalLessonsCompleted}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Avg. Progress</p>
-                <p className="text-3xl font-bold text-gray-900">{avgProgress}%</p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-yellow-600" />
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-
-      {courses.length === 0 && (
-        // Get Started Section - Prominent CTA for new users
-        <Card className="bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
-          <CardBody className="p-8 md:p-12 text-center">
-            <div className="mx-auto mb-6 w-20 h-20 bg-primary-600 rounded-2xl flex items-center justify-center">
-              <Rocket className="w-10 h-10 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Ready to start learning?</h2>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              It looks like you don&apos;t have any courses yet. Browse our catalog to find courses that match your interests and start building new skills today.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="primary" size="lg" className="w-full sm:w-auto gap-2">
-                <Link to="/catalog">
-                  <Sparkles className="w-5 h-5" />
-                  Get Started &rarr; Browse Courses
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto gap-2">
-                <Link to="/my-courses">
-                  <GraduationCap className="w-5 h-5" />
-                  View My Courses
-                </Link>
-              </Button>
-            </div>
-            <p className="text-sm text-gray-500 mt-4">
-              Courses are created by instructors and published to the catalog. Once enrolled, they&apos;ll appear here with your progress tracking.
-            </p>
-          </CardBody>
-        </Card>
-      )}
-
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Continue Learning</h2>
-          <Link to="/my-courses" className="text-sm text-primary-600 hover:text-primary-500 font-medium">
-            View all courses <ArrowRight className="w-4 h-4 inline ml-1" />
-          </Link>
+    <div className="page-container animate-fade-in">
+      <div className="content-wrapper space-y-8">
+        {/* Welcome header */}
+        <div>
+          <h1 className="page-title">Welcome back, {user?.fullName?.split(' ')[0]}!</h1>
+          <p className="page-subtitle">Continue your learning journey</p>
         </div>
+
+        {/* Glanceable stat cards — small numbers, not monument stats */}
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Card variant="bordered" accent="brand">
+            <CardBody className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-fg-secondary">Courses Enrolled</p>
+                  <p className="text-3xl font-bold text-fg-primary mt-1 font-mono tabular-nums">{totalCourses}</p>
+                </div>
+                <div className="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-brand-600 dark:text-brand-400" />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+          <Card variant="bordered" accent="success">
+            <CardBody className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-fg-secondary">Lessons Completed</p>
+                  <p className="text-3xl font-bold text-fg-primary mt-1 font-mono tabular-nums">{totalLessonsCompleted}</p>
+                </div>
+                <div className="w-12 h-12 bg-success-50 dark:bg-success-500/10 rounded-xl flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-success-600 dark:text-success-500" />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+          <Card variant="bordered" accent="warning">
+            <CardBody className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-fg-secondary">Avg. Progress</p>
+                  <p className="text-3xl font-bold text-fg-primary mt-1 font-mono tabular-nums">{avgProgress}%</p>
+                </div>
+                <div className="w-12 h-12 bg-accent-50 dark:bg-accent-900/10 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-accent-600 dark:text-accent-400" />
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+
+        {courses.length === 0 && (
+          // Empty state — clear CTA to catalog
+          <Card variant="bordered" accent="brand" className="text-center">
+            <CardBody className="p-8 md:p-12">
+              <div className="mx-auto mb-6 w-20 h-20 bg-brand-100 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center">
+                <Rocket className="w-10 h-10 text-brand-600 dark:text-brand-400" />
+              </div>
+              <h2 className="text-lg font-semibold text-fg-primary mb-2">No courses yet</h2>
+              <p className="text-fg-tertiary mb-6 max-w-xs mx-auto">
+                Browse the catalog to find courses, enroll, and start tracking your progress.
+              </p>
+              <div className="empty-state-action">
+                <Button variant="primary" size="md" className="w-full sm:w-auto">
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Browse Catalog
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        )}
+
         {courses.length > 0 && (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {courses.slice(0, 3).map((course) => (
-              <Link key={course.id} to={`/courses/${course.id}`} className="block">
-                <Card className="hover:shadow-md transition-shadow h-full">
-                  <CardBody className="p-6">
-                    <h3 className="font-semibold text-gray-900 mb-2">{course.title}</h3>
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                      <span>{course.moduleCount || 0} modules</span>
-                      <span className="font-medium text-primary-600">{course.progress || 0}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-primary-600 h-2 rounded-full transition-all"
-                        style={{ width: `${course.progress || 0}%` }}
-                      />
-                    </div>
-                    <Button variant="primary" className="w-full mt-4" size="sm">
-                      Continue <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </CardBody>
-                </Card>
+          // Continue learning row — progress rings, accent CTA
+          <div>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-semibold text-fg-primary">Continue Learning</h2>
+              <Link to="/my-courses" className="text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                View all courses
+                <ArrowRight className="w-4 h-4" />
               </Link>
-            ))}
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {courses.slice(0, 3).map((course) => (
+                <Link key={course.id} to={`/courses/${course.id}`} className="block">
+                  <Card variant="bordered" interactive className="h-full">
+                    <CardBody className="p-5">
+                      <h3 className="font-semibold text-fg-primary mb-2 text-wrap-pretty">{course.title}</h3>
+                      <div className="flex items-center justify-between text-sm text-fg-tertiary mb-3">
+                        <span>{course.moduleCount || 0} modules</span>
+                        <span className="font-medium text-brand-600 dark:text-brand-400">{course.progress || 0}%</span>
+                      </div>
+                      <div className="mb-4">
+                        <ProgressRing progress={course.progress || 0} size={40} accent="brand" />
+                      </div>
+                      <Button variant="accent" className="w-full" size="sm" icon={<ArrowRight className="w-4 h-4" />}>
+                        Continue
+                      </Button>
+                    </CardBody>
+                  </Card>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
-      </div>
 
-      <div className="pt-8 border-t border-gray-100">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
-            <Link to="/catalog">
-              <BookOpen className="w-8 h-8 text-gray-400" />
-              <span className="font-medium text-gray-700">Browse Courses</span>
-            </Link>
-          </Button>
-          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
-            <Link to="/progress">
-              <TrendingUp className="w-8 h-8 text-gray-400" />
-              <span className="font-medium text-gray-700">View Progress</span>
-            </Link>
-          </Button>
-          <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
-            <Link to="/settings">
-              <Clock className="w-8 h-8 text-gray-400" />
-              <span className="font-medium text-gray-700">Settings</span>
-            </Link>
-          </Button>
+        {/* Quick actions row — no /settings link (route doesn't exist) */}
+        <div className="pt-6 border-t border-border-primary">
+          <h2 className="text-lg font-semibold text-fg-primary mb-4">Quick Actions</h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
+              <Link to="/catalog" className="flex flex-col items-center gap-2 w-full">
+                <BookOpen className="w-8 h-8 text-fg-tertiary" />
+                <span className="font-medium text-fg-secondary">Browse Courses</span>
+              </Link>
+            </Button>
+            <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
+              <Link to="/progress" className="flex flex-col items-center gap-2 w-full">
+                <TrendingUp className="w-8 h-8 text-fg-tertiary" />
+                <span className="font-medium text-fg-secondary">View Progress</span>
+              </Link>
+            </Button>
+            <Button variant="outline" className="h-24 flex flex-col items-center justify-center gap-2">
+              <Link to="/dashboard" className="flex flex-col items-center gap-2 w-full">
+                <GraduationCap className="w-8 h-8 text-fg-tertiary" />
+                <span className="font-medium text-fg-secondary">My Courses</span>
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

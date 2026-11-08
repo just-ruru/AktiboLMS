@@ -2,16 +2,19 @@ package com.aktibolms.service;
 
 import com.aktibolms.dto.response.ActivityAnalytics;
 import com.aktibolms.dto.response.CourseAnalytics;
+import com.aktibolms.dto.response.SubmissionSummary;
 import com.aktibolms.entity.Activity;
 import com.aktibolms.entity.ActivityProgress;
 import com.aktibolms.entity.CodeSubmission;
 import com.aktibolms.entity.Course;
 import com.aktibolms.entity.QuizAttempt;
+import com.aktibolms.entity.User;
 import com.aktibolms.repository.ActivityProgressRepository;
 import com.aktibolms.repository.ActivityRepository;
 import com.aktibolms.repository.CodeSubmissionRepository;
 import com.aktibolms.repository.EnrollmentRepository;
 import com.aktibolms.repository.QuizAttemptRepository;
+import com.aktibolms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ public class InstructorAnalyticsService {
     private final QuizAttemptRepository quizAttemptRepository;
     private final CodeSubmissionRepository codeSubmissionRepository;
     private final ActivityRepository activityRepository;
+    private final UserRepository userRepository;
 
     public CourseAnalytics getCourseAnalytics(UUID courseId, UUID instructorId) {
         // Verify instructor owns the course
@@ -143,5 +147,47 @@ public class InstructorAnalyticsService {
                     .commonFailures(List.of())
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    public List<SubmissionSummary> getActivitySubmissions(UUID activityId) {
+        List<SubmissionSummary> submissions = new java.util.ArrayList<>();
+
+        // Code submissions
+        List<CodeSubmission> codeSubmissions = codeSubmissionRepository.findByActivityIdOrderByCreatedAtDesc(activityId);
+        for (CodeSubmission cs : codeSubmissions) {
+            User user = cs.getUser();
+            submissions.add(SubmissionSummary.builder()
+                    .id(cs.getId())
+                    .userId(user.getId())
+                    .userEmail(user.getEmail())
+                    .userFullName(user.getFullName())
+                    .activityType("code_exercise")
+                    .language(cs.getLanguage())
+                    .score(null)
+                    .passed(cs.getPassed())
+                    .createdAt(cs.getCreatedAt())
+                    .build());
+        }
+
+        // Quiz attempts
+        List<QuizAttempt> quizAttempts = quizAttemptRepository.findByActivityIdOrderByCreatedAtDesc(activityId);
+        for (QuizAttempt qa : quizAttempts) {
+            User user = qa.getUser();
+            submissions.add(SubmissionSummary.builder()
+                    .id(qa.getId())
+                    .userId(user.getId())
+                    .userEmail(user.getEmail())
+                    .userFullName(user.getFullName())
+                    .activityType("quiz")
+                    .language(null)
+                    .score(qa.getScore())
+                    .passed(qa.getPassed())
+                    .createdAt(qa.getCreatedAt())
+                    .build());
+        }
+
+        // Sort by createdAt descending
+        submissions.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+        return submissions;
     }
 }

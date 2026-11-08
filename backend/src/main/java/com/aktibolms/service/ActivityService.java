@@ -1,5 +1,6 @@
 package com.aktibolms.service;
 
+import com.aktibolms.dto.request.ReorderRequest;
 import com.aktibolms.dto.response.ProgressResponse;
 import com.aktibolms.entity.Activity;
 import com.aktibolms.entity.ActivityProgress;
@@ -73,6 +74,29 @@ public class ActivityService {
         }
 
         activityRepository.delete(activity);
+    }
+
+    public UUID findLessonIdByActivityId(UUID activityId) {
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+        return activity.getLesson().getId();
+    }
+
+    public void reorderActivities(UUID lessonId, List<ReorderRequest.Item> items, UUID instructorId) {
+        var lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+
+        if (!lesson.getModule().getCourse().getInstructor().getId().equals(instructorId)) {
+            throw new SecurityException("Not authorized to reorder activities in this lesson");
+        }
+
+        for (int i = 0; i < items.size(); i++) {
+            UUID itemId = items.get(i).getId();
+            Activity activity = activityRepository.findById(itemId)
+                    .orElseThrow(() -> new IllegalArgumentException("Activity not found: " + itemId));
+            activity.setOrderIndex(i);
+            activityRepository.save(activity);
+        }
     }
 
     @Transactional(readOnly = true)

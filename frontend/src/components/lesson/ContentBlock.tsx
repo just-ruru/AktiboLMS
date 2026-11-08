@@ -2,6 +2,31 @@ import { RichTextEditor } from '../editor/RichTextEditor'
 import { CodeEditor } from '../editor/CodeEditor'
 import { Image, Video, Code } from 'lucide-react'
 
+/* ============================================================================
+   STUDY NOTES — components/lesson/ContentBlock.tsx  (lesson content renderer)
+   ----------------------------------------------------------------------------
+   WHAT: Renders a single content block within a lesson. Supports text, video,
+         image, and code_snippet types. Used by StudentLessonView and
+         InstructorCourseBuilder.
+   HOW IT WORKS:
+     1. Receives a block object with type + content, plus optional readOnly
+        and onChange callbacks.
+     2. Text → RichTextEditor (readOnly in student view, editable in builder)
+     3. Video → iframe with sandbox attribute for security
+     4. Image → img tag
+     5. Code snippet → CodeEditor (Monaco) with language-specific syntax
+   WHERE THE API CONTRACT LIVES:
+     • GET /lessons/{lessonId}/content-blocks (backend #28) — list blocks for a lesson
+     • POST/PUT/DELETE /lessons/{lessonId}/content-blocks/{blockId} (backend #29-31)
+   WHAT TO CHANGE FOR THE NEW UI:
+     • The readOnly default is true — student view passes readOnly={true}
+       (correct). Builder should pass readOnly={false} for editing.
+     • Video iframe already has sandbox attribute added (security fix).
+     • Consider adding a placeholder state for empty content blocks.
+     • Add loading/skeleton states when content is being fetched.
+   QA LINK: qa-report.json — iframe sandbox attribute added (was missing).
+   ============================================================================ */
+
 interface ContentBlockContent {
   text?: string
   videoUrl?: string
@@ -55,6 +80,7 @@ export function ContentBlock({ block, readOnly = true, onChange }: ContentBlockP
               title="Lesson video"
               className="w-full h-full"
               frameBorder="0"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />

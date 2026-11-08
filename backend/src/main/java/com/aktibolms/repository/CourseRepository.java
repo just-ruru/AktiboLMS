@@ -18,6 +18,7 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
 
     Page<Course> findByInstructorId(UUID instructorId, Pageable pageable);
 
+    @Query("SELECT c FROM Course c LEFT JOIN FETCH c.instructor LEFT JOIN FETCH c.modules WHERE c.instructor.id = ?1")
     List<Course> findByInstructorId(UUID instructorId);
 
     Page<Course> findByPublishedTrue(Pageable pageable);

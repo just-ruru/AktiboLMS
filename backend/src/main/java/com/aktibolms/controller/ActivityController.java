@@ -3,7 +3,13 @@ package com.aktibolms.controller;
 import com.aktibolms.dto.request.ActivityRequest;
 import com.aktibolms.dto.response.ActivityResponse;
 import com.aktibolms.entity.Activity;
+import com.aktibolms.entity.Course;
+import com.aktibolms.entity.Lesson;
+import com.aktibolms.entity.Module;
 import com.aktibolms.repository.ActivityRepository;
+import com.aktibolms.repository.EnrollmentRepository;
+import com.aktibolms.repository.LessonRepository;
+import com.aktibolms.repository.ModuleRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.ActivityService;
 import jakarta.validation.Valid;
@@ -28,10 +34,33 @@ public class ActivityController {
 
     private final ActivityService activityService;
     private final ActivityRepository activityRepository;
+    private final LessonRepository lessonRepository;
+    private final ModuleRepository moduleRepository;
+    private final EnrollmentRepository enrollmentRepository;
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public ResponseEntity<List<ActivityResponse>> listActivities(@PathVariable UUID lessonId) {
+    public ResponseEntity<List<ActivityResponse>> listActivities(
+            @PathVariable UUID lessonId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Lesson lesson = lessonRepository.findByIdWithModule(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+        Module module = moduleRepository.findByIdWithCourse(lesson.getModule().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Module not found"));
+        Course course = module.getCourse();
+
+        // Authorization: published courses are readable by anyone;
+        // unpublished courses require instructor ownership or enrollment
+        if (!course.getPublished()) {
+            boolean isInstructor = userDetails != null
+                    && course.getInstructor().getId().equals(userDetails.getId());
+            boolean isEnrolled = userDetails != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userDetails.getId(), course.getId());
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Course not found or not accessible");
+            }
+        }
+
         List<Activity> activities = activityRepository.findByLessonIdOrderByOrderIndexAsc(lessonId);
         return ResponseEntity.ok(activities.stream().map(this::toResponse).collect(Collectors.toList()));
     }

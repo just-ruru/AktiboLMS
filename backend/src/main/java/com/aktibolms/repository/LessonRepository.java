@@ -21,4 +21,7 @@ public interface LessonRepository extends JpaRepository<Lesson, UUID> {
 
     @Query("SELECT l FROM Lesson l LEFT JOIN FETCH l.contentBlocks cb LEFT JOIN FETCH l.activities a WHERE l.id = :id")
     Optional<Lesson> findByIdWithContentBlocksAndActivities(@Param("id") UUID id);
+
+    @Query("SELECT l FROM Lesson l LEFT JOIN FETCH l.module WHERE l.id = ?1")
+    Optional<Lesson> findByIdWithModule(UUID id);
 }

@@ -4,7 +4,13 @@ import com.aktibolms.dto.request.ContentBlockRequest;
 import com.aktibolms.dto.request.ReorderRequest;
 import com.aktibolms.dto.response.ContentBlockResponse;
 import com.aktibolms.entity.ContentBlock;
+import com.aktibolms.entity.Course;
+import com.aktibolms.entity.Lesson;
+import com.aktibolms.entity.Module;
 import com.aktibolms.repository.ContentBlockRepository;
+import com.aktibolms.repository.EnrollmentRepository;
+import com.aktibolms.repository.LessonRepository;
+import com.aktibolms.repository.ModuleRepository;
 import com.aktibolms.security.CustomUserDetails;
 import com.aktibolms.service.CourseService;
 import jakarta.validation.Valid;
@@ -25,9 +31,32 @@ public class ContentBlockController {
 
     private final CourseService courseService;
     private final ContentBlockRepository contentBlockRepository;
+    private final LessonRepository lessonRepository;
+    private final ModuleRepository moduleRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @GetMapping
-    public ResponseEntity<List<ContentBlockResponse>> listContentBlocks(@PathVariable UUID lessonId) {
+    public ResponseEntity<List<ContentBlockResponse>> listContentBlocks(
+            @PathVariable UUID lessonId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Lesson lesson = lessonRepository.findByIdWithModule(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("Lesson not found"));
+        Module module = moduleRepository.findByIdWithCourse(lesson.getModule().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Module not found"));
+        Course course = module.getCourse();
+
+        // Authorization: published courses are readable by anyone;
+        // unpublished courses require instructor ownership or enrollment
+        if (!course.getPublished()) {
+            boolean isInstructor = userDetails != null
+                    && course.getInstructor().getId().equals(userDetails.getId());
+            boolean isEnrolled = userDetails != null
+                    && enrollmentRepository.existsByUserIdAndCourseId(userDetails.getId(), course.getId());
+            if (!isInstructor && !isEnrolled) {
+                throw new IllegalArgumentException("Course not found or not accessible");
+            }
+        }
+
         List<ContentBlock> blocks = contentBlockRepository.findByLessonIdOrderByOrderIndexAsc(lessonId);
         return ResponseEntity.ok(blocks.stream().map(this::toResponse).collect(Collectors.toList()));
     }
@@ -70,9 +99,9 @@ public class ContentBlockController {
     public ResponseEntity<Void> reorderContentBlocks(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable UUID lessonId,
-            @Valid @RequestBody ReorderRequest request) {
+            @RequestBody List<ReorderRequest.Item> items) {
 
-        courseService.reorderContentBlocks(lessonId, request.getItems(), userDetails.getId());
+        courseService.reorderContentBlocks(lessonId, items, userDetails.getId());
         return ResponseEntity.ok().build();
     }
 

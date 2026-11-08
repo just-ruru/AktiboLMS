@@ -126,7 +126,7 @@ export function CodeEditor({
         <div className="border-t border-gray-700 bg-gray-800 p-3">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-medium text-gray-400 uppercase">Output</span>
-            {error && <Badge variant="danger" className="text-xs">Error</Badge>}
+            {error && <Badge variant="error" className="text-xs">Error</Badge>}
             {output && !error && <Badge variant="success" className="text-xs">Success</Badge>}
           </div>
           <pre className="text-sm text-gray-100 whitespace-pre-wrap font-mono max-h-60 overflow-auto">
