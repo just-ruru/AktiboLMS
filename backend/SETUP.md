@@ -150,12 +150,11 @@ http://localhost:8080
 
 ---
 
-## 6. Verify it works (Postman)
+## 6. Verify the API
 
-**Yes — this backend is fully accessible via Postman.** It exposes HTTP REST endpoints,
-so you can test every CRUD operation without the frontend.
+The backend exposes HTTP REST endpoints that can be tested independently of the frontend.
 
-Import this collection or create requests manually:
+Create requests manually using an HTTP client:
 
 | Method | Endpoint | Body (JSON) | Purpose |
 |--------|----------|-------------|---------|
@@ -170,11 +169,10 @@ Import this collection or create requests manually:
 | `PUT` | `/api/instructors/1` | `{ "description": "Senior Instructor" }` | Update instructor profile |
 | `DELETE` | `/api/instructors/1` | — | Deactivate instructor account |
 
-**Postman tips:**
-- Set `Content-Type: application/json` in the request headers (Postman does this automatically when you select the JSON body type).
+- Set `Content-Type: application/json` when sending JSON request bodies.
 - Base URL: `http://localhost:8080`
 - Passwords are **never returned** in responses — they are hashed with BCrypt before storage.
-- The backend currently has no login prompt because Spring Security's web starter is not included. Requests are unauthenticated; do not expose this API beyond trusted local development until authentication and authorization are implemented.
+- Requests are currently unauthenticated; do not expose this API beyond trusted local development until authentication and authorization are implemented.
 
 ---
 

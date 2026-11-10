@@ -16,7 +16,7 @@ import java.util.Map;
  * Global exception handler for the backend.
  *
  * Converts thrown exceptions into consistent JSON error responses so the frontend
- * (and Postman) can handle errors predictably.
+ * clients can handle errors predictably.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

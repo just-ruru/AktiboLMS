@@ -11,10 +11,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.aktibolms</groupId>
-    <artifactId>backend</artifactId>
+    <groupId>com.csit321g6.klutcherz</groupId>
+    <artifactId>aktibolms</artifactId>
     <version>1.0.0</version>
-    <name>aktibolms-backend</name>
+    <name>aktibolms</name>
     <description>AktiboLMS Backend - Spring Boot + MySQL</description>
 
     <properties>

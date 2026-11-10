@@ -85,14 +85,7 @@ Course JSON uses `courseCode`, `courseTitle`, `description`, `units`, and `statu
 
 Module JSON uses `moduleTitle`, `sequenceOrder`, and `published`. Sequence order must be unique within its course.
 
-See `SETUP.md` for full Postman examples and teammate onboarding instructions.
-
-## Postman
-
-Yes — all endpoints are standard HTTP REST and work in Postman. Base URL:
-`http://localhost:8080`. Passwords are hashed (BCrypt) and never returned in responses.
-
-Import [`postman/AktiboLMS CRUD.postman_collection.json`](./postman/AktiboLMS%20CRUD.postman_collection.json) in Postman, start the backend, then use **Run collection** to run its requests in order. It creates unique instructor/student/course records, captures returned IDs, exercises CRUD/assignment/archive operations, and checks expected status codes. The collection covers implemented entities only; enrollment, lesson content blocks, quizzes, and student progress APIs are not implemented yet.
+See `SETUP.md` for backend setup and onboarding instructions.
 
 ## Notes
 

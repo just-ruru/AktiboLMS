@@ -164,7 +164,7 @@ The API is now live at `http://localhost:8080`.
 
 ---
 
-## 7. Verify the endpoints (Postman / curl / browser)
+## 7. Verify the endpoints
 
 All API endpoints are currently **open** with no authentication. The Spring Security web starter is not included; only its crypto library is used to preserve BCrypt password hashing.
 
