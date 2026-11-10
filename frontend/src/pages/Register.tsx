@@ -5,7 +5,6 @@ import { Input } from '../components/ui/Input'
 import { Label } from '../components/ui/Label'
 import { Card } from '../components/ui/Card'
 import { Navbar } from '../components/ui/Navbar'
-import { LavaLampBg } from '../components/ui/LavaLampBg'
 
 export function Register() {
   const navigate = useNavigate()
@@ -18,8 +17,7 @@ export function Register() {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   return (
-    <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] pt-[10px] px-[10px] relative size-full">
-      <LavaLampBg />
+    <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] px-[10px] relative size-full">
       <Navbar className="w-[1420px]" />
       <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative w-full flex-1 animate-page-fade">
         <Card

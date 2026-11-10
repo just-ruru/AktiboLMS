@@ -11,14 +11,13 @@ export function LandingPage() {
         <p className="font-sans font-bold leading-[1.45] absolute left-[72px] not-italic text-[#ffb700] text-[12px] top-[72px] whitespace-nowrap">
           A MORE FOCUSED WAY TO LEARN
         </p>
-        <div
-          className="font-sans font-semibold leading-[0] absolute left-[72px] not-italic text-[64px] text-white top-[112px] tracking-[-1.92px] w-[600px] whitespace-nowrap"
-        >
+        <div className="font-sans font-semibold leading-[0] absolute left-[72px] not-italic text-[64px] text-white top-[112px] tracking-[-1.92px] w-[600px] whitespace-nowrap">
           <p className="leading-[1.1] mb-0">Less searching.</p>
           <p className="leading-[1.1] text-[#ffb700]">More learning.</p>
         </div>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[72px] not-italic text-[#d1d8ee] text-[20px] top-[286px] w-[520px] whitespace-nowrap">
-          Make room for your next step. Bring your courses and your learning journey together with AKTIBO LMS.
+        <p className="font-sans font-normal leading-[1.45] absolute left-[72px] not-italic text-[#d1d8ee] text-[20px] top-[286px] w-[520px] whitespace-wrap">
+          Make room for your next step. Bring your courses and your learning
+          journey together with AKTIBO LMS.
         </p>
         <Link
           to="/register"
@@ -41,8 +40,12 @@ export function LandingPage() {
         </p>
         <div className="bg-white h-[426px] absolute left-[748px] overflow-clip rounded-[14px] top-[110px] w-[620px]">
           <div className="bg-[#f4f6fa] h-[52px] absolute left-0 overflow-clip top-0 w-[620px] whitespace-nowrap">
-            <p className="absolute left-[20px] text-[#000e53] text-[13px] top-[16px]">AKTIBO / My learning</p>
-            <p className="absolute left-[518px] text-[#596579] text-[10px] top-[18px]">EXAMPLE</p>
+            <p className="absolute left-[20px] text-[#000e53] text-[13px] top-[16px]">
+              AKTIBO / My learning
+            </p>
+            <p className="absolute left-[518px] text-[#596579] text-[10px] top-[18px]">
+              EXAMPLE
+            </p>
           </div>
           <div className="bg-[#f4f6fa] h-[374px] absolute left-0 overflow-clip top-[52px] w-[140px]">
             <p className="font-sans font-bold leading-[1.45] absolute left-[18px] not-italic text-[#596579] text-[9px] top-[28px] whitespace-nowrap">
@@ -145,7 +148,8 @@ export function LandingPage() {
             Your courses, together
           </p>
           <p className="font-sans font-normal absolute left-[24px] text-[#596579] text-[16px] top-[106px] w-[368px] whitespace-nowrap">
-            Spend less time looking around and more time finding the learning that matters to you.
+            Spend less time looking around and more time finding the learning
+            that matters to you.
           </p>
         </div>
         <div className="bg-[#f4f6fa] h-[208px] absolute left-[512px] overflow-clip rounded-[12px] top-[218px] w-[416px]">
@@ -156,7 +160,8 @@ export function LandingPage() {
             A clear place to start
           </p>
           <p className="font-sans font-normal absolute left-[24px] text-[#596579] text-[16px] top-[106px] w-[368px] whitespace-nowrap">
-            From exploring a course to returning to your account, know where to go next.
+            From exploring a course to returning to your account, know where to
+            go next.
           </p>
         </div>
         <div className="bg-[#f4f6fa] h-[208px] absolute left-[952px] overflow-clip rounded-[12px] top-[218px] w-[416px]">
@@ -167,7 +172,8 @@ export function LandingPage() {
             Your own learning space
           </p>
           <p className="font-sans font-normal absolute left-[24px] text-[#596579] text-[16px] top-[106px] w-[368px] whitespace-nowrap">
-            Keep your profile and contact details organised, so you can focus on your next step.
+            Keep your profile and contact details organised, so you can focus on
+            your next step.
           </p>
         </div>
       </div>
@@ -227,8 +233,12 @@ export function LandingPage() {
             <p className="leading-[1.45]">something new.</p>
           </div>
           <div className="font-sans font-normal leading-[0] absolute left-[32px] not-italic text-[#d1d8ee] text-[16px] top-[176px] whitespace-nowrap">
-            <p className="leading-[1.45] mb-0">Your next chapter starts with curiosity.</p>
-            <p className="leading-[1.45]">Take a look at the courses on AKTIBO.</p>
+            <p className="leading-[1.45] mb-0">
+              Your next chapter starts with curiosity.
+            </p>
+            <p className="leading-[1.45]">
+              Take a look at the courses on AKTIBO.
+            </p>
           </div>
           <div className="bg-[#ffb700] flex h-[52px] items-center justify-center absolute left-[32px] overflow-clip rounded-[8px] top-[252px] w-[188px]">
             <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[#000e53] text-[16px] whitespace-nowrap">
@@ -245,7 +255,9 @@ export function LandingPage() {
             <p className="leading-[1.45]">Your next step.</p>
           </div>
           <div className="font-sans font-normal leading-[0] absolute left-[32px] not-italic text-[#596579] text-[16px] top-[176px] whitespace-nowrap">
-            <p className="leading-[1.45] mb-0">Review pricing before you get started</p>
+            <p className="leading-[1.45] mb-0">
+              Review pricing before you get started
+            </p>
             <p className="leading-[1.45]">and choose what works for you.</p>
           </div>
           <div className="bg-white border border-[#dee4ee] border-solid flex h-[52px] items-center justify-center absolute left-[32px] overflow-clip rounded-[8px] top-[252px] w-[174px]">

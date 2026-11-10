@@ -27,7 +27,7 @@ export function Navbar({ className = "", ...props }: NavbarProps) {
   return (
     <nav
       className={[
-        "flex gap-[10px] h-[104px] items-center justify-between overflow-clip px-[72px] relative shrink-0 bg-[#000e53] w-[1440px]",
+        "flex gap-[10px] h-[80px] items-center justify-between overflow-clip px-[72px] relative shrink-0 bg-[#000e53] w-[1440px] sticky top-0 z-[50]",
         className,
       ]
         .filter(Boolean)
@@ -157,7 +157,7 @@ export function Navbar({ className = "", ...props }: NavbarProps) {
       </div>
 
       {/* Header divider */}
-      <div className="absolute bg-[#304074] h-px left-[72px] top-[103px] w-[1296px]" />
+      <div className="absolute bg-[#304074] h-px left-[72px] top-[77px] w-[1296px]" />
 
       {/* Mobile Menu Button */}
       <div className="md:hidden flex items-center">

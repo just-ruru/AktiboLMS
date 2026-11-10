@@ -5,15 +5,13 @@ import { Input } from '../components/ui/Input'
 import { Label } from '../components/ui/Label'
 import { Card } from '../components/ui/Card'
 import { Navbar } from '../components/ui/Navbar'
-import { LavaLampBg } from '../components/ui/LavaLampBg'
 
 export function ForgotPassword() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
 
   return (
-    <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] pt-[10px] px-[10px] relative size-full">
-      <LavaLampBg />
+    <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] px-[10px] relative size-full">
       <Navbar className="w-[1420px]" />
       <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative shrink-0 w-full animate-page-fade">
         <Card
@@ -45,7 +43,7 @@ export function ForgotPassword() {
             <Button
               variant="primary"
               onClick={() => navigate('/login')}
-              className="w-full max-w-[490px] h-[42px] px-[179px] py-[8px] border border-black hover:bg-amber-400 active:bg-amber-500 transition-colors duration-200"
+              className="w-full max-w-[490px] h-[42px] px-[100px] py-[8px] border border-black hover:bg-amber-400 active:bg-amber-500 transition-colors duration-200 whitespace-nowrap"
             >
               Send Reset Link
             </Button>
