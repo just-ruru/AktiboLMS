@@ -5,9 +5,11 @@ import { useState } from "react";
 interface NavbarProps extends HTMLAttributes<HTMLDivElement> {}
 
 const NAV_LINKS = [
-  { to: "/", label: "HOME" },
-  { to: "/courses", label: "COURSES" },
-  { to: "/pricing", label: "PRICING" },
+  { to: "/", label: "HOME", width: "w-[96px]" },
+  { to: "/courses", label: "COURSES", width: "w-[144px]" },
+  { to: "/pricing", label: "PRICING", width: "w-[128px]" },
+  { to: "/students/list", label: "STUDENTS", width: "w-[128px]" },
+  { to: "/instructors/list", label: "INSTRUCTORS", width: "w-[144px]" },
 ];
 
 const ACCOUNT_LINKS = [
@@ -59,42 +61,28 @@ export function Navbar({ className = "", ...props }: NavbarProps) {
       >
         {NAV_LINKS.map((link) => {
           const active = isActive(link.to);
-          const isLink = link.to === "/";
           return (
             <div
               key={link.label}
               className={[
                 "content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 transition-all duration-300 ease-out hover:scale-[1.02]",
-                link.label === "HOME" ? "w-[96px]" : link.label === "COURSES" ? "w-[144px]" : "w-[128px]",
+                link.width,
               ]
                 .filter(Boolean)
                 .join(" ")}
             >
-              {isLink ? (
-                <NavLink
-                  to={link.to}
-                  end
-                  className={({ isActive: navActive }) => [
-                    "font-display font-normal leading-[24px] relative shrink-0 text-[16px] whitespace-nowrap transition-colors duration-200",
-                    navActive ? "text-[#ffb700]" : "text-white",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {link.label}
-                </NavLink>
-              ) : (
-                <p
-                  className={[
-                    "font-display font-normal leading-[24px] relative shrink-0 text-[16px] whitespace-nowrap transition-colors duration-200",
-                    active ? "text-[#ffb700]" : "text-white",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {link.label}
-                </p>
-              )}
+              <NavLink
+                to={link.to}
+                end={link.to === "/"}
+                className={({ isActive: navActive }) => [
+                  "font-display font-normal leading-[24px] relative shrink-0 text-[16px] whitespace-nowrap transition-colors duration-200",
+                  navActive || active ? "text-[#ffb700]" : "text-white",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {link.label}
+              </NavLink>
               {active && link.label === "HOME" && (
                 <div className="absolute bg-[#ffb700] h-[3px] left-[16px] top-[45px] w-[64px] transition-all duration-300 ease-out" />
               )}
