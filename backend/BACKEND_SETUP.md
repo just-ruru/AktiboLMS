@@ -166,7 +166,7 @@ The API is now live at `http://localhost:8080`.
 
 ## 7. Verify the endpoints (Postman / curl / browser)
 
-All Student and Instructor CRUD endpoints are **open** (no auth required yet — Spring Security is configured only to provide the BCrypt password encoder bean; the filter chain is intentionally permissive for local dev).
+All API endpoints are currently **open** with no authentication. The Spring Security web starter is not included; only its crypto library is used to preserve BCrypt password hashing.
 
 ### Base URL
 
@@ -225,7 +225,7 @@ backend/
     ├── config/
     │   └── WebConfig.java               # CORS (allows React on :5173)
     ├── security/
-    │   └── SecurityConfig.java          # BCryptPasswordEncoder bean (auth filter chain TBD)
+    │   └── SecurityConfig.java          # BCryptPasswordEncoder bean (crypto only)
     ├── exception/
     │   ├── ResourceNotFoundException.java
     │   └── GlobalExceptionHandler.java  # Consistent JSON error responses

@@ -48,10 +48,10 @@
             <version>${mysql.version}</version>
         </dependency>
 
-        <!-- Spring Security (for future auth/JWT) -->
+        <!-- Password hashing only; excludes Spring Security's web login/filter chain -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
         <!-- OpenAPI / Swagger documentation -->
@@ -72,11 +72,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

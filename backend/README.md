@@ -11,7 +11,7 @@ Spring Boot 3.x + MySQL backend for the AktiboLMS project (Interactive Learning 
 | Data | Spring Data JPA + Hibernate |
 | Database | MySQL 8.x |
 | Build | Maven |
-| Password hashing | BCrypt (Spring Security) |
+| Password hashing | BCrypt (Spring Security Crypto only) |
 | CORS | Configured for `http://localhost:5173` (Vite dev server) |
 
 ## Quick start
@@ -58,6 +58,33 @@ Backend runs on `http://localhost:8080`.
 | PUT | `/api/instructors/{id}` | Update instructor profile |
 | DELETE | `/api/instructors/{id}` | Deactivate instructor account (soft delete) |
 
+### Courses (`/api/courses`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/courses` | Create a course |
+| GET | `/api/courses/{courseId}` | Get a course |
+| GET | `/api/courses` | List non-archived courses (paginated) |
+| PUT | `/api/courses/{courseId}` | Update course details and status |
+| DELETE | `/api/courses/{courseId}` | Archive a course |
+| POST | `/api/courses/{courseId}/assignments` | Assign an instructor for a semester and academic year |
+| GET | `/api/courses/{courseId}/assignments` | List active instructor assignments |
+| DELETE | `/api/courses/{courseId}/assignments/{assignmentId}` | Remove an instructor assignment |
+
+Course JSON uses `courseCode`, `courseTitle`, `description`, `units`, and `status` (`DRAFT`, `PUBLISHED`, or `ARCHIVED`). Assignment JSON uses the database `instructorId`, `semester`, `academicYear`, and `role`.
+
+### Modules (`/api/courses/{courseId}/modules`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/courses/{courseId}/modules` | Create a module |
+| GET | `/api/courses/{courseId}/modules` | List non-archived modules in sequence order |
+| GET | `/api/courses/{courseId}/modules/{moduleId}` | Get a module |
+| PUT | `/api/courses/{courseId}/modules/{moduleId}` | Update a module |
+| DELETE | `/api/courses/{courseId}/modules/{moduleId}` | Unpublish and archive a module |
+
+Module JSON uses `moduleTitle`, `sequenceOrder`, and `published`. Sequence order must be unique within its course.
+
 See `SETUP.md` for full Postman examples and teammate onboarding instructions.
 
 ## Postman
@@ -65,8 +92,10 @@ See `SETUP.md` for full Postman examples and teammate onboarding instructions.
 Yes — all endpoints are standard HTTP REST and work in Postman. Base URL:
 `http://localhost:8080`. Passwords are hashed (BCrypt) and never returned in responses.
 
+Import [`postman/AktiboLMS CRUD.postman_collection.json`](./postman/AktiboLMS%20CRUD.postman_collection.json) in Postman, start the backend, then use **Run collection** to run its requests in order. It creates unique instructor/student/course records, captures returned IDs, exercises CRUD/assignment/archive operations, and checks expected status codes. The collection covers implemented entities only; enrollment, lesson content blocks, quizzes, and student progress APIs are not implemented yet.
+
 ## Notes
 
-- Course and Module entities/CRUD are handled by a separate teammate and are not in this backend yet.
-- Full Spring Security + JWT auth is planned as a follow-up. Currently endpoints are open for local development.
-- Soft delete: `DELETE` sets `is_active = false` rather than hard-deleting rows.
+- Spring Security's web starter is not included, so endpoints currently have no login or authorization. BCrypt hashing is retained through the crypto-only library. Add authentication and role-based authorization before exposing the API beyond trusted local development; course assignments are not yet used to authorize instructor access, and published content is not yet restricted to enrolled students.
+- Courses and modules are archived rather than hard-deleted, preserving their IDs for future enrollment and progress records.
+- Module content blocks, enrollments, quizzes, and student progress/submissions remain separate follow-up work.

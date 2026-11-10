@@ -174,6 +174,7 @@ Import this collection or create requests manually:
 - Set `Content-Type: application/json` in the request headers (Postman does this automatically when you select the JSON body type).
 - Base URL: `http://localhost:8080`
 - Passwords are **never returned** in responses — they are hashed with BCrypt before storage.
+- The backend currently has no login prompt because Spring Security's web starter is not included. Requests are unauthenticated; do not expose this API beyond trusted local development until authentication and authorization are implemented.
 
 ---
 
@@ -201,7 +202,7 @@ backend/
 │   │   │   │   ├── StudentService.java            # Business logic (students)
 │   │   │   │   └── InstructorService.java         # Business logic (instructors)
 │   │   │   ├── security/
-│   │   │   │   └── SecurityConfig.java            # BCrypt password encoder bean
+│   │   │   │   └── SecurityConfig.java            # BCrypt password encoder bean (crypto only)
 │   │   │   ├── dto/request/
 │   │   │   │   ├── StudentRequest.java
 │   │   │   │   └── InstructorRequest.java
@@ -230,7 +231,7 @@ Per our agreement:
 | Instructor CRUD | You (this backend) | ✅ Done |
 | Course entity + CRUD | Teammate | ⏳ Pending |
 | Module/Subject entity + CRUD | Teammate | ⏳ Pending |
-| Auth / JWT / login | Pending | ⏳ Pending |
+| Auth / JWT / login | Pending | ⏳ Pending (API currently has no authentication) |
 | Enrollment / progress tracking | Pending | ⏳ Pending |
 
 When your teammate adds Course/Module, they should follow the same package structure
