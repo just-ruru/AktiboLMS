@@ -6,12 +6,11 @@ import com.aktibolms.backend.entity.Student;
 import com.aktibolms.backend.exception.ResourceNotFoundException;
 import com.aktibolms.backend.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Business logic for Student CRUD operations.
@@ -23,11 +22,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class StudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public StudentService(StudentRepository studentRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     /**
      * Create a new student account.
@@ -66,14 +68,12 @@ public class StudentService {
     }
 
     /**
-     * Get all active students.
+     * Get all active students, paginated.
      */
     @Transactional(readOnly = true)
-    public List<StudentResponse> getAllStudents() {
-        return studentRepository.findAll().stream()
-                .filter(Student::isActive)
-                .map(StudentResponse::new)
-                .collect(Collectors.toList());
+    public Page<StudentResponse> getAllStudents(Pageable pageable) {
+        return studentRepository.findByIsActiveTrue(pageable)
+                .map(StudentResponse::new);
     }
 
     /**

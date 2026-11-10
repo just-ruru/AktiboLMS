@@ -99,11 +99,36 @@ mvn clean compile
 
 Expected output: **BUILD SUCCESS**. The first run downloads dependencies (~100–200 MB), so it may take a minute or two.
 
-To also run tests (there are none written yet, but this validates the test setup):
+### Running tests
+
+There are two test suites — no MySQL instance is needed:
+
+| Suite | Tests | How it works |
+|-------|-------|--------------|
+| **Service tests** (`StudentServiceTest`, `InstructorServiceTest`) | 10 each | Runs against an embedded **H2** in-memory database (see `src/test/resources/application-test.properties`). Each test method is wrapped in `@Transactional` so the DB is rolled back after every test — tests are independent and can run in any order. |
+| **Controller tests** (`StudentControllerTest`, `InstructorControllerTest`) | 5 each | Standalone `MockMvc` with Mockito-mocked services. No database required. |
+
+Run all tests:
 
 ```bash
 mvn test
 ```
+
+Run only service tests:
+
+```bash
+mvn test -Dtest='*ServiceTest'
+```
+
+Run only controller tests:
+
+```bash
+mvn test -Dtest='*ControllerTest'
+```
+
+Expected output: **BUILD SUCCESS** with **Tests run: 30, Failures: 0, Errors: 0**.
+
+> Note on Spring Boot 4.1.2: `@WebMvcTest`, `@DataJpaTest`, and `@MockBean` are **not available** in Spring Boot 4.1.2 (they were removed from `spring-boot-test-autoconfigure`). Service tests use `@SpringBootTest(webEnvironment = NONE)` + `@ActiveProfiles("test")` with H2 instead; controller tests use standalone `MockMvcBuilders.standaloneSetup()` + Mockito mocks injected via `ReflectionTestUtils`.
 
 To package a runnable jar:
 
@@ -270,6 +295,7 @@ If you need to prepare for it, the plan is:
 - [ ] `aktibolms_app` user created with privileges
 - [ ] `application.properties` DB credentials match your MySQL setup
 - [ ] `mvn clean compile` → BUILD SUCCESS
+- [ ] `mvn test` → **Tests run: 30, Failures: 0, Errors: 0**
 - [ ] `mvn spring-boot:run` → app starts on `http://localhost:8080`
 - [ ] `POST /api/students` returns 201 with a `StudentResponse` (no password field)
 

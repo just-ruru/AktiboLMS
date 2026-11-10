@@ -6,12 +6,11 @@ import com.aktibolms.backend.entity.Instructor;
 import com.aktibolms.backend.exception.ResourceNotFoundException;
 import com.aktibolms.backend.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Business logic for Instructor CRUD operations.
@@ -23,11 +22,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class InstructorService {
 
-    @Autowired
-    private InstructorRepository instructorRepository;
+    private final InstructorRepository instructorRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public InstructorService(InstructorRepository instructorRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.instructorRepository = instructorRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     /**
      * Create a new instructor profile/account.
@@ -66,14 +68,12 @@ public class InstructorService {
     }
 
     /**
-     * Get all active instructors.
+     * Get all active instructors, paginated.
      */
     @Transactional(readOnly = true)
-    public List<InstructorResponse> getAllInstructors() {
-        return instructorRepository.findAll().stream()
-                .filter(Instructor::isActive)
-                .map(InstructorResponse::new)
-                .collect(Collectors.toList());
+    public Page<InstructorResponse> getAllInstructors(Pageable pageable) {
+        return instructorRepository.findByIsActiveTrue(pageable)
+                .map(InstructorResponse::new);
     }
 
     /**
