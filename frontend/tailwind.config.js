@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
+<<<<<<< HEAD
         /* ---- Brand Colors (Teal) ---- */
         brand: {
           50: '#f0fdfa',
@@ -82,6 +83,12 @@ export default {
           700: '#0369a1',
           800: '#075985',
           900: '#0c4a6e',
+=======
+        aktibo: {
+          navy: "#000e53",
+          gold: "#ffb700",
+          white: "#ffffff",
+>>>>>>> frontend
         },
         /* ---- Foreground/Background (CSS custom properties mapped) ---- */
         fg: {
@@ -156,6 +163,7 @@ export default {
         },
       },
       fontFamily: {
+<<<<<<< HEAD
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'SF Mono', 'monospace'],
       },
@@ -211,6 +219,13 @@ export default {
         modal: '500',
         popover: '600',
         tooltip: '700',
+=======
+        sans: ["'Inter'", "system-ui", "sans-serif"],
+        display: ["'Lexend Exa'", "system-ui", "sans-serif"],
+      },
+      spacing: {
+        18: "4.5rem",
+>>>>>>> frontend
       },
     },
   },

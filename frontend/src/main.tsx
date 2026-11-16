@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ============================================================================
    STUDY NOTES — main.tsx  (application entry point / provider composition)
    ----------------------------------------------------------------------------
@@ -27,8 +28,14 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AuthProvider } from './hooks/useAuth'
 import { ThemeProvider } from './context/ThemeContext'
 import App from './App'
+=======
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+>>>>>>> frontend
 import './index.css'
+import App from './App.tsx'
 
+<<<<<<< HEAD
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -53,3 +60,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </QueryClientProvider>
   </React.StrictMode>
 )
+=======
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+>>>>>>> frontend
