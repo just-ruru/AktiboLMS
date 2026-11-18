@@ -1,189 +1,134 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
-import type { HTMLAttributes } from "react";
-import { useState } from "react";
+import { useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
+import type { HTMLAttributes } from 'react'
 
-interface NavbarProps extends HTMLAttributes<HTMLDivElement> {}
+interface NavbarProps extends HTMLAttributes<HTMLElement> {
+  signedIn?: boolean
+  userName?: string
+}
 
-const NAV_LINKS = [
-  { to: "/", label: "HOME", width: "w-[96px]" },
-  { to: "/courses", label: "COURSES", width: "w-[144px]" },
-  { to: "/pricing", label: "PRICING", width: "w-[128px]" },
-  { to: "/students/list", label: "STUDENTS", width: "w-[128px]" },
-  { to: "/instructors/list", label: "INSTRUCTORS", width: "w-[144px]" },
-];
+const PRE_SIGNUP_LINKS = [
+  { to: '/', label: 'Home', end: true },
+  { to: '/student/courses', label: 'Courses' },
+  { to: '/login', label: 'Log in', end: true },
+  { to: '/register', label: 'Register', end: true },
+]
 
-const ACCOUNT_LINKS = [
-  { to: "/login", label: "LOG IN" },
-  { to: "/register", label: "REGISTER" },
-];
+const POST_SIGNUP_LINKS = [
+  { to: '/', label: 'Home', end: true },
+  { to: '/student/courses', label: 'Courses' },
+  { to: '/pricing', label: 'Pricing' },
+  { to: '/account-profile', label: 'My account', end: true },
+]
 
-export function Navbar({ className = "", ...props }: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+const COURSES_PATHS = ['/student/courses', '/instructor/courses']
 
-  const isActive = (to: string) => {
-    if (to === "/") return location.pathname === "/";
-    return location.pathname === to;
-  };
+const isLinkActive = (to: string, pathname: string) => {
+  if (to === '/') return pathname === '/'
+  if (to === '/student/courses') return COURSES_PATHS.includes(pathname)
+  return pathname === to
+}
+
+export function Navbar({
+  className = '',
+  signedIn = false,
+  userName = 'Hoshimi Miyabi',
+  ...props
+}: NavbarProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
+  const links = signedIn ? POST_SIGNUP_LINKS : PRE_SIGNUP_LINKS
+
+  const closeMenu = () => setIsOpen(false)
 
   return (
-    <nav
-      className={[
-        "flex gap-[10px] h-[80px] items-center justify-between overflow-clip px-[72px] relative shrink-0 bg-[#000e53] w-[1440px] sticky top-0 z-[50]",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      {...props}
-    >
-      {/* Logo + Brand */}
-      <div className="content-stretch flex gap-[12px] h-[56px] items-center overflow-clip relative shrink-0 w-[256px]">
-        <div className="relative shrink-0 size-[52px]">
-          <img
-            src="/assets/aktibo-symbol.png"
-            alt="AKTIBO symbol"
-            className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
-          />
-        </div>
-        <p className="font-display font-normal leading-[normal] relative shrink-0 text-[20px] text-white whitespace-nowrap">
-          AKTIBO LMS
-        </p>
-      </div>
+    <nav className={`site-nav ${className}`} aria-label="Main navigation" {...props}>
+      <Link to="/" className="site-nav__brand" onClick={closeMenu}>
+        <img src="/assets/aktibo-symbol.png" alt="" />
+        <span>AKTIBO LMS</span>
+      </Link>
 
-      {/* Desktop Primary navigation */}
-      <div
-        className={[
-          "content-stretch flex gap-[16px] h-[48px] items-center overflow-clip relative shrink-0 w-[400px] hidden md:flex",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {NAV_LINKS.map((link) => {
-          const active = isActive(link.to);
-          return (
-            <div
-              key={link.label}
-              className={[
-                "content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 transition-all duration-300 ease-out hover:scale-[1.02]",
-                link.width,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <NavLink
-                to={link.to}
-                end={link.to === "/"}
-                className={({ isActive: navActive }) => [
-                  "font-display font-normal leading-[24px] relative shrink-0 text-[16px] whitespace-nowrap transition-colors duration-200",
-                  navActive || active ? "text-[#ffb700]" : "text-white",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {link.label}
-              </NavLink>
-              {active && link.label === "HOME" && (
-                <div className="absolute bg-[#ffb700] h-[3px] left-[16px] top-[45px] w-[64px] transition-all duration-300 ease-out" />
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Desktop Account actions */}
-      <div
-        className={[
-          "content-stretch flex gap-[16px] h-[48px] items-center overflow-clip relative shrink-0 w-[336px] hidden md:flex",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {ACCOUNT_LINKS.map((link) => {
-          const active = isActive(link.to);
-          if (link.label === "LOG IN") {
+      <div className="site-nav__desktop">
+        <div className="site-nav__links">
+          {links.map(({ to, label, end }) => {
+            const active = isLinkActive(to, location.pathname)
             return (
               <NavLink
-                key={link.label}
-                to={link.to}
-                className="content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[160px] transition-all duration-300 ease-out hover:scale-[1.02]"
+                key={to}
+                to={to}
+                end={end}
+                className={({ isActive }) =>
+                  `site-nav__link${active || isActive ? ' is-active' : ''}${
+                    label === 'My account' ? ' site-nav__my-account' : ''
+                  }`
+                }
               >
-                <p
-                  className={[
-                    "font-display font-normal leading-[24px] relative shrink-0 text-[16px] whitespace-nowrap transition-colors duration-200",
-                    active ? "text-[#ffb700]" : "text-white",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {link.label}
-                </p>
-                {active && (
-                  <div className="absolute bg-[#ffb700] h-[3px] left-[16px] top-[45px] w-[128px] transition-all duration-300 ease-out" />
-                )}
+                {label}
               </NavLink>
-            );
-          }
-          return (
-            <Link
-              key={link.label}
-              to={link.to}
-              className={[
-                "bg-[#ffb700] border border-black border-solid content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[160px] transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-[0_8px_16px_rgba(255,183,0,0.35)]",
-                className,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <p className="font-display font-bold leading-[24px] relative shrink-0 text-[16px] text-black whitespace-nowrap">
-                {link.label}
-              </p>
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* Header divider */}
-      <div className="absolute bg-[#304074] h-px left-[72px] top-[77px] w-[1296px]" />
-
-      {/* Mobile Menu Button */}
-      <div className="md:hidden flex items-center">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="text-white hover:text-[#ffb700] transition-colors duration-200 p-2 rounded-[9px] focus:outline-none"
-          aria-label="Toggle menu"
-          aria-expanded={isOpen}
-        >
-          {isOpen ? "✕" : "☰"}
-        </button>
-      </div>
-
-      {/* Mobile Nav Links (slide-down menu) */}
-      {isOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-[#000e53] flex flex-col gap-[16px] items-center justify-center px-[72px] py-[48px] text-[16px] text-white border-t border-[#304074] animate-slide-down">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:text-[#ffb700] transition-colors duration-200 whitespace-nowrap"
-            >
-              {link.label}
-            </Link>
-          ))}
-          {ACCOUNT_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:text-[#ffb700] transition-colors duration-200 whitespace-nowrap"
-            >
-              {link.label}
-            </Link>
-          ))}
+            )
+          })}
         </div>
-      )}
+
+        {signedIn ? (
+          <Link
+            to="/account-profile"
+            className={`site-nav__signed-in${
+              location.pathname === '/account-profile' ? ' is-active' : ''
+            }`}
+            onClick={closeMenu}
+          >
+            {userName}
+          </Link>
+        ) : null}
+      </div>
+
+      <button
+        type="button"
+        className="site-nav__toggle"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={isOpen}
+        aria-controls="mobile-navigation"
+      >
+        {isOpen ? (
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        )}
+      </button>
+
+      <div
+        id="mobile-navigation"
+        className={`site-nav__mobile${isOpen ? ' is-open' : ''}`}
+        hidden={!isOpen}
+      >
+        {links.map(({ to, label, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            onClick={closeMenu}
+            className={({ isActive }) =>
+              `site-nav__mobile-link${isActive || location.pathname === to ? ' is-active' : ''}`
+            }
+          >
+            {label}
+          </NavLink>
+        ))}
+        {signedIn && (
+          <NavLink
+            to="/account-profile"
+            onClick={closeMenu}
+            className={`site-nav__mobile-link${location.pathname === '/account-profile' ? ' is-active' : ''} site-nav__mobile-signed-in`}
+          >
+            {userName}
+          </NavLink>
+        )}
+      </div>
     </nav>
-  );
+  )
 }

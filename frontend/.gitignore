@@ -24,5 +24,8 @@ dist-ssr
 *.sw?
 
 
+.claude
+
+
 frontend/test-results
 frontend/tests

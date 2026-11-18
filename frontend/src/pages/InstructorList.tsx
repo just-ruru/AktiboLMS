@@ -41,63 +41,7 @@ export function InstructorList() {
 
   return (
     <div className="bg-[#f4f6fa] content-stretch flex flex-col items-start relative size-full">
-      <Navbar className="w-[1440px]" />
-      <div className="bg-[#000e53] content-stretch flex h-[104px] items-center justify-between overflow-clip px-[72px] relative shrink-0 w-full">
-        <div className="content-stretch flex gap-[12px] h-[56px] items-center overflow-clip relative shrink-0 w-[256px]">
-          <div className="relative shrink-0 size-[52px]">
-            <img
-              src="/assets/aktibo-symbol.png"
-              alt="AKTIBO symbol"
-              className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
-            />
-          </div>
-          <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[normal] relative shrink-0 text-[20px] text-white whitespace-nowrap">
-            AKTIBO LMS
-          </p>
-        </div>
-        <div className="content-stretch flex gap-[16px] h-[48px] items-center overflow-clip relative shrink-0 w-[400px]">
-          <div
-            className="content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[96px]"
-            onClick={() => navigate("/")}
-          >
-            <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[24px] relative shrink-0 text-[16px] text-white whitespace-nowrap">
-              HOME
-            </p>
-          </div>
-          <div
-            className="content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[144px]"
-            onClick={() => navigate("/courses")}
-          >
-            <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[24px] relative shrink-0 text-[16px] text-white whitespace-nowrap">
-              COURSES
-            </p>
-          </div>
-          <div
-            className="content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[128px]"
-            onClick={() => navigate("/pricing")}
-          >
-            <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[24px] relative shrink-0 text-[16px] text-white whitespace-nowrap">
-              PRICING
-            </p>
-          </div>
-        </div>
-        <div className="content-stretch flex gap-[16px] h-[48px] items-center overflow-clip relative shrink-0 w-[336px]">
-          <div
-            className="content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[160px]"
-            onClick={() => navigate("/instructors/list")}
-          >
-            <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[24px] relative shrink-0 text-[#ffb700] text-[16px] whitespace-nowrap">
-              MY ACCOUNT
-            </p>
-          </div>
-          <div className="border border-[rgba(255,255,255,0.4)] border-solid content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[160px]">
-            <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[24px] relative shrink-0 text-[16px] text-white whitespace-nowrap">
-              ADMIN
-            </p>
-          </div>
-        </div>
-        <div className="absolute bg-[#304074] h-px left-[72px] top-[103px] w-[1296px]" />
-      </div>
+      <Navbar signedIn className="w-[1440px]" />
 
       <div className="bg-[#000e53] content-stretch flex flex-col gap-[8px] h-[176px] items-start overflow-clip pb-[36px] pt-[22px] px-[72px] relative shrink-0 w-full">
         <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#ffb700] text-[11px] whitespace-nowrap">

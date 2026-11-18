@@ -12,7 +12,7 @@ export function ForgotPassword() {
 
   return (
     <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] px-[10px] relative size-full">
-      <Navbar className="w-[1420px]" />
+      <Navbar />
       <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative shrink-0 w-full animate-page-fade">
         <Card
           className="h-[621px] rounded-[28px] px-[20px] py-[60px] shrink-0 w-[550px] items-center overflow-clip"

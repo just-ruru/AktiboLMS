@@ -8,10 +8,12 @@ import { StudentList } from './pages/StudentList'
 import { StudentCreate } from './pages/StudentCreate'
 import { StudentProfile } from './pages/StudentProfile'
 import { StudentUpdate } from './pages/StudentUpdate'
+import { StudentView } from './pages/StudentView'
 import { InstructorList } from './pages/InstructorList'
 import { InstructorCreate } from './pages/InstructorCreate'
 import { InstructorProfile } from './pages/InstructorProfile'
 import { InstructorUpdate } from './pages/InstructorUpdate'
+import { InstructorView } from './pages/InstructorView'
 import { NotFound } from './pages/NotFound'
 import './App.css'
 
@@ -25,13 +27,15 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/account-profile" element={<AccountProfile />} />
 
-        {/* Students */}
+        {/* Student views */}
+        <Route path="/student/courses" element={<StudentView />} />
         <Route path="/students/list" element={<StudentList />} />
         <Route path="/students/create" element={<StudentCreate />} />
         <Route path="/students/profile/:id" element={<StudentProfile />} />
         <Route path="/students/update/:id" element={<StudentUpdate />} />
 
-        {/* Instructors */}
+        {/* Instructor views */}
+        <Route path="/instructor/courses" element={<InstructorView />} />
         <Route path="/instructors/list" element={<InstructorList />} />
         <Route path="/instructors/create" element={<InstructorCreate />} />
         <Route path="/instructors/profile/:id" element={<InstructorProfile />} />

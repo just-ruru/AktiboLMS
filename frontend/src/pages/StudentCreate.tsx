@@ -52,8 +52,8 @@ export function StudentCreate() {
   };
 
   return (
-    <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] px-[10px] relative size-full">
-      <Navbar className="w-[1420px]" />
+    <div className="bg-[#f4f6fa] flex flex-col items-start relative size-full">
+      <Navbar signedIn className="w-[1420px]" />
       <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative shrink-0 w-full animate-page-fade">
         <Card className="h-[753px] rounded-[28px] px-[20px] py-[35px] shrink-0 w-[1246px] items-center overflow-clip">
           <div className="flex flex-col items-start overflow-clip p-[10px] relative w-full max-w-[1420px]">
