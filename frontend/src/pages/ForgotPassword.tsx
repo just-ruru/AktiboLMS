@@ -56,7 +56,7 @@ export function ForgotPassword() {
             <p className="font-['Lexend Exa'] font-bold relative shrink-0">
               <Link
                 to="/login"
-                className="hover:text-aktif-gold transition-colors duration-200"
+                className="hover:text-aktibo-gold transition-colors duration-200"
               >
                 Log in
               </Link>

@@ -167,7 +167,7 @@ export function Register() {
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="font-bold hover:text-aktif-gold transition-colors duration-200"
+                className="font-bold hover:text-aktibo-gold transition-colors duration-200"
               >
                 Sign in
               </Link>
@@ -175,7 +175,7 @@ export function Register() {
             <p className="relative shrink-0">
               <Link
                 to="/forgot-password"
-                className="font-bold hover:text-aktif-gold transition-colors duration-200"
+                className="font-bold hover:text-aktibo-gold transition-colors duration-200"
               >
                 Forgot Password?
               </Link>

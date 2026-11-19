@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Navbar } from '../components/ui/Navbar'
 import { CourseCard } from '../components/ui/CourseCard'
@@ -71,7 +72,7 @@ export function StudentView() {
   const [category, setCategory] = useState('All Categories')
   const [sort, setSort] = useState('Recently updated')
   const [activeTab, setActiveTab] = useState<'all' | 'myLearning'>('all')
-  const [selectedCourse, setSelectedCourse] = useState<(typeof COURSES)[number] | null>(null)
+  const navigate = useNavigate()
 
   const filtered = COURSES.filter((course) => {
     const query = search.trim().toLowerCase()
@@ -167,7 +168,7 @@ export function StudentView() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full mt-2 h-[42px] rounded-[11px] border border-black bg-white px-4 text-[16px] font-['Lexend Exa'] focus:outline-none focus:ring-2 focus:ring-aktif-gold"
+                className="w-full mt-2 h-[42px] rounded-[11px] border border-black bg-white px-4 text-[16px] font-['Lexend Exa'] focus:outline-none focus:ring-2 focus:ring-aktibo-gold"
                 placeholder="Search courses..."
               />
             </div>
@@ -234,46 +235,19 @@ export function StudentView() {
                   structure={course.structure}
                   progress={course.progress}
                   buttonLabel={course.buttonLabel}
-                  onButtonClick={() => setSelectedCourse(course)}
+                  onButtonClick={() =>
+                    navigate(
+                      course.status === 'Enrolled'
+                        ? `/student/courses/${course.courseCode}/subjects`
+                        : `/student/courses/${course.courseCode}/subjects`,
+                    )
+                  }
                 />
               ))
             )}
           </div>
         </div>
       </div>
-
-      {selectedCourse && (
-        <div
-          className="course-dialog-backdrop"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setSelectedCourse(null)
-          }}
-        >
-          <section
-            className="course-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="course-dialog-title"
-          >
-            <button
-              type="button"
-              className="course-dialog__close"
-              onClick={() => setSelectedCourse(null)}
-              aria-label="Close course details"
-            >
-              ×
-            </button>
-            <p className="eyebrow">{selectedCourse.courseCode} · {selectedCourse.category}</p>
-            <h2 id="course-dialog-title">{selectedCourse.title}</h2>
-            <p>Instructor: {selectedCourse.instructor}</p>
-            <p>{selectedCourse.structure}</p>
-            <p>Status: {selectedCourse.status}</p>
-            <Button variant="primary" onClick={() => setSelectedCourse(null)}>
-              Back to courses
-            </Button>
-          </section>
-        </div>
-      )}
     </div>
   )
 }

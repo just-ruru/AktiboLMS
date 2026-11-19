@@ -8,9 +8,11 @@ export function Label({ children, className = '', ...props }: LabelProps) {
   return (
     <label
       className={[
-        'block mb-2 text-[24px] font-["Lexend Exa"] text-black',
+        'mb-1.5 block font-display text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-muted',
         className,
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       {...props}
     >
       {children}

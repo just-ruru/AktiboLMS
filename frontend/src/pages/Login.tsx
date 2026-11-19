@@ -72,7 +72,7 @@ export function Login() {
               Don't have an account?{' '}
               <Link
                 to="/register"
-                className="font-bold hover:text-aktif-gold transition-colors duration-200"
+                className="font-bold hover:text-aktibo-gold transition-colors duration-200"
               >
                 Sign up
               </Link>
@@ -80,7 +80,7 @@ export function Login() {
             <p className="relative shrink-0">
               <Link
                 to="/forgot-password"
-                className="font-bold hover:text-aktif-gold transition-colors duration-200"
+                className="font-bold hover:text-aktibo-gold transition-colors duration-200"
               >
                 Forgot Password
               </Link>
