@@ -4,7 +4,6 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Label } from "../components/ui/Label";
 import { Card } from "../components/ui/Card";
-import { Navbar } from "../components/ui/Navbar";
 import { createStudent } from "../services/api";
 
 export function StudentCreate() {
@@ -52,8 +51,8 @@ export function StudentCreate() {
   };
 
   return (
-    <div className="bg-[#f4f6fa] flex flex-col items-start relative size-full">
-      <Navbar signedIn className="w-[1420px]" />
+    <div className="bg-[#f4f6fa] content-stretch flex flex-col items-start relative size-full animate-page-fade">
+
       <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative shrink-0 w-full animate-page-fade">
         <Card className="h-[753px] rounded-[28px] px-[20px] py-[35px] shrink-0 w-[1246px] items-center overflow-clip">
           <div className="flex flex-col items-start overflow-clip p-[10px] relative w-full max-w-[1420px]">
@@ -173,7 +172,7 @@ export function StudentCreate() {
                       value={form.description}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
                       placeholder="Brief description..."
-                      className="w-full h-[46px] rounded-[11px] border border-black bg-white px-4 text-[16px] font-['Lexend Exa'] focus:outline-none focus:ring-2 focus:ring-aktibo-gold"
+                      className="w-full h-[46px] rounded-[11px] border border-[#dee4ee] bg-white px-4 text-[16px] font-['Lexend Exa'] focus:outline-none focus:ring-2 focus:ring-aktibo-gold"
                     />
                   </div>
                 </div>
@@ -187,7 +186,7 @@ export function StudentCreate() {
                   handleSubmit(e as React.FormEvent);
                 }}
                 disabled={submitting}
-                className="w-full max-w-[588px] h-[51px] px-[179px] py-[8px] border border-black hover:bg-amber-400 active:bg-amber-500 transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none"
+                className="w-full max-w-[588px] h-[51px] px-[179px] py-[8px] border border-[#000e53] hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none"
               >
                 {submitting ? "Creating..." : "ADD STUDENT"}
               </Button>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
-import { Navbar } from "../components/ui/Navbar";
 import { getAllStudents, type Student } from "../services/api";
 
 export function StudentList() {
@@ -40,8 +39,7 @@ export function StudentList() {
   });
 
   return (
-    <div className="bg-[#f4f6fa] content-stretch flex flex-col items-start relative size-full">
-      <Navbar className="w-full" signedIn />
+    <div className="bg-[#f4f6fa] content-stretch flex flex-col items-start relative size-full animate-page-fade">
 
       <div className="bg-[#000e53] content-stretch flex flex-col gap-[8px] h-[176px] items-start overflow-clip pb-[36px] pt-[22px] px-[72px] relative shrink-0 w-full">
         <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#ffb700] text-[11px] whitespace-nowrap">
@@ -56,7 +54,7 @@ export function StudentList() {
               <Button
                 variant="primary"
                 onClick={handleCreate}
-                className="h-[48px] w-[264px] rounded-[9px] bg-[#ffb700] border border-black text-black text-[12px] font-['Lexend_Exa'] font-bold whitespace-nowrap hover:bg-amber-400 active:bg-amber-500 transition-colors duration-200"
+                className="h-[48px] w-[264px] rounded-[9px] bg-[#ffb700] border border-[#000e53] text-[#000e53] text-[12px] font-['Lexend_Exa'] font-bold whitespace-nowrap hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
               >
                 ADD STUDENT
               </Button>
@@ -72,7 +70,7 @@ export function StudentList() {
         <div className="content-stretch flex flex-col gap-[20px] h-[748px] items-start overflow-clip pb-[40px] relative shrink-0 w-[1296px]">
           <div className="content-stretch flex gap-[16px] h-[44px] items-start relative shrink-0 w-full">
             <div
-              className="bg-[#ffb700] border border-black border-solid content-stretch flex h-full items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[224px]"
+              className="bg-[#ffb700] border border-[#000e53] border-solid content-stretch flex h-full items-center justify-center overflow-clip relative rounded-[9px] shrink-0 w-[224px]"
             >
               <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[12px] text-black whitespace-pre">
                 ALL STUDENTS {students.length}
@@ -115,7 +113,7 @@ export function StudentList() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full mt-2 h-[42px] rounded-[11px] border border-black bg-white px-4 text-[16px] font-['Lexend Exa'] focus:outline-none focus:ring-2 focus:ring-aktibo-gold"
+                className="w-full mt-2 h-[42px] rounded-[11px] border border-[#dee4ee] bg-white px-4 text-[16px] font-['Lexend Exa'] focus:outline-none focus:ring-2 focus:ring-aktibo-gold"
                 placeholder="Search students..."
               />
             </div>
@@ -229,7 +227,7 @@ export function StudentList() {
                           <Button
                             variant="primary"
                             onClick={() => handleEdit(student.id)}
-                            className="h-[38px] flex-1 rounded-[9px] bg-[#ffb700] border border-black text-black text-[12px] font-['Lexend_Exa'] font-bold whitespace-nowrap hover:bg-amber-400 active:bg-amber-500 transition-colors duration-200"
+                            className="h-[38px] flex-1 rounded-[9px] bg-[#ffb700] border border-[#000e53] text-[#000e53] text-[12px] font-['Lexend_Exa'] font-bold whitespace-nowrap hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
                           >
                             EDIT
                           </Button>

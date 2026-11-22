@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Navbar } from '../components/ui/Navbar'
 import { PageIntro } from '../components/ui/PageIntro'
 import { TabsBar } from '../components/ui/TabsBar'
 import { SubjectSidebar } from '../components/ui/SubjectSidebar'
 import { ModuleRow, type ModuleStatus } from '../components/ui/ModuleRow'
 import { Button } from '../components/ui/Button'
-import { Footer } from '../components/ui/Footer'
 
 const SIDEBAR_SUBJECTS = [
   { name: 'Programming Fundamentals', completion: '50% complete · 2 of 4 modules' },
@@ -33,8 +31,7 @@ export function StudentModules() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas">
-      <Navbar className="w-full" signedIn />
+    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas animate-page-fade">
 
       <PageIntro
         breadcrumb="Courses / CS101 / Programming Fundamentals"
@@ -90,7 +87,6 @@ export function StudentModules() {
         </div>
       </main>
 
-      <Footer signedIn className="mt-12" />
     </div>
   )
 }

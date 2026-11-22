@@ -15,8 +15,8 @@ const SIZES: Record<InputSize, string> = {
   sm: 'h-9 px-3 text-[13px]',
   md: 'h-11 px-4 text-[14px]',
   lg: 'h-12 px-4 text-[15px]',
-  auth: 'h-12 px-4 text-[16px] rounded-[11px] border-black',
-  register: 'h-12 px-4 text-[16px] rounded-[11px] border-black',
+  auth: 'h-[48px] px-[12px] text-[12px] rounded-[8px]',
+  register: 'h-[48px] px-[12px] text-[12px] rounded-[8px]',
 }
 
 export function Input({

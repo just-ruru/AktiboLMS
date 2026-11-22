@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { Navbar } from '../components/ui/Navbar'
 import { PageIntro } from '../components/ui/PageIntro'
 import { TabsBar } from '../components/ui/TabsBar'
 import { StatCard } from '../components/ui/StatCard'
 import { ProgressBar } from '../components/ui/ProgressBar'
-import { Footer } from '../components/ui/Footer'
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
@@ -22,8 +20,7 @@ export function StudentProgress() {
   const [activeTab, setActiveTab] = useState('overview')
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas">
-      <Navbar className="w-full" signedIn />
+    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas animate-page-fade">
 
       <PageIntro
         breadcrumb="My account / Learning progress"
@@ -67,7 +64,6 @@ export function StudentProgress() {
         </section>
       </main>
 
-      <Footer signedIn className="mt-12" />
     </div>
   )
 }

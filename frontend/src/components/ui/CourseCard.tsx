@@ -92,10 +92,10 @@ export function CourseCard({
           type="button"
           onClick={onButtonClick}
           className={[
-            'course-card__action h-[40px] rounded-[9px] transition-colors duration-200',
+            'course-card__action h-[40px] rounded-[9px] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0',
             isInstructor
               ? 'bg-white border border-[#dee4ee] text-[#000e53] hover:bg-[#f4f6fa]'
-              : 'bg-[#ffb700] border border-black text-black hover:bg-amber-400 active:bg-amber-500',
+              : 'bg-[#ffb700] border border-[#000e53] text-[#000e53] hover:bg-[#ffc933] active:bg-[#e8a800]',
           ]
             .filter(Boolean)
             .join(' ')}

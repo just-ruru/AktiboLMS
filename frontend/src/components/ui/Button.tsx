@@ -17,7 +17,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    'bg-aktibo-gold text-aktibo-ink-on-gold border border-black hover:bg-aktibo-gold-hover active:bg-[#e8a800] active:translate-y-0',
+    'bg-[#ffb700] text-[#000e53] border border-[#000e53] hover:bg-[#ffc933] active:bg-[#e8a800] active:translate-y-0',
   secondary:
     'bg-aktibo-surface text-aktibo-navy border border-aktibo-border hover:bg-aktibo-canvas active:bg-aktibo-border',
   outline:

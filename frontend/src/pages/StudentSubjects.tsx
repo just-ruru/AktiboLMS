@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Navbar } from '../components/ui/Navbar'
 import { PageIntro } from '../components/ui/PageIntro'
 import { TabsBar } from '../components/ui/TabsBar'
 import { ProgressSummary } from '../components/ui/ProgressSummary'
 import { SubjectCard } from '../components/ui/SubjectCard'
 import { Button } from '../components/ui/Button'
-import { Footer } from '../components/ui/Footer'
 
 const SUBJECTS = [
   {
@@ -40,8 +38,7 @@ export function StudentSubjects() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas">
-      <Navbar className="w-full" signedIn />
+    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas animate-page-fade">
 
       <PageIntro
         breadcrumb="Courses / CS101"
@@ -116,7 +113,6 @@ export function StudentSubjects() {
         </div>
       </main>
 
-      <Footer signedIn className="mt-12" />
     </div>
   )
 }

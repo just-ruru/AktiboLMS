@@ -30,3 +30,19 @@ target/
 *.jar
 *.war
 *.ear
+
+# Design & AI artifacts (regenerable / non-essential source-of-truth lives in Figma)
+.design/
+.impeccable/
+frontend/.impeccable/
+frontend/docs/
+
+# One-off scripts
+extract_frames.py
+
+# Loose screenshot artifacts at repo root (keep committed design refs under frontend/public/assets/ only)
+/*.png
+/*.jpg
+/*.jpeg
+
+.claude

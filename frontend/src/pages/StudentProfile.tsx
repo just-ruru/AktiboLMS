@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "../components/ui/Button";
-import { Navbar } from "../components/ui/Navbar";
 import { getStudentById } from "../services/api";
 
 const profilePicPlaceholder = new URL(
@@ -55,9 +54,8 @@ export function StudentProfile() {
   }
 
   return (
-    <div className="bg-[#f4f6fa] flex flex-col min-h-screen relative size-full">
+    <div className="bg-[#f4f6fa] flex flex-col min-h-screen relative size-full animate-page-fade">
       {/* Navbar — signed-in variant per Figma */}
-      <Navbar className="w-full" signedIn />
 
       {/* Page introduction */}
       <div className="bg-[#000e53] flex flex-col gap-[10px] h-[208px] items-start overflow-clip pb-[61px] pl-[72px] pr-[900px] pt-[27px] relative shrink-0 w-full">
@@ -133,7 +131,7 @@ export function StudentProfile() {
                   Your personal and academic information.
                 </p>
               </div>
-              <div className="bg-[#ffb700] content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[246px]">
+              <div className="bg-[#ffb700] border border-[#000e53] text-[#000e53] content-stretch flex h-[48px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[246px] cursor-pointer hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0">
                 <p className="[word-break:break-word] font-['Inter'] font-semibold leading-[1.4] not-italic relative shrink-0 text-[#000e53] text-[16px] whitespace-nowrap">
                   Edit Student Details
                 </p>

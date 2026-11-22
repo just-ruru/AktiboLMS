@@ -7,7 +7,7 @@ export function NotFound() {
 
   return (
     <div className="bg-[#000e53] flex flex-col items-center justify-center h-screen">
-      <Navbar />
+      <Navbar signedIn={false} />
       <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative shrink-0 w-full animate-page-fade">
         <div className="bg-white rounded-[28px] p-[40px] shadow-xl border border-black/20 flex flex-col items-center gap-[16px] text-center">
           <h1 className="text-[64px] font-['Castoro Titling'] text-black">404</h1>

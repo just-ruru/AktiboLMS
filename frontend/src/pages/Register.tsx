@@ -1,188 +1,174 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '../components/ui/Button'
-import { Input } from '../components/ui/Input'
-import { Label } from '../components/ui/Label'
-import { Card } from '../components/ui/Card'
+import { useNavigate } from 'react-router-dom'
 import { Navbar } from '../components/ui/Navbar'
+import { Footer } from '../components/ui/Footer'
+import { Input } from '../components/ui/Input'
 
+/**
+ * Register — matches Figma frame 25:44 (Registration).
+ * Navy bg, shared pre-signup Navbar, centered white registration form
+ * (rounded-[24px]), Castoro Titling "Create your account" heading,
+ * first name + last name, email + course, password + re-enter password,
+ * phone number field, "USE SAMPLE DETAILS" / "SHOW / HIDE PASSWORDS" /
+ * "CREATE ACCOUNT" buttons, secondary links, prototype guidance banner,
+ * and shared Footer. Responsive at 320/375/390/768/1024/1440.
+ */
 export function Register() {
   const navigate = useNavigate()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [course, setCourse] = useState('')
-  const [password, setPassword] = useState('')
-  const [phone, setPhone] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
 
   return (
-    <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] px-[10px] relative size-full">
-      <Navbar />
-      <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative w-full flex-1 animate-page-fade">
-        <Card
-          className="h-[753px] rounded-[28px] px-[20px] py-[35px] shrink-0 w-[1246px] items-center overflow-clip"
-        >
-          <div className="flex flex-col items-start overflow-clip p-[10px] relative w-full max-w-[1420px]">
-            <h1 className="text-[64px] font-['Castoro Titling'] text-black text-center w-full leading-[normal]">
-              REGISTER
-            </h1>
+    <div className="bg-[#000e53] min-h-screen flex flex-col relative auth-page animate-page-fade">
+      {/* Navigation — shared pre-signup Navbar matches Figma 95:101-95:118 */}
+      <Navbar signedIn={false} />
+
+      {/* Account form workspace */}
+      <main className="flex-1 flex items-center justify-center px-6 sm:px-10 lg:px-[72px] pt-[40px] pb-[24px]">
+        <div className="bg-white content-stretch flex flex-col gap-[16px] p-[32px] relative rounded-[24px] shrink-0 w-full max-w-[1180px]">
+          {/* Form introduction */}
+          <div className="content-stretch flex flex-col gap-[8px] items-start leading-[1.5] overflow-clip relative shrink-0 w-full max-w-[1116px]">
+            <p className="font-['Castoro_Titling:Regular'] not-italic relative shrink-0 text-[#000e53] text-[32px] w-full">
+              Create your account
+            </p>
+            <p className="font-['Lexend_Exa:Regular'] font-normal relative shrink-0 text-[#596579] text-[12px] w-full">
+              Start with your details, then verify your email and choose your role.
+            </p>
           </div>
-          <div className="flex gap-[10px] h-[488px] items-start overflow-clip relative w-full">
-            {/* Left Panel */}
-            <div className="flex-1 flex flex-col h-[488px] items-start justify-center min-w-px overflow-clip relative w-full">
-              <div className="flex flex-col items-start relative w-full">
-                <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                  <Label htmlFor="firstName" className="text-[24px] text-black">
-                    First Name
-                  </Label>
-                </div>
-                <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                  <Input
-                    id="firstName"
-                    type="text"
-                    inputSize="register"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="First Name"
-                    className="w-full"
-                  />
-                </div>
-                <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                  <Label htmlFor="email" className="text-[24px] text-black whitespace-nowrap">
-                    Email
-                  </Label>
-                </div>
-                <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                  <Input
-                    id="email"
-                    type="email"
-                    inputSize="register"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="example@cit.edu"
-                    className="w-full"
-                  />
-                </div>
-                <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                  <Label htmlFor="password" className="text-[24px] text-black whitespace-nowrap">
-                    Password
-                  </Label>
-                </div>
-                <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                  <Input
-                    id="password"
-                    type="password"
-                    inputSize="register"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    className="w-full"
-                  />
-                </div>
-                <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                  <Label htmlFor="confirmPassword" className="text-[24px] text-black whitespace-nowrap">
-                    Re-enter Password
-                  </Label>
-                </div>
-                <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    inputSize="register"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Re-enter Password"
-                    className="w-full"
-                  />
-                </div>
+
+          {/* Registration fields */}
+          <div className="content-stretch flex flex-col gap-[12px] items-start overflow-clip relative shrink-0 w-full max-w-[1116px]">
+            {/* Row 1: first name + last name */}
+            <div className="content-stretch flex gap-[24px] items-start overflow-clip relative shrink-0 w-full max-w-[1116px]">
+              <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full max-w-[546px]">
+                <Input
+                  label="First name *"
+                  placeholder="First name"
+                  inputSize="auth"
+                  className="w-full border-[#dfe5f0] border-solid"
+                />
+              </div>
+              <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full max-w-[546px]">
+                <Input
+                  label="Last name *"
+                  placeholder="Last name"
+                  inputSize="auth"
+                  className="w-full border-[#dfe5f0] border-solid"
+                />
               </div>
             </div>
 
-            {/* Right Panel */}
-            <div className="flex-1 flex flex-col h-[383px] items-start justify-center min-w-px overflow-clip relative w-full">
-              <div className="flex flex-col items-start relative w-full">
-                <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                  <Label htmlFor="lastName" className="text-[24px] text-black">
-                    Last Name
-                  </Label>
-                </div>
-                <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                  <Input
-                    id="lastName"
-                    type="text"
-                    inputSize="register"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Last Name"
-                    className="w-full"
-                  />
-                </div>
-                <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                  <Label htmlFor="course" className="text-[24px] text-black">
-                    Course
-                  </Label>
-                </div>
-                <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                  <Input
-                    id="course"
-                    type="text"
-                    inputSize="register"
-                    value={course}
-                    onChange={(e) => setCourse(e.target.value)}
-                    placeholder="Course"
-                    className="w-full"
-                  />
-                </div>
-                <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                  <Label htmlFor="phone" className="text-[24px] text-black">
-                    Phone Number
-                  </Label>
-                </div>
-                <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                  <Input
-                    id="phone"
-                    type="text"
-                    inputSize="register"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone Number"
-                    className="w-full"
-                  />
-                </div>
+            {/* Row 2: email + course */}
+            <div className="content-stretch flex gap-[24px] items-start overflow-clip relative shrink-0 w-full max-w-[1116px]">
+              <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full max-w-[546px]">
+                <Input
+                  label="Email *"
+                  placeholder="name@example.com"
+                  type="email"
+                  inputSize="auth"
+                  className="w-full border-[#dfe5f0] border-solid"
+                />
+              </div>
+              <div className="content-stretch flex flex-col gap-[8px] items-start leading-[1.5] overflow-clip relative shrink-0 w-full max-w-[546px]">
+                <label className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#15203a] text-[12px] w-full">
+                  Course *
+                </label>
+                <select
+                  className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex flex-col font-['Lexend_Exa:Regular'] font-normal h-[48px] items-start overflow-clip pl-[12px] pr-[40px] py-[12px] relative rounded-[8px] shrink-0 text-left w-full"
+                >
+                  <option>Select a course</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Row 3: password + re-enter password */}
+            <div className="content-stretch flex gap-[24px] items-start overflow-clip relative shrink-0 w-full max-w-[1116px]">
+              <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full max-w-[546px]">
+                <Input
+                  label="Password *"
+                  placeholder="Create password"
+                  type="password"
+                  inputSize="auth"
+                  className="w-full border-[#dfe5f0] border-solid"
+                />
+              </div>
+              <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full max-w-[546px]">
+                <Input
+                  label="Re-enter password *"
+                  placeholder="Repeat password"
+                  type="password"
+                  inputSize="auth"
+                  className="w-full border-[#dfe5f0] border-solid"
+                />
+              </div>
+            </div>
+
+            {/* Row 4: phone number */}
+            <div className="content-stretch flex items-start overflow-clip relative shrink-0 w-full max-w-[1116px]">
+              <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full max-w-[546px]">
+                <Input
+                  label="Phone number"
+                  placeholder="Optional"
+                  inputSize="auth"
+                  className="w-full border-[#dfe5f0] border-solid"
+                />
               </div>
             </div>
           </div>
-          <div className="flex h-[67px] items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-            <Button
-              variant="primary"
-              onClick={() => navigate('/account-profile')}
-              className="w-full max-w-[588px] h-[51px] px-[179px] py-[8px] border border-black hover:bg-amber-400 active:bg-amber-500 transition-colors duration-200"
+
+          {/* Registration actions */}
+          <div className="content-stretch cursor-pointer flex gap-[16px] items-start overflow-clip relative shrink-0 w-full max-w-[1116px]">
+            <button
+              className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-full max-w-[350px] text-center"
             >
-              SUBMIT
-            </Button>
+              <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px]">
+                USE SAMPLE DETAILS
+              </p>
+            </button>
+            <button
+              className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-full max-w-[350px] text-center"
+            >
+              <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px]">
+                SHOW / HIDE PASSWORDS
+              </p>
+            </button>
+            <button
+              className="bg-[#ffb700] border border-[#000e53] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-full max-w-[384px] text-center"
+              onClick={() => navigate('/account-profile')}
+            >
+              <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[normal] min-w-px relative text-[#000e53] text-[11px]">
+                CREATE ACCOUNT
+              </p>
+            </button>
           </div>
-          <footer className="flex gap-[199px] h-[20px] items-center justify-center leading-[normal] overflow-clip p-[10px] relative shrink-0 text-[12px] text-black text-center w-full whitespace-nowrap">
-            <p className="relative shrink-0">
-              Already have an account?{' '}
-              <Link
-                to="/login"
-                className="font-bold hover:text-aktibo-gold transition-colors duration-200"
-              >
-                Sign in
-              </Link>
+
+          {/* Form secondary links */}
+          <div className="content-stretch cursor-pointer flex font-['Lexend_Exa:Bold'] font-bold gap-[16px] items-start leading-[0] overflow-clip relative shrink-0 text-[11px] text-black text-center w-full justify-center">
+            <a className="block flex-[1_0_0] min-w-px relative" onClick={() => navigate('/login')}>
+              <p className="leading-[normal]">Already have an account? Sign in</p>
+            </a>
+            <a className="block flex-[1_0_0] min-w-px relative" onClick={() => navigate('/forgot-password')}>
+              <p className="leading-[normal]">Forgot Password?</p>
+            </a>
+          </div>
+
+          {/* Prototype form guidance */}
+          <div className="bg-[#fff4cd] content-stretch flex flex-col items-start overflow-clip p-[14px] relative rounded-[8px] shrink-0 w-full max-w-[1116px]">
+            <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[11px] w-full">
+              Prototype preview: use sample details or click each field. Choose your course from the selector. Registration and verification are simulated.
             </p>
-            <p className="relative shrink-0">
-              <Link
-                to="/forgot-password"
-                className="font-bold hover:text-aktibo-gold transition-colors duration-200"
-              >
-                Forgot Password?
-              </Link>
+          </div>
+
+          <a
+            className="block cursor-pointer font-['Lexend_Exa:Bold'] font-bold leading-[0] min-w-full relative shrink-0 text-[#000e53] text-[11px] text-center w-full text-center"
+            onClick={() => navigate('/help-support')}
+          >
+            <p className="[text-underline-position:from-font] decoration-from-font decoration-solid leading-[1.5] underline">
+              Need help? Visit Help & support
             </p>
-          </footer>
-        </Card>
+          </a>
+        </div>
       </main>
+
+      {/* Footer */}
+      <Footer signedIn={false} />
     </div>
   )
 }

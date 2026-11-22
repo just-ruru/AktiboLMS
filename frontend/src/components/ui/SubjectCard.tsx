@@ -57,7 +57,7 @@ export function SubjectCard({
         <button
           type="button"
           onClick={onAction}
-          className="h-[40px] w-[192px] shrink-0 rounded-[9px] border border-black bg-aktibo-gold font-display text-[12px] font-bold uppercase tracking-[0.04em] text-aktibo-ink-on-gold transition-colors duration-200 hover:bg-aktibo-gold-hover active:bg-[#e8a800]"
+          className="h-[40px] w-[192px] shrink-0 rounded-[9px] border border-[#000e53] bg-aktibo-gold font-display text-[12px] font-bold uppercase tracking-[0.04em] text-aktibo-ink-on-gold hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
         >
           {actionLabel}
         </button>
