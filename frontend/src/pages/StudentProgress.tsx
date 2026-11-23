@@ -28,7 +28,7 @@ export function StudentProgress() {
         metadata="Your activity across all enrolled courses"
       />
 
-      <main className="mx-auto w-full max-w-[1296px] flex-1 px-6 py-8 sm:px-10 lg:px-[72px]">
+      <main className="mx-auto w-full max-w-[1296px] flex-1 py-8 px-[72px]">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <TabsBar tabs={TABS} activeId={activeTab} onChange={setActiveTab} />
           <p className="rounded-[9px] border border-aktibo-border bg-aktibo-surface px-4 py-2 text-[12px] font-display font-bold text-aktibo-navy">
@@ -36,7 +36,7 @@ export function StudentProgress() {
           </p>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-6 grid grid-cols-1 gap-4 grid-cols-2 grid-cols-4">
           <StatCard value="6 / 30" label="Modules complete" />
           <StatCard value="80%" label="Quick check average" tone="success" />
           <StatCard value="5" label="Practice completed" tone="info" />

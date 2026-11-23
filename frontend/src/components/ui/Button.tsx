@@ -17,7 +17,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#ffb700] text-[#000e53] border border-[#000e53] hover:bg-[#ffc933] active:bg-[#e8a800] active:translate-y-0',
+    'bg-aktibo-gold text-aktibo-ink-on-gold border border-aktibo-navy hover:bg-aktibo-gold-hover active:bg-aktibo-navy active:text-white active:translate-y-0',
   secondary:
     'bg-aktibo-surface text-aktibo-navy border border-aktibo-border hover:bg-aktibo-canvas active:bg-aktibo-border',
   outline:
@@ -25,7 +25,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
   ghost:
     'bg-transparent text-aktibo-navy border border-transparent hover:bg-aktibo-navy/10',
   danger:
-    'bg-aktibo-danger-bg text-aktibo-danger-fg border border-aktibo-danger-fg hover:bg-[#ffd4d4]',
+    'bg-aktibo-danger-bg text-aktibo-danger-fg border border-aktibo-danger-fg hover:bg-aktibo-danger-bg/80',
 }
 
 const SIZES: Record<ButtonSize, string> = {

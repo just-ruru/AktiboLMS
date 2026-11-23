@@ -1,210 +1,179 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import { Label } from "../components/ui/Label";
-import { Card } from "../components/ui/Card";
-import { createStudent } from "../services/api";
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Button } from '../components/ui/Button'
+import { Input } from '../components/ui/Input'
+import { Label } from '../components/ui/Label'
+import { Card } from '../components/ui/Card'
+import { PageIntro } from '../components/ui/PageIntro'
+import { createStudent } from '../services/api'
 
 export function StudentCreate() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [form, setForm] = useState({
-    studentId: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    description: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitting, setSubmitting] = useState(false);
+    studentId: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    description: '',
+  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [submitting, setSubmitting] = useState(false)
 
   const validate = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    if (!form.studentId.trim()) newErrors.studentId = "Student ID is required";
-    if (!form.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!form.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!form.email.trim()) newErrors.email = "Email is required";
+    const newErrors: Record<string, string> = {}
+    if (!form.studentId.trim()) newErrors.studentId = 'Student ID is required'
+    if (!form.firstName.trim()) newErrors.firstName = 'First name is required'
+    if (!form.lastName.trim()) newErrors.lastName = 'Last name is required'
+    if (!form.email.trim()) newErrors.email = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "Email should be valid";
+      newErrors.email = 'Email should be valid'
     }
-    if (!form.password) newErrors.password = "Password is required";
+    if (!form.password) newErrors.password = 'Password is required'
     else if (form.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = 'Password must be at least 6 characters'
     }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setSubmitting(true);
+    e.preventDefault()
+    if (!validate()) return
+    setSubmitting(true)
     try {
-      await createStudent(form);
-      navigate("/students/list");
+      await createStudent(form)
+      navigate('/students/list')
     } catch (err: any) {
-      setErrors({ _submit: err.message || "Failed to create student" });
+      setErrors({ _submit: err.message || 'Failed to create student' })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
-    <div className="bg-[#f4f6fa] content-stretch flex flex-col items-start relative size-full animate-page-fade">
+    <div className="bg-aktibo-canvas min-h-screen flex flex-col relative size-full animate-page-fade">
 
-      <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative shrink-0 w-full animate-page-fade">
-        <Card className="h-[753px] rounded-[28px] px-[20px] py-[35px] shrink-0 w-[1246px] items-center overflow-clip">
-          <div className="flex flex-col items-start overflow-clip p-[10px] relative w-full max-w-[1420px]">
-            <h1 className="text-[64px] font-['Castoro Titling'] text-black text-center w-full leading-[normal]">
-              CREATE STUDENT
-            </h1>
-          </div>
-          <form onSubmit={handleSubmit} className="flex flex-col items-start overflow-clip p-[10px] relative w-full">
+      {/* Page introduction */}
+      <PageIntro
+        breadcrumb="Students / Create"
+        title="Create student"
+        metadata="Add a new student account and learning profile."
+      />
+
+      <main className="flex-1 mx-auto w-full max-w-[1296px] px-[72px] py-6">
+        <Card variant="surface" padded className="p-8 p-12">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
             {errors._submit && (
-              <p className="mt-1 text-[11px] font-['Lexend Exa'] text-red-500 w-full mb-4">
+              <p className="mt-1 text-[11px] font-display text-aktibo-danger-fg">
                 {errors._submit}
               </p>
             )}
-            <div className="flex gap-[10px] h-[488px] items-start overflow-clip relative w-full">
-              {/* Left Panel */}
-              <div className="flex-1 flex flex-col h-[488px] items-start justify-center min-w-px overflow-clip relative w-full">
-                <div className="flex flex-col items-start relative w-full">
-                  <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                    <Label htmlFor="studentId" className="text-[24px] text-black whitespace-nowrap">
-                      Student ID
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                    <Input
-                      id="studentId"
-                      type="text"
-                      inputSize="register"
-                      value={form.studentId}
-                      onChange={(e) => setForm({ ...form, studentId: e.target.value })}
-                      placeholder="e.g. STU2025001"
-                      className="w-full"
-                      error={errors.studentId}
-                    />
-                  </div>
-                  <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                    <Label htmlFor="firstName" className="text-[24px] text-black whitespace-nowrap">
-                      First Name
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                    <Input
-                      id="firstName"
-                      type="text"
-                      inputSize="register"
-                      value={form.firstName}
-                      onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                      placeholder="First Name"
-                      className="w-full"
-                      error={errors.firstName}
-                    />
-                  </div>
-                  <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                    <Label htmlFor="lastName" className="text-[24px] text-black whitespace-nowrap">
-                      Last Name
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                    <Input
-                      id="lastName"
-                      type="text"
-                      inputSize="register"
-                      value={form.lastName}
-                      onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                      placeholder="Last Name"
-                      className="w-full"
-                      error={errors.lastName}
-                    />
-                  </div>
+
+            <div className="grid gap-6 grid-cols-2 w-full">
+              {/* Left column */}
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="studentId">Student ID *</Label>
+                  <Input
+                    id="studentId"
+                    type="text"
+                    inputSize="md"
+                    value={form.studentId}
+                    onChange={(e) => setForm({ ...form, studentId: e.target.value })}
+                    placeholder="e.g. STU2025001"
+                    error={errors.studentId}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="firstName">First Name *</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    inputSize="md"
+                    value={form.firstName}
+                    onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                    placeholder="First Name"
+                    error={errors.firstName}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="lastName">Last Name *</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    inputSize="md"
+                    value={form.lastName}
+                    onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                    placeholder="Last Name"
+                    error={errors.lastName}
+                  />
                 </div>
               </div>
 
-              {/* Right Panel */}
-              <div className="flex-1 flex flex-col h-[383px] items-start justify-center min-w-px overflow-clip relative w-full">
-                <div className="flex flex-col items-start relative w-full">
-                  <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                    <Label htmlFor="email" className="text-[24px] text-black whitespace-nowrap">
-                      Email
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                    <Input
-                      id="email"
-                      type="email"
-                      inputSize="register"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      placeholder="example@cit.edu"
-                      className="w-full"
-                      error={errors.email}
-                    />
-                  </div>
-                  <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                    <Label htmlFor="password" className="text-[24px] text-black whitespace-nowrap">
-                      Password
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                    <Input
-                      id="password"
-                      type="password"
-                      inputSize="register"
-                      value={form.password}
-                      onChange={(e) => setForm({ ...form, password: e.target.value })}
-                      placeholder="••••••"
-                      className="w-full"
-                      error={errors.password}
-                    />
-                  </div>
-                  <div className="flex flex-col items-start overflow-clip py-[6px] px-[10px] relative w-full">
-                    <Label htmlFor="description" className="text-[24px] text-black whitespace-nowrap">
-                      Description
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
-                    <textarea
-                      id="description"
-                      value={form.description}
-                      onChange={(e) => setForm({ ...form, description: e.target.value })}
-                      placeholder="Brief description..."
-                      className="w-full h-[46px] rounded-[11px] border border-[#dee4ee] bg-white px-4 text-[16px] font-['Lexend Exa'] focus:outline-none focus:ring-2 focus:ring-aktibo-gold"
-                    />
-                  </div>
+              {/* Right column */}
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    inputSize="md"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    placeholder="example@cit.edu"
+                    error={errors.email}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="password">Password *</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    inputSize="md"
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    placeholder="••••••"
+                    error={errors.password}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Input
+                    id="description"
+                    inputSize="md"
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder="Brief description…"
+                  />
                 </div>
               </div>
             </div>
-            <div className="flex h-[67px] items-center justify-center overflow-clip py-[5px] px-[10px] relative w-full">
+
+            <div className="mt-6 flex gap-3 justify-end">
+              <Link to="/students/list">
+                <Button size="lg" variant="ghost" className="w-auto">
+                  Cancel
+                </Button>
+              </Link>
               <Button
+                size="lg"
+               
                 variant="primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSubmit(e as React.FormEvent);
-                }}
+                className="w-auto"
                 disabled={submitting}
-                className="w-full max-w-[588px] h-[51px] px-[179px] py-[8px] border border-[#000e53] hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleSubmit(e as React.FormEvent)
+                }}
               >
-                {submitting ? "Creating..." : "ADD STUDENT"}
+                {submitting ? 'Creating…' : 'Add student'}
               </Button>
             </div>
           </form>
-          <footer className="flex gap-[199px] h-[20px] items-center justify-center leading-[normal] overflow-clip p-[10px] relative shrink-0 text-[12px] text-black text-center w-full whitespace-nowrap">
-            <p className="relative shrink-0">
-              Already have an account?{" "}
-              <button
-                onClick={() => navigate("/students/list")}
-                className="font-bold hover:text-[#ffb700] transition-colors duration-200"
-              >
-                View Student List
-              </button>
-            </p>
-          </footer>
         </Card>
       </main>
+
     </div>
-  );
+  )
 }

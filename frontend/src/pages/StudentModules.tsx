@@ -31,7 +31,7 @@ export function StudentModules() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas animate-page-fade">
+    <div className="bg-aktibo-canvas min-h-screen flex flex-col relative size-full animate-page-fade">
 
       <PageIntro
         breadcrumb="Courses / CS101 / Programming Fundamentals"
@@ -39,19 +39,21 @@ export function StudentModules() {
         metadata="4 modules · 12 lessons · 50% complete"
         action={
           <Button
+            size="lg"
+            fullWidth
             variant="primary"
-            className="h-[48px] w-full rounded-[9px] bg-aktibo-gold text-[12px] text-aktibo-ink-on-gold sm:w-[264px]"
             onClick={() => navigate('/student/courses/CS101/subjects/1/modules/3/lesson')}
+            className="w-auto"
           >
             RESUME LEARNING
           </Button>
         }
       />
 
-      <main className="mx-auto w-full max-w-[1296px] flex-1 px-6 py-8 sm:px-10 lg:px-[72px]">
+      <main className="flex-1 mx-auto w-full max-w-[1296px] px-[72px] py-6">
         <TabsBar tabs={TABS} activeId={activeTab} onChange={setActiveTab} />
 
-        <div className="mt-8 flex flex-col gap-6 lg:flex-row">
+        <div className="mt-8 flex flex-col gap-6 flex-row">
           <SubjectSidebar
             heading="COURSE SUBJECTS"
             subjects={SIDEBAR_SUBJECTS}
@@ -60,7 +62,7 @@ export function StudentModules() {
           />
 
           <section className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-baseline justify-between gap-2 rounded-[16px] border border-aktibo-border bg-aktibo-surface px-6 py-4 shadow-card">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 rounded-card border border-aktibo-border bg-aktibo-surface p-6 p-8 shadow-card">
               <div>
                 <h2 className="font-display text-[18px] font-bold text-aktibo-navy-deep">
                   Programming Fundamentals

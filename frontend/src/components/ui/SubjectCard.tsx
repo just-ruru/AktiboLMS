@@ -47,7 +47,7 @@ export function SubjectCard({
           <p className="text-[10px] font-display font-bold uppercase tracking-[0.06em] text-aktibo-muted">
             Progress {Math.round(clamped)}%
           </p>
-          <div className="mt-2 h-[5px] w-full overflow-hidden rounded-full bg-[#e7ebf3]">
+          <div className="mt-2 h-[5px] w-full overflow-hidden rounded-full bg-aktibo-border">
             <div
               className="h-full rounded-full bg-aktibo-gold transition-[width] duration-300 ease-out"
               style={{ width: `${clamped}%` }}
@@ -57,7 +57,7 @@ export function SubjectCard({
         <button
           type="button"
           onClick={onAction}
-          className="h-[40px] w-[192px] shrink-0 rounded-[9px] border border-[#000e53] bg-aktibo-gold font-display text-[12px] font-bold uppercase tracking-[0.04em] text-aktibo-ink-on-gold hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
+          className="h-10 w-[192px] shrink-0 rounded-control border border-aktibo-navy bg-aktibo-gold font-display text-[12px] font-bold uppercase tracking-[0.04em] text-aktibo-ink-on-gold hover:bg-aktibo-gold-hover transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
         >
           {actionLabel}
         </button>

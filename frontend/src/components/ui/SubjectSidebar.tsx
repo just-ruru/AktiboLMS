@@ -31,7 +31,7 @@ export function SubjectSidebar({
   return (
     <aside
       className={[
-        'w-full rounded-[16px] border border-aktibo-border bg-aktibo-surface p-4 lg:w-[312px] lg:shrink-0',
+        'w-full rounded-[16px] border border-aktibo-border bg-aktibo-surface p-4 w-[312px] shrink-0',
         className,
       ].filter(Boolean).join(' ')}
       {...props}

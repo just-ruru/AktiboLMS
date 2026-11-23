@@ -1,67 +1,89 @@
+import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 /**
- * Overlay · Confirm logout — matches Figma frame 174:1478.
- * Opaque navy backdrop, white dialog panel rounded-[16px], two h-[48px] buttons.
- * Can be used as a controlled modal (isOpen/onClose) or as a standalone route.
+ * Overlay · Confirm logout — confirmation dialog for ending a session.
+ * Navy scrim, white dialog panel, two actions. Works as a controlled modal
+ * (isOpen/onClose) or as a standalone route.
  */
 export function OverlayConfirmLogout({
   isOpen = true,
   onClose,
 }: { isOpen?: boolean; onClose?: () => void } = {}) {
+  const navigate = useNavigate()
+  const panelRef = useRef<HTMLDivElement>(null)
+  const cancelRef = useRef<HTMLButtonElement>(null)
+
+  // Move focus into the dialog when it opens so keyboard users land here.
+  useEffect(() => {
+    if (isOpen) cancelRef.current?.focus()
+  }, [isOpen])
+
+  // Escape closes the dialog.
+  useEffect(() => {
+    if (!isOpen || !onClose) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   return (
     <div
-      className="bg-[#000e53] content-stretch fixed inset-0 z-[100] flex items-center justify-center overflow-clip relative size-full animate-page-fade"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-aktibo-navy/80 p-4 animate-page-fade"
       onClick={onClose}
     >
-      {/* Dismiss overlay background */}
-      <button
-        className="absolute bg-[#000e53] block cursor-pointer h-[1220px] left-0 top-0 w-[1440px]"
-        onClick={(e) => {
-          e.stopPropagation()
-          onClose?.()
-        }}
-        aria-label="Dismiss overlay"
-      />
       <div
-        className="bg-white content-stretch flex flex-col gap-[20px] h-[400px] items-start overflow-clip p-[32px] relative rounded-[16px] shrink-0 w-[620px]"
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-logout-title"
+        aria-describedby="confirm-logout-body"
+        className="flex w-full max-w-[560px] flex-col gap-5 rounded-card bg-aktibo-surface p-6 shadow-panel p-8"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#000e53] text-[10px] w-[min-content]">
-          YOUR ACCOUNT
+        <p className="font-display text-[11px] font-bold uppercase tracking-[0.08em] text-aktibo-gold">
+          Your account
         </p>
-        <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#000e53] text-[24px] w-[min-content]">
+        <h2
+          id="confirm-logout-title"
+          className="font-display text-[24px] font-bold leading-tight text-aktibo-navy"
+        >
           Log out of AktiboLMS?
-        </p>
-        <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[13px] w-[min-content]">
+        </h2>
+        <p id="confirm-logout-body" className="text-[14px] leading-relaxed text-aktibo-muted">
           You will return to sign-in. Your saved course progress and account details remain available the next time you sign in.
         </p>
-        <div className="content-stretch cursor-pointer flex gap-[16px] h-[48px] items-start overflow-clip relative shrink-0 w-[556px]">
+
+        <div className="flex flex-col-reverse gap-3 flex-row justify-end">
           <button
-            className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex h-[48px] items-center justify-center overflow-clip p-[12px] relative rounded-[9px] shrink-0 w-[270px] hover:bg-[#f4f6fa] active:bg-[#e8ecf3] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
+            ref={cancelRef}
+            type="button"
+            className="h-11 rounded-control border border-aktibo-border bg-aktibo-surface px-5 font-display text-[13px] font-bold uppercase tracking-[0.06em] text-aktibo-navy transition-colors hover:bg-aktibo-canvas w-auto"
             onClick={(e) => {
               e.stopPropagation()
               onClose?.()
             }}
           >
-            <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px] text-center">
-              STAY SIGNED IN
-            </p>
+            Stay signed in
           </button>
-          <a
-            href="/login"
-            className="bg-[#ffb700] border border-[#000e53] border-solid content-stretch cursor-pointer flex h-[48px] items-center justify-center overflow-clip p-[12px] relative rounded-[9px] shrink-0 w-[270px] hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
+          <button
+            type="button"
+            className="h-11 rounded-control border border-aktibo-navy bg-aktibo-gold px-5 font-display text-[13px] font-bold uppercase tracking-[0.06em] text-aktibo-ink-on-gold transition-colors hover:bg-aktibo-gold-hover w-auto"
             onClick={(e) => {
               e.stopPropagation()
               onClose?.()
+              navigate('/login')
             }}
           >
-            <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px] text-center">
-              LOG OUT
-            </p>
-          </a>
+            Log out
+          </button>
         </div>
-        <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[11px] w-[min-content]">
+
+        <p className="text-[12px] text-aktibo-muted">
           In this prototype, only the preview session is reset.
         </p>
       </div>

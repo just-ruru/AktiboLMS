@@ -24,7 +24,7 @@ export function Card({
       className={[
         'rounded-card border shadow-card',
         VARIANTS[variant],
-        padded ? 'p-6 sm:p-7' : '',
+        padded ? 'p-6' : '',
         className,
       ]
         .filter(Boolean)

@@ -1,190 +1,159 @@
 import { Link } from 'react-router-dom'
 import { Input } from '../components/ui/Input'
+import { Button } from '../components/ui/Button'
+import { Card } from '../components/ui/Card'
+import { PageIntro } from '../components/ui/PageIntro'
 
-/**
- * Account · Edit profile — signed-in page within MainLayout (Navbar + Footer provided by shell).
- * Canvas bg, navy page-intro band ("Edit your profile"), left sidebar with account
- * navigation, right panel with editable profile fields (display name, first/last name,
- * email, mobile, date of birth, gender), sample changes + cancel + save buttons.
- * Entrance fade + hover/press. Responsive: stacked on mobile, side-by-side on desktop.
- */
 export function AccountEditProfile() {
-  const buttonClass = (variant: 'gold' | 'white') =>
-    `content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-full transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0 ${
-      variant === 'gold'
-        ? 'bg-[#ffb700] border border-[#000e53] border-solid'
-        : 'bg-white border border-[#dfe5f0] border-solid'
-    }`
-
-  const buttonText = (variant: 'gold' | 'white') =>
-    `flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-center ${variant === 'gold' ? 'text-[#000e53]' : 'text-[#000e53]'} text-[11px]`
-
   return (
-    <div className="bg-[#f4f6fa] min-h-screen flex flex-col relative animate-page-fade">
-      {/* Page intro band — navy, matches Figma edit profile page header */}
-      <div className="[word-break:break-word] bg-[#000e53] content-stretch flex flex-col gap-[8px] items-start leading-[1.5] overflow-clip pb-[20px] pt-[22px] px-[72px] relative shrink-0 w-full">
-        <p className="font-['Lexend_Exa:Bold'] font-bold relative shrink-0 text-[#ffb700] text-[10px] w-full whitespace-pre-wrap">
-          MY ACCOUNT  /  EDIT PROFILE
-        </p>
-        <p className="font-['Castoro_Titling:Regular'] not-italic relative shrink-0 text-[36px] text-white w-full">
-          Edit your profile
-        </p>
-        <p className="font-['Lexend_Exa:Regular'] font-normal relative shrink-0 text-[#d1d8ee] text-[13px] w-full">
-          Keep your personal and contact information up to date.
-        </p>
-      </div>
+    <div className="bg-aktibo-canvas min-h-screen flex flex-col relative animate-page-fade">
+      {/* Page intro band — navy */}
+      <PageIntro
+        breadcrumb="My account / Edit profile"
+        title="Edit your profile"
+        metadata="Keep your personal and contact information up to date."
+      />
 
       {/* Main content area */}
-      <main className="flex-1 flex flex-col px-6 sm:px-10 lg:px-[72px] pt-[32px] relative w-full max-w-[1440px] mx-auto">
-        <div className="content-stretch flex flex-col lg:flex-row gap-[24px] items-start overflow-clip relative shrink-0 w-full">
+      <main className="flex-1 mx-auto w-full max-w-[1296px] px-[72px] py-6">
+        <div className="grid gap-6 grid-cols-[288px_1fr] items-start">
           {/* Left sidebar — account navigation */}
-          <aside className="bg-white border border-[#dfe5f0] border-solid content-stretch flex flex-col gap-[16px] items-start overflow-clip p-[24px] relative rounded-[8px] shrink-0 w-full lg:w-[288px] lg:flex-none">
-            <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[10px] w-[min-content]">
-              YOUR ACCOUNT
-            </p>
-            <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#000e53] text-[19px] w-[min-content]">
-              Make it yours
-            </p>
-            <Link to="/account-profile" className={buttonClass('white')}>
-              <p className={buttonText('white')}>
-                ACCOUNT OVERVIEW
-              </p>
-            </Link>
-            <div className="bg-[#fff4cd] border border-[#000e53] border-solid content-stretch flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-full">
-              <p className={buttonText('gold')}>
-                EDIT PROFILE
-              </p>
-            </div>
-            <Link to="/security" className={buttonClass('white')}>
-              <p className={buttonText('white')}>
-                PASSWORD & SECURITY
-              </p>
-            </Link>
-            <Link to="/help-support" className={buttonClass('white')}>
-              <p className={buttonText('white')}>
-                HELP & SUPPORT
-              </p>
-            </Link>
-            <div className="[word-break:break-word] bg-[#f4f6fa] content-stretch flex flex-col gap-[10px] items-start leading-[1.5] overflow-clip p-[16px] relative rounded-[8px] shrink-0 text-[#596579] w-full">
-              <p className="font-['Lexend_Exa:Bold'] font-bold relative shrink-0 text-[10px] w-full">
-                YOUR CHANGES, YOUR CHOICE
-              </p>
-              <p className="font-['Lexend_Exa:Regular'] font-normal relative shrink-0 text-[12px] w-full">
-                Changes are applied only when you save. Cancel returns to your profile without changing saved information.
-              </p>
-            </div>
+          <aside className="flex flex-col gap-4">
+            <Card variant="surface" padded className="p-5">
+              <div className="flex flex-col gap-1">
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted">
+                  Your account
+                </p>
+                <p className="font-sans text-[20px] font-bold text-aktibo-navy-deep whitespace-nowrap">
+                  Make it yours
+                </p>
+              </div>
+              <div className="mt-5 flex flex-col gap-3">
+                <Link to="/account-profile">
+                  <Button size="lg" fullWidth variant="ghost">
+                    Account overview
+                  </Button>
+                </Link>
+                <Button size="lg" fullWidth variant="primary">
+                  Edit profile
+                </Button>
+                <Link to="/security">
+                  <Button size="lg" fullWidth variant="ghost">
+                    Password & security
+                  </Button>
+                </Link>
+                <Link to="/help-support">
+                  <Button size="lg" fullWidth variant="ghost">
+                    Help & support
+                  </Button>
+                </Link>
+              </div>
+              <Card variant="surface" padded className="mt-5 p-4 bg-aktibo-canvas border-aktibo-border-strong">
+                <div className="flex flex-col gap-1">
+                  <p className="font-sans text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted">
+                    Your changes, your choice
+                  </p>
+                  <p className="font-sans text-[12px] text-aktibo-muted">
+                    Changes are applied only when you save. Cancel returns to your profile without changing saved information.
+                  </p>
+                </div>
+              </Card>
+            </Card>
           </aside>
 
           {/* Right panel — profile edit form */}
-          <div className="bg-white border border-[#dfe5f0] border-solid content-stretch flex flex-col gap-[16px] items-start overflow-clip p-[24px] relative rounded-[8px] shrink-0 w-full lg:w-[984px] lg:flex-none">
-            <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#000e53] text-[20px] w-[min-content]">
-              Personal and contact information
-            </p>
-            <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[12px] w-[min-content]">
-              Your profile details stay separate from your student or instructor role.
-            </p>
+          <Card variant="surface" padded className="p-8">
+            <div className="flex flex-col gap-2">
+              <p className="font-sans text-[20px] font-bold text-aktibo-navy-deep whitespace-nowrap">
+                Personal and contact information
+              </p>
+              <p className="font-sans text-[12px] text-aktibo-muted">
+                Your profile details stay separate from your student or instructor role.
+              </p>
 
-            {/* Profile fields */}
-            <div className="content-stretch flex flex-col gap-[12px] items-start overflow-clip relative shrink-0 w-full">
-              <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-                <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[12px] w-[min-content]">
-                  Display name *
-                </p>
-                <Input
-                  placeholder="Hoshimi Miyabi"
-                  inputSize="auth"
-                  className="w-full border-[#dfe5f0] border-solid"
-                />
-              </div>
+              {/* Profile fields */}
+              <div className="mt-6 flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="font-sans text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-navy-deep">
+                    Display name *
+                  </label>
+                  <Input placeholder="Hoshimi Miyabi" inputSize="md" />
+                </div>
 
-              <div className="content-stretch flex gap-[24px] items-start overflow-clip relative shrink-0 w-full">
-                <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-                  <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[12px] w-[min-content]">
-                    First name *
-                  </p>
-                  <Input placeholder="Miyabi" inputSize="auth" className="w-full border-[#dfe5f0] border-solid" />
-                </div>
-                <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-                  <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[12px] w-[min-content]">
-                    Last name *
-                  </p>
-                  <Input placeholder="Hoshimi" inputSize="auth" className="w-full border-[#dfe5f0] border-solid" />
-                </div>
-              </div>
-
-              <div className="content-stretch flex gap-[24px] items-start overflow-clip relative shrink-0 w-full">
-                <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-                  <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[12px] w-[min-content]">
-                    Email address *
-                  </p>
-                  <Input
-                    type="email"
-                    placeholder="alexsmith.mobbin@gmail.com"
-                    inputSize="auth"
-                    className="w-full border-[#dfe5f0] border-solid"
-                  />
-                </div>
-                <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-                  <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[12px] w-[min-content]">
-                    Mobile number
-                  </p>
-                  <Input placeholder="+1 650-213-7390" inputSize="auth" className="w-full border-[#dfe5f0] border-solid" />
-                </div>
-              </div>
-
-              <div className="content-stretch flex gap-[24px] items-start overflow-clip relative shrink-0 w-full">
-                <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-                  <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[12px] w-[min-content]">
-                    Date of birth
-                  </p>
-                  <div className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex flex-col h-[48px] items-start overflow-clip p-[12px] relative rounded-[8px] shrink-0 w-full">
-                    <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[12px] text-left w-full">
-                      Not provided
-                    </p>
+                <div className="grid gap-4 grid-cols-2">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-navy-deep">
+                      First name *
+                    </label>
+                    <Input placeholder="Miyabi" inputSize="md" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-navy-deep">
+                      Last name *
+                    </label>
+                    <Input placeholder="Hoshimi" inputSize="md" />
                   </div>
                 </div>
-                <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-                  <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold min-w-full relative shrink-0 text-[#15203a] text-[12px] w-[min-content]">
-                    Gender
-                  </p>
-                  <div className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex flex-col font-['Lexend_Exa:Regular'] font-normal h-[48px] items-start overflow-clip pl-[12px] pr-[40px] py-[12px] relative rounded-[8px] shrink-0 text-left w-full">
-                    <p className="relative shrink-0 text-[#596579] text-[12px] w-full">
-                      Not specified
-                    </p>
+
+                <div className="grid gap-4 grid-cols-2">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-navy-deep">
+                      Email address *
+                    </label>
+                    <Input type="email" placeholder="alexsmith.mobbin@gmail.com" inputSize="md" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-navy-deep">
+                      Mobile number
+                    </label>
+                    <Input placeholder="+1 650-213-7390" inputSize="md" />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 grid-cols-2">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-navy-deep">
+                      Date of birth
+                    </label>
+                    <div className="flex items-center gap-2 rounded-control border border-aktibo-border bg-aktibo-surface p-3 cursor-pointer">
+                      <span className="font-sans text-[12px] text-aktibo-muted">Not provided</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-[12px] font-bold uppercase tracking-[0.08em] text-aktibo-navy-deep">
+                      Gender
+                    </label>
+                    <div className="flex items-center gap-2 rounded-control border border-aktibo-border bg-aktibo-surface p-3 cursor-pointer">
+                      <span className="font-sans text-[12px] text-aktibo-muted">Not specified</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Sample edit tip box */}
-            <div className="[word-break:break-word] bg-[#fff4cd] content-stretch flex flex-col gap-[8px] items-start leading-[1.5] overflow-clip p-[16px] relative rounded-[8px] shrink-0 w-full">
-              <p className="font-['Lexend_Exa:Bold'] font-bold relative shrink-0 text-[#000e53] text-[10px] w-full">
-                TRY A SAMPLE EDIT
-              </p>
-              <p className="font-['Lexend_Exa:Regular'] font-normal relative shrink-0 text-[#596579] text-[12px] w-full">
-                Use sample changes to preview an updated phone number, birthday, and gender preference. Nothing is applied until you select Save changes.
-              </p>
-            </div>
+              {/* Sample edit tip box */}
+              <div className="mt-6 p-4 rounded-control bg-aktibo-warning-bg border border-aktibo-warning-fg/30">
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-warning-fg">
+                  Try a sample edit
+                </p>
+                <p className="font-sans text-[12px] text-aktibo-muted">
+                  Use sample changes to preview an updated phone number, birthday, and gender preference. Nothing is applied until you save.
+                </p>
+              </div>
 
-            {/* Action buttons */}
-            <div className="content-stretch cursor-pointer flex gap-[16px] items-start overflow-clip relative shrink-0 w-full">
-              <button className={buttonClass('white')}>
-                <p className={buttonText('white')}>
-                  USE SAMPLE CHANGES
-                </p>
-              </button>
-              <button className={buttonClass('white')}>
-                <p className={buttonText('white')}>
-                  CANCEL
-                </p>
-              </button>
-              <button className={buttonClass('gold')}>
-                <p className={buttonText('gold')}>
-                  SAVE CHANGES
-                </p>
-              </button>
+              {/* Action buttons */}
+              <div className="mt-6 flex flex-col flex-row gap-3 justify-end">
+                <Button size="lg" variant="ghost">
+                  Use sample changes
+                </Button>
+                <Button size="lg" variant="ghost">
+                  Cancel
+                </Button>
+                <Button size="lg" variant="primary">
+                  Save changes
+                </Button>
+              </div>
             </div>
-          </div>
+          </Card>
         </div>
       </main>
     </div>

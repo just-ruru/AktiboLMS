@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Navbar } from '../components/ui/Navbar'
+import { Footer } from '../components/ui/Footer'
 
 /**
  * Landing Page — matches Figma frame 6:11.
@@ -11,7 +12,7 @@ import { Navbar } from '../components/ui/Navbar'
  * - Inline hex colours replaced with `aktibo` Tailwind tokens (single source of truth).
  * - Arbitrary font-face references replaced with `font-sans` / `font-display` / `font-titling`.
  * - Fixed `w-[1440px]` containers replaced with responsive `max-w-[1440px] mx-auto`
- *   plus responsive gutters (`px-6 sm:px-10 lg:px-[72px]`), matching the `.shell`
+ *   plus responsive gutters (`px-6 px-10 px-[72px]`), matching the `.shell`
  *   pattern in index.css.
  * - Absolute positioning kept only where Figma requires it (badges, dividers,
  *   active-page indicator). All content flow is native flex.
@@ -24,7 +25,7 @@ export function LandingPage() {
 
       {/* Hero */}
       <section
-        className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] pt-[72px] pb-[120px]"
+        className="relative w-full max-w-[1440px] mx-auto px-[72px] pt-[72px] pb-[120px]"
       >
         <div className="flex gap-[474px] items-start relative w-full">
           <p className="font-sans font-bold text-aktibo-gold text-[12px] whitespace-nowrap">
@@ -199,7 +200,7 @@ export function LandingPage() {
 
       {/* Learning principles */}
       <section
-        className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] bg-aktibo-gold pt-[29px] pb-[39px] pl-[72px] pr-[260px]"
+        className="relative w-full max-w-[1440px] mx-auto px-[72px] bg-aktibo-gold pt-[29px] pb-[39px] pl-[72px] pr-[260px]"
       >
         <div className="flex gap-[230px] items-start relative w-full">
           <p className="font-sans font-semibold text-aktibo-navy text-[20px] w-[187px]">
@@ -233,7 +234,7 @@ export function LandingPage() {
 
       {/* Benefits */}
       <section
-        className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] bg-aktibo-surface pt-[58px] pb-[54px]"
+        className="w-full max-w-[1440px] mx-auto px-[72px] bg-aktibo-surface pt-[58px] pb-[54px]"
       >
         <p className="font-sans font-bold text-aktibo-muted text-[12px] whitespace-nowrap">
           LEARNING, WITH LESS FRICTION
@@ -291,7 +292,7 @@ export function LandingPage() {
 
       {/* How it works */}
       <section
-        className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] bg-aktibo-canvas pt-[54px] pb-[89px] pl-[72px] pr-[102px]"
+        className="relative w-full max-w-[1440px] mx-auto px-[72px] bg-aktibo-canvas pt-[54px] pb-[89px] pl-[72px] pr-[102px]"
       >
         <div className="absolute bg-[#cad2e2] h-px left-[98px] top-[194px] w-[894px]" />
         <p className="font-sans font-bold text-aktibo-muted text-[12px] whitespace-nowrap">
@@ -342,7 +343,7 @@ export function LandingPage() {
 
       {/* Explore AKTIBO */}
       <section
-        className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] gap-[32px] py-[52px]"
+        className="flex flex-wrap gap-[32px] w-full max-w-[1440px] mx-auto px-[72px] py-[52px]"
       >
         <div className="bg-aktibo-navy flex flex-col gap-[16px] items-start overflow-clip pb-[32px] pl-[32px] pr-[308px] pt-[28px] relative rounded-[16px] w-[632px]">
           <p className="font-sans font-bold text-aktibo-gold text-[11px] whitespace-nowrap">
@@ -394,7 +395,7 @@ export function LandingPage() {
 
       {/* Common questions */}
       <section
-        className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] bg-aktibo-canvas py-[56px]"
+        className="w-full max-w-[1440px] mx-auto px-[72px] bg-aktibo-canvas py-[56px]"
       >
         <div className="flex gap-[247px] items-start relative w-full">
           <div className="flex items-start pt-[4px] w-[217px]">
@@ -458,7 +459,7 @@ export function LandingPage() {
 
       {/* Get started */}
       <section
-        className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] bg-aktibo-navy pt-[52px] pb-[107px]"
+        className="w-full max-w-[1440px] mx-auto px-[72px] bg-aktibo-navy pt-[52px] pb-[107px]"
       >
         <p className="font-sans font-bold text-aktibo-gold text-[12px] whitespace-nowrap">
           YOUR NEXT CHAPTER
@@ -496,56 +497,7 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <section
-        className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-[72px] bg-aktibo-navy pt-[32px] pb-[80px]"
-      >
-        <div className="absolute bg-aktibo-navy-mid h-px left-[72px] top-0 w-[1296px]" />
-        <div className="flex gap-[556px] items-start relative w-full">
-          <div className="flex gap-[12px] items-center overflow-clip relative w-[256px]">
-            <div className="relative size-[40px]">
-              <img
-                alt=""
-                className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
-                src="/assets/aktibo-symbol.png"
-              />
-            </div>
-            <p className="font-display font-normal leading-[normal] text-[18px] text-white whitespace-nowrap">
-              AKTIBO LMS
-            </p>
-          </div>
-          <div className="flex items-start pt-[2px] w-[484px]">
-            <div className="flex gap-[12px] items-center overflow-clip relative w-[484px]">
-              <a
-                className="flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[96px] font-sans font-medium text-[14px] text-left text-white whitespace-nowrap"
-              >
-                <p className="leading-[1.4] mb-0">Home</p>
-              </a>
-              <Link
-                className="cursor-pointer flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[112px] font-sans font-medium text-[14px] text-left text-white whitespace-nowrap"
-                to="/"
-              >
-                <p className="leading-[1.4] mb-0">Courses</p>
-              </Link>
-              <Link
-                className="cursor-pointer flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[96px] font-sans font-medium text-[14px] text-left text-white whitespace-nowrap"
-                to="/pricing"
-              >
-                <p className="leading-[1.4] mb-0">Pricing</p>
-              </Link>
-              <Link
-                className="cursor-pointer flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[144px] font-sans font-medium text-[14px] text-left text-white whitespace-nowrap"
-                to="/login"
-              >
-                <p className="leading-[1.4] mb-0">Log in</p>
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="flex font-sans text-aktibo-muted-on-navy text-[14px] gap-[965px] items-start leading-[1.4] not-italic w-full mt-[6px]">
-          <p className="w-[193px]">A more focused way to learn.</p>
-          <p className="w-[138px]">Learning, with focus.</p>
-        </div>
-      </section>
+      <Footer signedIn={false} />
     </div>
   )
 }

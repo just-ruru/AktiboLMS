@@ -39,7 +39,7 @@ export function InstructorSubjects() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-aktibo-canvas animate-page-fade">
+    <div className="bg-aktibo-canvas min-h-screen flex flex-col relative size-full animate-page-fade">
 
       <PageIntro
         breadcrumb="Courses / CS101"
@@ -47,25 +47,27 @@ export function InstructorSubjects() {
         metadata="5 modules · 18 lessons · 24 enrolled learners"
         action={
           <Button
+            size="lg"
+            fullWidth
             variant="primary"
-            className="h-[48px] w-full rounded-[9px] bg-aktibo-gold text-[12px] text-aktibo-ink-on-gold sm:w-[264px]"
             onClick={() => navigate('/instructor/courses/CS101/edit')}
+            className="w-auto"
           >
             EDIT COURSE
           </Button>
         }
       />
 
-      <main className="mx-auto w-full max-w-[1296px] flex-1 px-6 py-8 sm:px-10 lg:px-[72px]">
+      <main className="flex-1 mx-auto w-full max-w-[1296px] px-[72px] py-6">
         <TabsBar tabs={TABS} activeId={activeTab} onChange={setActiveTab} />
 
         {/* Teaching summary strip */}
-        <div className="mt-6 grid grid-cols-2 gap-4 rounded-[16px] border border-aktibo-border bg-aktibo-surface p-4 shadow-card lg:grid-cols-[repeat(4,1fr)_auto] lg:items-center">
+        <div className="mt-6 grid grid-cols-2 gap-4 rounded-card border border-aktibo-border bg-aktibo-surface p-4 p-6 shadow-card grid-cols-[repeat(4,1fr)_auto] items-center">
           <StatCard value="24" label="Enrolled" className="border-0 bg-transparent px-2 py-1 shadow-none" />
           <StatCard value="18" label="Lessons" className="border-0 bg-transparent px-2 py-1 shadow-none" />
           <StatCard value="86%" label="Avg. progress" className="border-0 bg-transparent px-2 py-1 shadow-none" />
           <StatCard value="12" label="Activities" className="border-0 bg-transparent px-2 py-1 shadow-none" />
-          <Badge tone="success" className="justify-self-start lg:justify-self-end">
+          <Badge tone="success" className="justify-self-start justify-self-end">
             Published
           </Badge>
         </div>
@@ -77,15 +79,12 @@ export function InstructorSubjects() {
               Organize this course into subjects, then modules.
             </p>
           </div>
-          <Button
-            variant="primary"
-            className="h-[44px] rounded-[9px] bg-aktibo-gold px-6 text-[12px] text-aktibo-ink-on-gold"
-          >
+          <Button size="sm" variant="primary">
             ADD SUBJECT
           </Button>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-6 grid-cols-2 grid-cols-3">
           {SUBJECTS.map((subject) => (
             <SubjectCard
               key={subject.title}
@@ -99,8 +98,8 @@ export function InstructorSubjects() {
           ))}
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_416px]">
-          <section className="rounded-[16px] border border-aktibo-border bg-aktibo-surface p-6 shadow-card">
+        <div className="mt-10 grid grid-cols-1 gap-6 grid-cols-[1fr_416px]">
+          <section className="rounded-card border border-aktibo-border bg-aktibo-surface p-6 p-8 shadow-card">
             <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted">
               LATEST COURSE UPDATE
             </p>
@@ -113,7 +112,7 @@ export function InstructorSubjects() {
             <p className="mt-3 text-[11px] text-aktibo-muted">Posted by you · 2 days ago</p>
           </section>
 
-          <section className="rounded-[16px] border border-aktibo-border bg-aktibo-surface p-6 shadow-card">
+          <section className="rounded-card border border-aktibo-border bg-aktibo-surface p-6 p-8 shadow-card">
             <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted">
               ENROLLMENT ACCESS
             </p>

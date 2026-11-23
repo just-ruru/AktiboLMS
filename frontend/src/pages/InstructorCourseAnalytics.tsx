@@ -1,138 +1,75 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
+import { Card } from '../components/ui/Card'
+import { PageIntro } from '../components/ui/PageIntro'
+import { StatCard } from '../components/ui/StatCard'
 
 export function InstructorCourseAnalytics() {
   const navigate = useNavigate()
 
   return (
-    <div className="bg-[#f4f6fa] content-stretch flex flex-col items-start relative size-full animate-page-fade">
-      {/* Navbar — signed-in variant per Figma */}
+    <div className="bg-aktibo-canvas min-h-screen flex flex-col relative size-full animate-page-fade">
 
-      {/* Page introduction — navy band per Figma */}
-      <div className="bg-[#000e53] content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
-        <div className="mx-auto w-full max-w-[1296px] px-6 py-6 sm:px-10 lg:px-[72px] lg:py-0">
-          <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#ffb700] text-[11px] whitespace-nowrap">
-            COURSE ANALYTICS
-          </p>
-          <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 lg:mt-0">
-            <h1 className="font-titling leading-[1.2] not-italic relative shrink-0 text-[32px] sm:text-[40px] text-white whitespace-normal">
-              Introduction to Computer Science
-            </h1>
-          </div>
-          <p className="mt-2 [word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#d1d8ee] text-[14px] whitespace-normal">
-            Course performance overview
-          </p>
+      {/* Page introduction — navy hero band */}
+      <PageIntro
+        breadcrumb="Instructors / Analytics"
+        title="Introduction to Computer Science"
+        metadata="Course performance overview"
+      />
+
+      <main className="flex-1 mx-auto w-full max-w-[1296px] px-[72px] py-6">
+        {/* Stat cards row */}
+        <div className="mt-6 grid gap-4 w-full grid-cols-3">
+          <StatCard value="42" label="Total Enrollments" />
+          <StatCard value="68%" label="Average Progress" />
+          <StatCard value="12" label="Completed" />
         </div>
-      </div>
 
-      {/* Page workspace */}
-      <div className="content-stretch flex flex-col items-start pt-[32px] relative shrink-0 w-full pb-8">
-        <div className="mx-auto w-full max-w-[1296px] px-6 sm:px-10 lg:px-[72px]">
-          <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full">
-
-            {/* Stat cards row */}
-            <div className="content-stretch flex gap-[20px] items-start relative shrink-0 w-full">
-              <div
-                className={[
-                  'bg-white border border-[#dee4ee] border-solid content-stretch flex flex-col items-start overflow-clip p-[24px] relative rounded-[16px] shrink-0 w-full',
-                  'flex-1 min-w-[200px]',
-                ].join(' ')}
-              >
-                <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[13px] w-full whitespace-nowrap">
-                  Total Enrollments
-                </p>
-                <p className="mt-2 [word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#000e53] text-[32px] w-full whitespace-nowrap">
-                  42
-                </p>
+        {/* Course detail card */}
+        <Card variant="surface" padded className="mt-6 w-full">
+          <div className="flex flex-col gap-4">
+            <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted whitespace-nowrap">
+              COURSE DETAILS
+            </p>
+            <div className="grid gap-4 grid-cols-3">
+              <div className="flex flex-col gap-2">
+                <p className="text-[13px] text-aktibo-muted whitespace-nowrap">Instructor</p>
+                <p className="text-[16px] font-bold text-aktibo-navy-deep">Dr. Sarah Chen</p>
               </div>
-              <div
-                className={[
-                  'bg-white border border-[#dee4ee] border-solid content-stretch flex flex-col items-start overflow-clip p-[24px] relative rounded-[16px] shrink-0 w-full',
-                  'flex-1 min-w-[200px]',
-                ].join(' ')}
-              >
-                <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[13px] w-full whitespace-nowrap">
-                  Average Progress
-                </p>
-                <p className="mt-2 [word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#000e53] text-[32px] w-full whitespace-nowrap">
-                  68%
-                </p>
+              <div className="flex flex-col gap-2">
+                <p className="text-[13px] text-aktibo-muted whitespace-nowrap">Status</p>
+                <p className="text-[16px] font-bold text-aktibo-success-fg">Published</p>
               </div>
-              <div
-                className={[
-                  'bg-white border border-[#dee4ee] border-solid content-stretch flex flex-col items-start overflow-clip p-[24px] relative rounded-[16px] shrink-0 w-full',
-                  'flex-1 min-w-[200px]',
-                ].join(' ')}
-              >
-                <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[13px] w-full whitespace-nowrap">
-                  Completed
-                </p>
-                <p className="mt-2 [word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#000e53] text-[32px] w-full whitespace-nowrap">
-                  12
-                </p>
+              <div className="flex flex-col gap-2">
+                <p className="text-[13px] text-aktibo-muted whitespace-nowrap">Last Updated</p>
+                <p className="text-[16px] font-bold text-aktibo-navy-deep">Today</p>
               </div>
             </div>
-
-            {/* Course detail card */}
-            <div
-              className={[
-                'bg-white border border-[#dee4ee] border-solid content-stretch flex flex-col items-start overflow-clip p-[32px] relative rounded-[16px] shrink-0 w-full',
-                'min-h-[320px]',
-              ].join(' ')}
-            >
-              <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full">
-                <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#596579] text-[10px] w-full whitespace-nowrap">
-                  COURSE DETAILS
-                </p>
-                <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-                  <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                    <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[13px] w-full whitespace-nowrap">
-                      Instructor
-                    </p>
-                    <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#000e53] text-[16px] w-full whitespace-normal">
-                      Dr. Sarah Chen
-                    </p>
-                  </div>
-                  <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                    <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[13px] w-full whitespace-nowrap">
-                      Status
-                    </p>
-                    <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#236543] text-[16px] w-full whitespace-normal">
-                      Published
-                    </p>
-                  </div>
-                  <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                    <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] relative shrink-0 text-[#596579] text-[13px] w-full whitespace-nowrap">
-                      Last Updated
-                    </p>
-                    <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] relative shrink-0 text-[#000e53] text-[16px] w-full whitespace-normal">
-                      Today
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="content-stretch flex gap-[16px] items-start justify-between relative shrink-0 w-full mt-4">
-              <Button
-                variant="primary"
-                onClick={() => navigate('/instructor/courses')}
-                className="flex-1 h-[48px] rounded-[9px] bg-[#ffb700] border border-[#000e53] text-[#000e53] font-['Lexend_Exa'] font-bold whitespace-nowrap hover:bg-[#ffc933] active:bg-[#e8a800] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
-              >
-                VIEW LEARNERS
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => navigate('/instructor/courses')}
-                className="flex-1 h-[48px] rounded-[9px] bg-white border border-[#000e53] text-[#000e53] font-['Lexend_Exa'] font-bold whitespace-nowrap hover:bg-[#f4f6fa] active:bg-[#e8ecf3] transition-all duration-200 ease-out hover:-translate-y-px active:translate-y-0"
-              >
-                BACK TO COURSES
-              </Button>
-            </div>
-
           </div>
+        </Card>
+
+        <div className="mt-6 flex flex-col flex-row gap-3 w-full justify-end">
+          <Button
+            size="lg"
+            fullWidth
+            variant="outline"
+            onClick={() => navigate('/instructor/courses')}
+            className="w-auto"
+          >
+            BACK TO COURSES
+          </Button>
+          <Button
+            size="lg"
+            fullWidth
+            variant="primary"
+            onClick={() => navigate('/instructor/courses')}
+            className="w-auto"
+          >
+            VIEW LEARNERS
+          </Button>
         </div>
-      </div>
+      </main>
+
     </div>
   )
 }

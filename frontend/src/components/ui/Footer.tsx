@@ -27,14 +27,14 @@ export function Footer({ signedIn = false, userName, className = '', ...props }:
 
   return (
     <footer className={`w-full bg-aktibo-navy ${className}`} {...props}>
-      <div className="mx-auto w-full max-w-[1296px] px-6 py-8 sm:px-10 lg:px-[72px]">
+      <div className="mx-auto w-full max-w-[1296px] py-8 px-[72px]">
         <div className="h-px w-full bg-aktibo-gold" />
         <div className="mt-8 flex flex-wrap items-center justify-between gap-6">
           <Link to="/" className="flex gap-[12px] items-center text-[16px] font-[500] tracking-[0.04em] text-white text-decoration-none whitespace-nowrap">
             <img src="/assets/aktibo-symbol.png" alt="" className="size-[42px] object-contain" />
             <span className="text-aktibo-white">AKTIBO LMS</span>
           </Link>
-          <nav aria-label="Footer navigation" className="flex flex-wrap gap-x-8 gap-y-2">
+          <nav aria-label="Footer navigation" className="flex flex-wrap gap-y-2">
             {links.map((link) => (
               <Link
                 key={link.to + link.label}

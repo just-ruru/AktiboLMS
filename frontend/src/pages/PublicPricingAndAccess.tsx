@@ -1,191 +1,241 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Navbar } from '../components/ui/Navbar'
+import { Footer } from '../components/ui/Footer'
+import { Card } from '../components/ui/Card'
+import { Button } from '../components/ui/Button'
 
+/**
+ * Public · Pricing & access — shared pre-signup Navbar, navy hero band, access
+ * options banner, three plan cards (Student / Instructor / Institution), two bottom
+ * action boxes, shared Footer. Responsive at 320/375/390/768/1024/1440.
+ */
 export function PublicPricingAndAccess() {
+  const navigate = useNavigate()
+
   return (
-    <div className="bg-[#f4f6fa] content-stretch flex flex-col items-start relative size-full animate-page-fade">
+    <div className="bg-aktibo-navy min-h-screen flex flex-col relative animate-page-fade">
+      {/* Navigation — shared pre-signup Navbar */}
       <Navbar signedIn={false} />
 
-      <div className="[word-break:break-word] bg-[#000e53] content-stretch flex flex-col gap-[8px] h-[176px] items-start leading-[1.5] overflow-clip pb-[20px] pt-[22px] px-[72px] relative shrink-0 w-full">
-        <p className="font-['Lexend_Exa:Bold'] font-bold relative shrink-0 text-[#ffb700] text-[10px] w-full">
-          PRICING & ACCESS
-        </p>
-        <p className="font-['Castoro_Titling:Regular'] not-italic relative shrink-0 text-[36px] text-white w-full">
-          Plans for active learning
-        </p>
-        <p className="font-['Lexend_Exa:Regular'] font-normal relative shrink-0 text-[#d1d8ee] text-[13px] w-full">
-          Explore the workspace that fits your learning or teaching needs.
-        </p>
-      </div>
+      {/* Hero band */}
+      <header className="bg-aktibo-navy px-[72px] py-6">
+        <div className="max-w-[1296px] mx-auto">
+          <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-gold whitespace-nowrap">
+            PRICING & ACCESS
+          </p>
+          <h1 className="font-display text-[36px] font-bold text-white leading-tight">
+            Plans for active learning
+          </h1>
+          <p className="mt-2 text-[13px] text-aktibo-muted-on-navy">
+            Explore the workspace that fits your learning or teaching needs.
+          </p>
+        </div>
+      </header>
 
-      <div className="content-stretch flex flex-col h-[780px] items-start pl-[72px] pt-[32px] relative shrink-0 w-[1368px]">
-        <div className="content-stretch flex flex-col gap-[24px] h-[748px] items-start overflow-clip relative shrink-0 w-[1296px]">
-          <div className="[word-break:break-word] bg-[#fff4cd] content-stretch flex flex-col gap-[8px] h-[84px] items-start leading-[1.5] overflow-clip p-[20px] relative rounded-[8px] shrink-0 w-[1296px]">
-            <p className="font-['Lexend_Exa:Bold'] font-bold relative shrink-0 text-[#000e53] text-[10px] w-full">
+      <main className="flex-1 flex items-center justify-center px-[72px] pb-8">
+        <CardForm>
+          {/* Access options banner */}
+          <div className="p-4 rounded-control bg-aktibo-warning-bg border border-aktibo-warning-fg/30">
+            <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-warning-fg whitespace-nowrap">
               ACCESS OPTIONS · PROTOTYPE PREVIEW
             </p>
-            <p className="font-['Lexend_Exa:Regular'] font-normal relative shrink-0 text-[#15203a] text-[12px] w-full">
-              Monetary pricing has not been defined for this project. No payment is collected in this prototype.
+            <p className="mt-1 text-[12px] text-aktibo-ink leading-relaxed">
+              Monetary pricing has not been defined for this project. No payment is
+              collected in this prototype.
             </p>
           </div>
 
-          <div className="content-stretch flex gap-[24px] h-[432px] items-start overflow-clip relative shrink-0 w-[1296px]">
-            <div className="bg-white border border-[#dfe5f0] border-solid content-stretch flex flex-col h-[432px] items-start justify-between overflow-clip p-[24px] relative rounded-[8px] shrink-0 w-[416px]">
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[10px] w-[min-content]">
-                FOR LEARNERS
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#000e53] text-[21px] w-[min-content]">
-                Student access
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[13px] w-[min-content]">
-                Your next learning step
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[12px] w-[min-content]">
-                Join a course and turn concepts into practice.
-              </p>
-              <div className="[word-break:break-word] content-stretch flex flex-col font-['Lexend_Exa:Regular'] font-normal gap-[12px] h-[128px] items-start leading-[1.5] overflow-clip relative shrink-0 text-[#15203a] text-[11px] w-[368px] whitespace-pre-wrap">
-                <p className="relative shrink-0 w-full">•  Interactive reading and video lessons</p>
-                <p className="relative shrink-0 w-full">•  In-lesson programming activities</p>
-                <p className="relative shrink-0 w-full">•  Quick checks with immediate feedback</p>
-                <p className="relative shrink-0 w-full">•  Personal progress and activity history</p>
-              </div>
-              <Link to="/register" className="bg-[#ffb700] border border-[#000e53] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-[368px]">
-                <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px] text-center">
-                  GET STARTED AS A STUDENT
+          {/* Plan cards */}
+          <div className="mt-6 grid gap-6 grid-cols-3">
+            <Card variant="surface" padded className="p-6 flex flex-col h-full">
+              <div className="flex flex-col gap-3">
+                <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted whitespace-nowrap">
+                  FOR LEARNERS
                 </p>
-              </Link>
-            </div>
-
-            <div className="bg-white border border-[#dfe5f0] border-solid content-stretch flex flex-col h-[432px] items-start justify-between overflow-clip p-[24px] relative rounded-[8px] shrink-0 w-[416px]">
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[10px] w-[min-content]">
-                FOR EDUCATORS
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#000e53] text-[21px] w-[min-content]">
-                Instructor access
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[13px] w-[min-content]">
-                Build an active classroom
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[12px] w-[min-content]">
-                Create focused lessons and understand learner progress.
-              </p>
-              <div className="[word-break:break-word] content-stretch flex flex-col font-['Lexend_Exa:Regular'] font-normal gap-[12px] h-[128px] items-start leading-[1.5] overflow-clip relative shrink-0 text-[#15203a] text-[11px] w-[368px] whitespace-pre-wrap">
-                <p className="relative shrink-0 w-full">•  Course, subject, and module authoring</p>
-                <p className="relative shrink-0 w-full">•  Rich-media and programming blocks</p>
-                <p className="relative shrink-0 w-full">•  Practice questions with explanations</p>
-                <p className="relative shrink-0 w-full">•  Learner progress and engagement data</p>
-              </div>
-              <Link to="/register" className="bg-[#ffb700] border border-[#000e53] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-[368px]">
-                <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px] text-center">
-                  GET STARTED AS AN INSTRUCTOR
+                <p className="font-display text-[21px] font-bold text-aktibo-navy whitespace-nowrap whitespace-normal">
+                  Student access
                 </p>
-              </Link>
-            </div>
-
-            <div className="bg-white border border-[#dfe5f0] border-solid content-stretch flex flex-col h-[432px] items-start justify-between overflow-clip p-[24px] relative rounded-[8px] shrink-0 w-[416px]">
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[10px] w-[min-content]">
-                FOR TEAMS
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#000e53] text-[21px] w-[min-content]">
-                Institution access
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[13px] w-[min-content]">
-                Explore a shared rollout
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[12px] w-[min-content]">
-                Discuss how AktiboLMS could support your learning community.
-              </p>
-              <div className="[word-break:break-word] content-stretch flex flex-col font-['Lexend_Exa:Regular'] font-normal gap-[12px] h-[128px] items-start leading-[1.5] overflow-clip relative shrink-0 text-[#15203a] text-[11px] w-[368px] whitespace-pre-wrap">
-                <p className="relative shrink-0 w-full">•  Align learning and teaching workflows</p>
-                <p className="relative shrink-0 w-full">•  Plan course and enrollment access</p>
-                <p className="relative shrink-0 w-full">•  Discuss onboarding needs</p>
-                <p className="relative shrink-0 w-full">•  Review requirements with your team</p>
-              </div>
-              <a href="#" className="bg-[#ffb700] border border-[#000e53] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-[368px]">
-                <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px] text-center">
-                  DISCUSS YOUR NEEDS
+                <p className="text-[13px] font-bold text-aktibo-navy-deep whitespace-nowrap whitespace-normal">
+                  Your next learning step
                 </p>
-              </a>
-            </div>
-          </div>
-
-          <div className="content-stretch flex gap-[24px] h-[184px] items-start overflow-clip relative shrink-0 w-[1296px]">
-            <div className="bg-white border border-[#dfe5f0] border-solid content-stretch flex flex-col gap-[16px] h-[184px] items-start overflow-clip p-[24px] relative rounded-[8px] shrink-0 w-[636px]">
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[18px] w-[min-content]">
-                Already have an account?
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[12px] w-[min-content]">
-                Sign in and choose your student or instructor workspace.
-              </p>
-              <Link to="/login" className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-[220px]">
-                <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px] text-center">
-                  LOG IN
+                <p className="mt-2 text-[12px] text-aktibo-muted leading-relaxed">
+                  Join a course and turn concepts into practice.
                 </p>
-              </Link>
-            </div>
-
-            <div className="bg-white border border-[#dfe5f0] border-solid content-stretch flex flex-col gap-[16px] h-[184px] items-start overflow-clip p-[24px] relative rounded-[8px] shrink-0 w-[636px]">
-              <p className="[word-break:break-word] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-full relative shrink-0 text-[#15203a] text-[18px] w-[min-content]">
-                Not sure where to start?
-              </p>
-              <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[1.5] min-w-full relative shrink-0 text-[#596579] text-[12px] w-[min-content]">
-                Find answers about enrollment, roles, and getting help.
-              </p>
-              <Link to="/help-support" className="bg-white border border-[#dfe5f0] border-solid content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip p-[10px] relative rounded-[9px] shrink-0 w-[240px]">
-                <p className="[word-break:break-word] flex-[1_0_0] font-['Lexend_Exa:Bold'] font-bold leading-[1.5] min-w-px relative text-[#000e53] text-[11px] text-center">
-                  HELP & SUPPORT
-                </p>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="content-stretch flex flex-col h-[160px] items-start pt-[32px] relative shrink-0 w-full">
-        <div className="bg-[#000e53] content-stretch flex flex-col gap-[14px] h-[128px] items-start overflow-clip pb-[14px] pt-[32px] px-[72px] relative shrink-0 w-[1440px]">
-          <div className="absolute bg-[#304074] h-px left-[72px] top-0 w-[1296px]" />
-          <div className="content-stretch flex gap-[556px] h-[48px] items-start relative shrink-0 w-full">
-            <Link to="/" className="content-stretch cursor-pointer flex gap-[12px] h-full items-center overflow-clip relative shrink-0 w-[256px]">
-              <img src="/assets/aktibo-symbol.png" alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" />
-              <p className="[word-break:break-word] font-['Lexend_Exa:Regular'] font-normal leading-[normal] relative shrink-0 text-[18px] text-left text-white whitespace-nowrap">
-                AKTIBO LMS
-              </p>
-            </Link>
-            <div className="content-stretch flex h-[46px] items-start pt-[2px] relative shrink-0 w-[484px]">
-              <div className="content-stretch flex gap-[12px] h-[44px] items-center overflow-clip relative shrink-0 w-[484px]">
-                <Link to="/" className="content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[96px]">
-                  <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-left text-white whitespace-nowrap">
-                    Home
+                <div className="mt-4 flex flex-col gap-2 text-[11px] text-aktibo-ink">
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Interactive reading and video lessons
                   </p>
-                </Link>
-                <Link to="/student/courses" className="content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[112px]">
-                  <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-left text-white whitespace-nowrap">
-                    Courses
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    In-lesson programming activities
                   </p>
-                </Link>
-                <div className="content-stretch flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[96px]">
-                  <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-white whitespace-nowrap">
-                    Pricing
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Quick checks with immediate feedback
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Personal progress and activity history
                   </p>
                 </div>
-                <Link to="/login" className="content-stretch cursor-pointer flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[144px]">
-                  <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-left text-white whitespace-nowrap">
-                    Log in
-                  </p>
-                </Link>
+                <Button
+                  size="lg"
+                  fullWidth
+                  variant="primary"
+                  className="mt-5"
+                  onClick={() => navigate('/register')}
+                >
+                  Get started as a student
+                </Button>
               </div>
-            </div>
+            </Card>
+
+            <Card variant="surface" padded className="p-6 flex flex-col h-full">
+              <div className="flex flex-col gap-3">
+                <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted whitespace-nowrap">
+                  FOR EDUCATORS
+                </p>
+                <p className="font-display text-[21px] font-bold text-aktibo-navy whitespace-nowrap whitespace-normal">
+                  Instructor access
+                </p>
+                <p className="text-[13px] font-bold text-aktibo-navy-deep whitespace-nowrap whitespace-normal">
+                  Build an active classroom
+                </p>
+                <p className="mt-2 text-[12px] text-aktibo-muted leading-relaxed">
+                  Create focused lessons and understand learner progress.
+                </p>
+                <div className="mt-4 flex flex-col gap-2 text-[11px] text-aktibo-ink">
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Course, subject, and module authoring
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Rich-media and programming blocks
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Practice questions with explanations
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Learner progress and engagement data
+                  </p>
+                </div>
+                <Button
+                  size="lg"
+                  fullWidth
+                  variant="primary"
+                  className="mt-5"
+                  onClick={() => navigate('/register')}
+                >
+                  Get started as an instructor
+                </Button>
+              </div>
+            </Card>
+
+            <Card variant="surface" padded className="p-6 flex flex-col h-full">
+              <div className="flex flex-col gap-3">
+                <p className="font-display text-[10px] font-bold uppercase tracking-[0.08em] text-aktibo-muted whitespace-nowrap">
+                  FOR TEAMS
+                </p>
+                <p className="font-display text-[21px] font-bold text-aktibo-navy whitespace-nowrap whitespace-normal">
+                  Institution access
+                </p>
+                <p className="text-[13px] font-bold text-aktibo-navy-deep whitespace-nowrap whitespace-normal">
+                  Explore a shared rollout
+                </p>
+                <p className="mt-2 text-[12px] text-aktibo-muted leading-relaxed">
+                  Discuss how AktiboLMS could support your learning community.
+                </p>
+                <div className="mt-4 flex flex-col gap-2 text-[11px] text-aktibo-ink">
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Align learning and teaching workflows
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Plan course and enrollment access
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Discuss onboarding needs
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="shrink-0">•</span>
+                    Review requirements with your team
+                  </p>
+                </div>
+                <Button
+                  size="lg"
+                  fullWidth
+                  variant="primary"
+                  className="mt-5"
+                  onClick={() => navigate('/help-support')}
+                >
+                  Discuss your needs
+                </Button>
+              </div>
+            </Card>
           </div>
-          <div className="[word-break:break-word] content-stretch flex font-['Inter:Regular'] font-normal gap-[965px] h-[20px] items-start leading-[1.4] not-italic relative shrink-0 text-[#d1d8ee] text-[14px] w-full">
-            <p className="h-full relative shrink-0 w-[193px]">
-              A more focused way to learn.
-            </p>
-            <p className="h-full relative shrink-0 w-[138px]">
-              Learning, with focus.
-            </p>
+
+          {/* Bottom action boxes */}
+          <div className="mt-8 grid gap-6 grid-cols-2">
+            <Card variant="surface" padded className="p-6">
+              <div className="flex flex-col gap-2">
+                <p className="font-display text-[18px] font-bold text-aktibo-navy-deep whitespace-nowrap whitespace-normal">
+                  Already have an account?
+                </p>
+                <p className="text-[12px] text-aktibo-muted leading-relaxed">
+                  Sign in and choose your student or instructor workspace.
+                </p>
+                <Button
+                  size="lg"
+                  fullWidth
+                  variant="ghost"
+                  className="mt-4"
+                  onClick={() => navigate('/login')}
+                >
+                  Log in
+                </Button>
+              </div>
+            </Card>
+
+            <Card variant="surface" padded className="p-6">
+              <div className="flex flex-col gap-2">
+                <p className="font-display text-[18px] font-bold text-aktibo-navy-deep whitespace-nowrap whitespace-normal">
+                  Not sure where to start?
+                </p>
+                <p className="text-[12px] text-aktibo-muted leading-relaxed">
+                  Find answers about enrollment, roles, and getting help.
+                </p>
+                <Button
+                  size="lg"
+                  fullWidth
+                  variant="ghost"
+                  className="mt-4"
+                  onClick={() => navigate('/help-support')}
+                >
+                  Help & support
+                </Button>
+              </div>
+            </Card>
           </div>
-        </div>
-      </div>
+        </CardForm>
+      </main>
+
+      {/* Footer */}
+      <Footer signedIn={false} />
+    </div>
+  )
+}
+
+/** Centered white content card. */
+function CardForm({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-aktibo-surface flex flex-col gap-5 p-6 p-8 rounded-panel shadow-panel w-full max-w-[1296px]">
+      {children}
     </div>
   )
 }
