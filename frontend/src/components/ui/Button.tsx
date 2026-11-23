@@ -1,5 +1,29 @@
 import type { ButtonHTMLAttributes } from 'react'
 
+/* ============================================================================
+   STUDY NOTES — components/ui/Button.tsx  (design-system button)
+   ----------------------------------------------------------------------------
+   WHAT: Reusable button primitive with variants (primary/secondary/outline/
+         danger/ghost), sizes (sm/md/lg), a loading state, and optional icon.
+         Used across forms, CTAs, and table actions.
+   HOW IT WORKS:
+     1. forwardRef + memo for ref forwarding and re-render optimization.
+     2. clsx merges base styles + variant + size + caller className.
+     3. loading disables the button and shows an inline SVG spinner.
+     4. icon renders before children when provided.
+   WHERE THE API CONTRACT LIVES: none here (pure UI).
+   WHAT TO CHANGE FOR THE NEW UI:
+     • Restyle variants to the new tokens:
+         – primary → brand teal gradient (--brand-600 → --brand-500)
+         – accent → amber for "continue/resume" CTAs
+         – ghost-white → for dark CTA cards
+     • Add new variants as needed (e.g. 'accent', 'outline-brand').
+     • Keep forwardRef + memo — that's the right pattern for a design-system
+       component; just don't remove the disabled/loading handling.
+   QA MEDIUM: Button wasn't memoized in the original review; this file already
+              wraps with memo. Keep it.
+   ============================================================================ */
+
 export type ButtonVariant =
   | 'primary'
   | 'secondary'
@@ -9,8 +33,7 @@ export type ButtonVariant =
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant
-  size?: ButtonSize
+  variant?: 'primary' | 'secondary' | 'danger'
   fullWidth?: boolean
   loading?: boolean
 }
@@ -46,17 +69,21 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    'inline-flex items-center justify-center gap-2 font-display font-bold tracking-tight ' +
-    'transition-all duration-200 ease-out active:translate-y-0 hover:-translate-y-px ' +
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aktibo-gold focus-visible:ring-offset-2 ' +
-    'disabled:pointer-events-none disabled:opacity-50'
+    'rounded-[9px] border border-black text-black text-[16px] font-bold font-["Lexend Exa"] transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 flex items-center justify-center hover:-translate-y-[1px] active:translate-y-0'
+
+  const variants: Record<string, string> = {
+    primary: 'bg-aktif-gold hover:bg-amber-400 active:bg-amber-500',
+    secondary: 'bg-aktif-white hover:bg-gray-100 active:bg-gray-200',
+    danger: 'bg-[#ff585b] border-black text-black hover:bg-[#ff4044] active:bg-[#e83a3d]',
+  }
+
 
   return (
     <button
       type={type}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
-      className={[
+      className={
         base,
         VARIANTS[variant],
         SIZES[size],

@@ -1,8 +1,6 @@
 import { useId } from 'react'
 import type { InputHTMLAttributes } from 'react'
 
-export type InputSize = 'sm' | 'md' | 'lg' | 'auth' | 'register'
-
 interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string
   error?: string
@@ -74,3 +72,4 @@ export function Input({
     </div>
   )
 }
+

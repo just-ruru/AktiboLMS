@@ -8,61 +8,88 @@ export default {
     extend: {
       colors: {
         aktibo: {
-          /* Brand */
-          navy: '#000e53',        // primary brand navy - page chrome, hero bands
-          'navy-deep': '#15203a', // heading text on light surfaces
-          'navy-mid': '#304074',  // secondary navy tint
-          gold: '#ffb700',        // primary accent
-          'gold-hover': '#ffc933',
-          'gold-soft': '#fff4d6',
-          white: '#ffffff',
-
-          /* Light surfaces */
-          canvas: '#f4f6fa',   // app page background
-          surface: '#ffffff',  // cards, panels
-          'surface-alt': '#f8fafc',
-          border: '#dee4ee',
-          'border-strong': '#c7d0e0',
-
-          /* Text */
-          ink: '#15203a',      // primary text on light
-          muted: '#596579',    // secondary text on light
-          'muted-on-navy': '#d1d8ee',
-          'ink-on-gold': '#000000',
-
-          /* Status */
-          'success-bg': '#e9f5ef',
-          'success-fg': '#236543',
-          'warning-bg': '#fff4d6',
-          'warning-fg': '#8a5b00',
-          'danger-bg': '#ffe8e8',
-          'danger-fg': '#b3261e',
-          'info-bg': '#e8f0fe',
-          'info-fg': '#1a4fa0',
+          navy: "#000e53",
+          gold: "#ffb700",
+          white: "#ffffff",
+        },
+        /* ---- Foreground/Background (CSS custom properties mapped) ---- */
+        fg: {
+          primary: 'var(--fg-primary)',
+          secondary: 'var(--fg-secondary)',
+          tertiary: 'var(--fg-tertiary)',
+          inverse: 'var(--fg-inverse)',
+          muted: 'var(--fg-muted)',
+        },
+        bg: {
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          tertiary: 'var(--bg-tertiary)',
+          hover: 'var(--bg-hover)',
+          active: 'var(--bg-active)',
+          inverse: 'var(--bg-inverse)',
+        },
+        border: {
+          primary: 'var(--border-primary)',
+          secondary: 'var(--border-secondary)',
+          focus: 'var(--border-focus)',
+          error: 'var(--border-error)',
+        },
+        /* ---- Button States ---- */
+        btn: {
+          primary: {
+            bg: 'var(--btn-primary-bg)',
+            hover: 'var(--btn-primary-hover)',
+            active: 'var(--btn-primary-active)',
+            fg: 'var(--btn-primary-fg)',
+          },
+          secondary: {
+            bg: 'var(--btn-secondary-bg)',
+            hover: 'var(--btn-secondary-hover)',
+            active: 'var(--btn-secondary-active)',
+            fg: 'var(--btn-secondary-fg)',
+          },
+          outline: {
+            border: 'var(--btn-outline-border)',
+            hover: 'var(--btn-outline-hover)',
+            fg: 'var(--btn-outline-fg)',
+          },
+          accent: {
+            bg: 'var(--btn-accent-bg)',
+            hover: 'var(--btn-accent-hover)',
+            active: 'var(--btn-accent-active)',
+            fg: 'var(--btn-accent-fg)',
+          },
+        },
+        /* ---- Input States ---- */
+        input: {
+          bg: 'var(--input-bg)',
+          border: 'var(--input-border)',
+          'focus-border': 'var(--input-focus-border)',
+          placeholder: 'var(--input-placeholder)',
+        },
+        /* ---- Card States ---- */
+        card: {
+          bg: 'var(--card-bg)',
+          border: 'var(--card-border)',
+          shadow: 'var(--card-shadow)',
+        },
+        /* ---- Navbar ---- */
+        navbar: {
+          bg: 'var(--navbar-bg)',
+          border: 'var(--navbar-border)',
+        },
+        /* ---- Sidebar ---- */
+        sidebar: {
+          bg: 'var(--sidebar-bg)',
+          border: 'var(--sidebar-border)',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['"Lexend Exa"', 'system-ui', 'sans-serif'],
-        titling: ['"Castoro Titling"', '"Lexend Exa"', 'serif'],
+        sans: ["'Inter'", "system-ui", "sans-serif"],
+        display: ["'Lexend Exa'", "system-ui", "sans-serif"],
       },
-      maxWidth: {
-        shell: '1296px',
-        prose: '68ch',
-      },
-      borderRadius: {
-        card: '16px',
-        panel: '28px',
-        control: '9px',
-        field: '11px',
-      },
-      boxShadow: {
-        card: '0 1px 2px rgba(21, 32, 58, 0.04), 0 8px 24px rgba(21, 32, 58, 0.06)',
-        'card-hover': '0 2px 4px rgba(21, 32, 58, 0.06), 0 16px 40px rgba(21, 32, 58, 0.10)',
-        panel: '0 24px 60px rgba(0, 14, 83, 0.28)',
-      },
-      transitionTimingFunction: {
-        out: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      spacing: {
+        18: "4.5rem",
       },
     },
   },

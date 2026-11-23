@@ -2,154 +2,275 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-# AktiboLMS
+## Project Overview
 
-An interactive Learning Management System ("Interactive Learning, Made Active") — a third-year IT
-group project (3 students, ~4-week plan, $0 budget). The full product/design doc lives in
-[`README.md`](README.md): pain points, goals/non-goals, architecture decisions, target database
-schema, the REST API surface, and the week-by-week implementation plan. Read it before designing
-anything new; it is the source of truth for intended behaviour, and the running code is currently
-well behind it.
+**AktiboLMS** — Interactive Learning Management System replacing static "walls of text" with rich content + embedded activities (Monaco code editor, instant-feedback quizzes). Progress tracked per-activity for actionable instructor analytics.
 
-## Repository layout
+**Stack**: React 18 + Vite + TypeScript (frontend) | Spring Boot 3.2 + Maven (backend) | PostgreSQL (Supabase) | TanStack Query | Monaco Editor | TipTap | Tailwind CSS | Flyway migrations | JWT auth (Spring Security) | Piston API (code execution)
 
-This directory (`AktiboLMS/`) is the git repo root.
+**Deploy**: Vercel (FE) + Render (BE) + Supabase (DB/Auth/Realtime)
 
-| Path | State |
-|------|-------|
-| `frontend/` | The only runnable code. React 19 + Vite 8 + TypeScript + Tailwind CSS. |
-| `backend/` | **Spring Boot backend source is missing from the working tree.** Only `backend/target/test-classes/*.class` build artifacts remain — no `src/`, no `pom.xml`. |
-| `README.md` | Design doc (25 KB): architecture, schema, API contract, 4-week plan, risk table. |
+---
 
-### Backend (source currently absent)
+## Common Development Commands
 
-`backend/` contains only compiled test classes. Their paths reveal the intended packages:
-
-- `com.aktibolms.backend.controller` — `StudentControllerTest`, `InstructorControllerTest`
-- `com.aktibolms.backend.service` — `StudentServiceTest`, `InstructorServiceTest`, `CourseModuleServiceTest`
-- `com.aktibolms.service` — `AuthServiceTest`, `CourseServiceTest`
-
-The backend existed in git history (commit `f3da6b5c` "Backend and frontend changes including
-security config, entities, repositories, services, and UI components"). To restore it:
-`git checkout f3da6b5c -- backend`. Otherwise, expect the frontend's API calls to fail — the
-frontend targets `http://localhost:8080/api`.
-
-Once restored, the project is Maven-based; the README specifies `./mvnw spring-boot:run`,
-`./mvnw test`, and `./mvnw flyway:migrate`. Spring Boot 3 + Spring Security/JWT + JPA + Flyway +
-PostgreSQL (Supabase).
-
-## Commands
-
-All frontend commands run from `frontend/`:
-
+### Frontend (from `AktiboLMS/frontend/` directory)
 ```bash
-npm run dev        # Vite dev server (HMR)
-npm run build      # tsc -b && vite build  — typecheck + bundle; run after every change
-npm run lint       # oxlint
-npm run preview    # serve the production build
+npm run dev          # Start Vite dev server (port 3000, proxies /api to backend:8080)
+npm run build        # Production build (tsc + vite build) → dist/
+npm run preview      # Preview production build
+npm run test         # Run Vitest
+npm run typecheck    # TypeScript check (tsc --noEmit)
+npm run lint         # ESLint (ts/tsx, max-warnings 0)
 ```
 
-There is **no test script** — Vitest was planned but never set up, and no test files exist.
-`@playwright/test` is installed as a devDependency but there is no `tests/` or `e2e/` directory
-yet. If you add frontend tests, you must also add the runner script to `package.json`.
+### Backend (from `AktiboLMS/backend/` directory)
+```bash
+./mvnw spring-boot:run           # Start dev server (port 8080, context-path /api)
+./mvnw test                      # Run tests (JUnit + Testcontainers)
+./mvnw flyway:migrate            # Run Flyway migrations (uses active Maven profile)
+./mvnw flyway:clean flyway:migrate  # Reset DB + rerun migrations
+./mvnw clean package -DskipTests # Build JAR
+```
 
-For the backend (once source is restored): `./mvnw spring-boot:run`, `./mvnw test`.
-Postman CLI is available on this machine for API work.
+### Database (Supabase CLI)
+```bash
+supabase db push            # Push migrations to Supabase
+supabase db pull            # Pull schema changes
+supabase migration new <name>  # Create new migration file
+supabase start              # Start local Supabase stack
+```
 
-## Frontend architecture
+### Environment Setup
+- Backend: Copy `.env.example` → `.env` with `DATABASE_URL`, `JWT_SECRET`, `SUPABASE_*`, `PISTON_API_URL`
+- Frontend: `.env.example` has `VITE_API_URL` (defaults to `/api` via Vite proxy)
 
-**Stack**: React 19, Vite 8, TypeScript (strict, project references via `tsconfig.app.json`),
-react-router-dom v7, Tailwind CSS 3.4, oxlint. No state-management library and no TanStack Query
-yet, despite both being in the README's plan.
+---
 
-**Routing** — all routes are declared flat in [`frontend/src/App.tsx`](frontend/src/App.tsx); there
-are no nested layouts or route guards:
+## High-Level Architecture
 
-| Path | Component |
-|------|-----------|
-| `/` | `LandingPage` |
-| `/login`, `/register`, `/forgot-password` | auth pages |
-| `/account-profile` | `AccountProfile` |
-| `/student/courses` | `StudentView` (course catalogue) |
-| `/students/list\|create\|profile/:id\|update/:id` | student CRUD screens |
-| `/instructor/courses` | `InstructorView` (course catalogue) |
-| `/instructors/list\|create\|profile/:id\|update/:id` | instructor CRUD screens |
-| `*` | `NotFound` |
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        ARCHITECTURE                             │
+├─────────────────────────────────────────────────────────────────┤
+│  Frontend (Vercel)          Backend (Render)         Supabase   │
+│  ┌──────────────────┐       ┌──────────────────┐   ┌─────────┐  │
+│  │ React 18 + Vite  │◄─────►│ Spring Boot 3    │◄─►│PostgreSQL│  │
+│  │ TypeScript       │ REST  │ Maven            │   │  Auth    │  │
+│  │ TanStack Query   │       │ Spring Security  │   │ Realtime │  │
+│  │ Monaco Editor    │       │ Spring Data JPA  │   │ Storage  │  │
+│  │ TipTap (rich text)│       │ Flyway           │   └─────────┘  │
+│  │ Tailwind CSS     │       │                  │       │        │
+│  └──────────────────┘       └──────────────────┘       │        │
+│         │                           │                   │        │
+│         │                    ┌──────┴──────┐            │        │
+│         │                    │ Piston API  │            │        │
+│         └───────────────────►│ (Code Exec) │            │        │
+│                              └─────────────┘            │        │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-**Pages** live flat in `frontend/src/pages/*.tsx`, one component per file, no per-feature folders
-(the README's `pages/auth/`, `pages/student/`, `pages/instructor/` split was not adopted).
+### Frontend Structure (`AktiboLMS/frontend/src/`)
+```
+src/
+├── components/
+│   ├── ui/                 # Button, Card, Input, Modal, Badge, etc.
+│   ├── editor/             # CodeEditor (Monaco), RichTextEditor (TipTap)
+│   ├── lesson/             # LessonViewer, ContentBlock, ActivityBlock
+│   ├── layout/             # Layout, Navbar
+│   └── auth/               # PrivateRoute
+├── pages/
+│   ├── auth/               # Login, Register
+│   ├── student/            # Dashboard, CourseView, LessonView, Progress
+│   └── instructor/         # Dashboard, CourseBuilder, Analytics
+├── hooks/
+│   ├── useAuth.ts          # Auth context + JWT management
+│   ├── useCourses.ts       # Course/module/lesson queries
+│   ├── useLesson.ts        # Lesson content + progress
+│   ├── useCodeExecution.ts # Piston API integration
+│   └── useRealtime.ts      # Supabase Realtime subscriptions
+├── services/
+│   ├── api.ts              # Axios instance + interceptors
+│   ├── auth.ts             # Auth API calls
+│   └── supabase.ts         # Realtime client
+├── types/                  # Shared TypeScript interfaces
+└── utils/
+```
 
-**Shared UI** in `frontend/src/components/ui/`: `Button` (variants `primary`/`secondary`/`danger`,
-plus `fullWidth`), `Card`, `CourseCard`, `Input`, `Label`, `Navbar`.
-`Navbar` takes a `signedIn` prop that switches the whole link set: pre-signup shows
-Home/Courses/Log in/Register; post-signup shows Home/Courses/Pricing/My account plus a signed-in
-user pill (`userName`, defaults to "Hoshimi Miyabi"). It is `sticky top-0 z-[50]`.
+### Backend Structure (`AktiboLMS/backend/src/main/java/com/aktibolms/`)
+```
+├── config/                 # SecurityConfig, AuthRateLimitFilter, CorsConfig
+├── controller/             # REST endpoints (Auth, Course, Module, Lesson, ContentBlock, Activity, Progress, CodeExecution, InstructorAnalytics)
+├── service/                # Business logic (CourseService, LessonService, ActivityService, ProgressService, CodeExecutionService, UserService)
+├── repository/             # JPA repositories (Course, Module, Lesson, ContentBlock, Activity, ActivityProgress, CodeSubmission, QuizAttempt, Enrollment, User)
+├── entity/                 # JPA entities matching DB schema
+├── dto/
+│   ├── request/            # DTOs for incoming requests
+│   └── response/           # DTOs for API responses
+├── security/
+│   ├── JwtFilter.java      # JWT validation filter
+│   ├── JwtUtil.java        # Token generation/validation
+│   ├── CustomUserDetails.java
+│   └── CustomUserDetailsService.java
+└── exception/              # GlobalExceptionHandler, ApiException
+```
 
-**API client** — [`frontend/src/services/api.ts`](frontend/src/services/api.ts) is a hand-rolled
-`fetch` wrapper (no axios yet): `API_BASE = "http://localhost:8080/api"`, JSON content type,
-throws an `Error` carrying the raw response body on non-2xx. It exports Student/Instructor CRUD
-(`createStudent`, `getStudentById`, `getAllStudents(page, size)`, `updateStudent`,
-`deactivateStudent`, and the instructor equivalents) returning a `PageResponse<T>` shape. Types
-for the entities live in this same file.
+### Database Schema (Key Tables)
+- `users` — synced with Supabase auth; role: STUDENT | INSTRUCTOR
+- `courses` → `modules` → `lessons` (hierarchical, ordered via `order_index`)
+- `content_blocks` — static content per lesson (TEXT, VIDEO, IMAGE, CODE_SNIPPET) with JSONB `content`
+- `activities` — interactive per lesson (CODE_EXERCISE, QUIZ) with JSONB `config`
+- `activity_progress` — per-user per-activity status + score (NOT_STARTED → IN_PROGRESS → SUBMITTED → COMPLETED)
+- `code_submissions` — code execution history
+- `quiz_attempts` — quiz answers + grading
+- `enrollments` — student ↔ course
 
-**Styling** — two parallel systems, so check both before adding styles:
+---
 
-- Tailwind utilities, with brand colours under the **`aktibo`** namespace in
-  `frontend/tailwind.config.js`: `aktibo-navy` `#000e53`, `aktibo-gold` `#ffb700`, `aktibo-white`.
-  Fonts: `font-sans` (Inter), `font-display` (Lexend Exa). Arbitrary values such as
-  `rounded-[9px]`, `text-[16px]`, `px-[72px]` are used heavily for Figma-exact sizing.
-- `frontend/src/App.css` (~1.5k lines) holds most real component styling in BEM-ish classes
-  (`.site-nav__link`, `.site-nav__my-account`, …). `frontend/src/index.css` holds the Tailwind
-  directives, shared keyframes/animations (`.animate-fade-in-up`, `.animate-page-fade`, etc.), the
-  navy `body`/`#root` background, and the gold `:focus-visible` outline.
+## Key API Endpoints (Base: `/api/v1`)
 
-**Assets** — two different locations with different rules:
+### Auth
+- `POST /auth/register` — Register (returns JWT)
+- `POST /auth/login` — Login (returns JWT)
+- `GET /auth/me` — Current user
+- `POST /auth/refresh` — Refresh access token
 
-- `frontend/public/assets/*` → served verbatim at `/assets/...` (e.g. `logo.png`,
-  `aktibo-symbol.png`, `avatar.svg`, `favicon.svg`). Reference by absolute path string.
-- `frontend/src/assets/*` (`hero.png`, `profile_pic_placeholder.jpg`) → **must be imported as a Vite
-  module** (`import pic from '../assets/profile_pic_placeholder.jpg'`). Referencing them as
-  `/assets/...` 404s, because they are not in `public/`.
+### Courses (Instructor)
+- `GET /courses` — List my courses
+- `POST /courses` — Create course
+- `GET /courses/:id` — Get with modules/lessons
+- `PUT /courses/:id` — Update
+- `DELETE /courses/:id` — Delete
+- `POST /courses/:id/publish` — Publish
 
-## UI status: still a work in progress
+### Courses (Student)
+- `GET /catalog/courses` — Browse published
+- `POST /courses/:id/enroll` — Enroll
+- `GET /my-courses` — Enrolled courses with progress
 
-**The overall UI is not properly finished yet — this is the current focus of the project.**
-The latest commit (`f5d09ebd`) is titled *"fix attempt for the ui, still need to change some
-styling as other pages are still not properly layouted"*. Work continues page-by-page, matching
-each screen to the Figma design.
+### Content & Activities
+- `POST /lessons/:lessonId/content-blocks` — Add content block
+- `POST /lessons/:lessonId/activities` — Create activity
+- `GET /activities/:id` — Student view (no solution)
+- `GET /activities/:id/instructor` — Instructor view (with solution)
 
-Reference material: `frontend/public/figma-reference.png` and `figma-screenshot.png` in the
-workspace directory one level above the repo root.
+### Progress & Execution
+- `GET /progress/course/:courseId` — Student progress
+- `POST /activities/:id/code/submit` — Submit code (proxies to Piston)
+- `POST /activities/:id/quiz/submit` — Submit quiz
+- `GET /instructor/courses/:courseId/analytics` — Course analytics
 
-Already matched to Figma: `LandingPage` (frame 6:11), `AccountProfile` (frame 92:49),
-`StudentProfile`, and the Student/Instructor `View`, `Profile`, `List`, `Create`, and `Update`
-screens. `Login`, `Register`, and `ForgotPassword` exist with the shared navbar treatment.
+---
 
-### Known class-name bug (silently breaks styling)
+## Authentication Flow
 
-Thirteen files use `bg-aktif-gold` / `bg-aktif-white`-style utilities, but the Tailwind config
-only defines the **`aktibo`** namespace — there is no `aktif` colour scale. Those classes compile
-to nothing, so the affected elements render unstyled (e.g. the primary button in
-`components/ui/Button.tsx` has no gold background). Affected: `Button.tsx`, `Input.tsx`, and the
-Login/Register/ForgotPassword plus all Student/Instructor CRUD pages. When restyling, use
-`bg-aktibo-gold` / `bg-aktibo-white` or an arbitrary hex value (`#ffb700`, `#000e53`).
+1. **Login/Register** → Backend validates credentials, returns `{ accessToken, refreshToken, user }`
+2. **Frontend** stores tokens in memory (access) + httpOnly cookie (refresh via `useAuth`)
+3. **Axios interceptor** attaches `Authorization: Bearer <accessToken>` to all requests
+4. **401 response** → Auto-refresh via `/auth/refresh`, retry original request
+5. **Spring Security** validates JWT (HS256, secret from `jwt.secret`), sets `CustomUserDetails` in context
+6. **Role-based access** via `@PreAuthorize("hasRole('INSTRUCTOR')")` or `PrivateRoute` on frontend
 
-### Other known rough edges
+---
 
-- Navbar's post-signup `Pricing` link points at `/pricing`, which has no route → falls through to
-  `NotFound`.
-- There is no auth. Every page is reachable without login; `signedIn` is a hardcoded prop, and the
-  signed-in user name is a literal.
-- Pages carry placeholder data inline (e.g. `COURSES` in `StudentView.tsx`) instead of fetching.
-- `Login`/`Register`/`ForgotPassword` are visually much simpler than the Figma-matched pages.
+## Code Execution (Piston API)
 
-## Working conventions
+- **Backend proxy**: `POST /code/execute` → forwards to Piston (`https://emkc.org/api/v2/piston/execute`)
+- **Supported languages**: Configurable via Piston runtimes endpoint
+- **Frontend**: `useCodeExecution.ts` hook + `CodeEditor` component (Monaco)
+- **Timeout**: 30s (configurable via `piston.timeout`)
 
-- After **any** frontend change, run `npm run build` in `frontend/` — it runs `tsc -b` first, so it
-  catches type errors as well as bundling problems. `npm run lint` is cheap and worth running too.
-- UI changes are verified against the Figma frames, so compare visually (screenshot via the
-  Playwright MCP tools or the dev server) rather than trusting that the JSX "looks right".
-- Use `fetch` through `src/services/api.ts` for backend calls; keep request/response types next to
-  the client functions, matching the existing `Student`/`Instructor`/`PageResponse<T>` pattern.
-- Keep the `.tsx` + Tailwind-with-`App.css` mix consistent with neighbouring files: reuse
-  `components/ui` primitives rather than re-styling buttons and inputs inline.
+---
+
+## Testing
+
+### Frontend
+```bash
+npm run test              # All tests (Vitest + Testing Library + jsdom)
+npm run test -- --run     # CI mode (no watch)
+npm run test <file>       # Single test file
+```
+
+### Backend
+```bash
+./mvnw test               # All tests (JUnit + Mockito + Testcontainers)
+./mvnw test -Dtest=*ServiceTest  # Single test class
+./mvnw test -Dtest=CourseServiceTest#testCreateCourse  # Single test method
+```
+
+---
+
+## Important Conventions
+
+1. **UUIDs everywhere** — All entity IDs are UUIDs (generated by DB via `uuid-ossp`)
+2. **Ordering via `order_index`** — Modules, lessons, content blocks, activities all use integer ordering
+3. **JSONB for flexible content** — `content_blocks.content` and `activities.config` store structured JSON
+4. **Optimistic UI updates** — TanStack Query mutations with `onMutate`/`onError`/`onSettled` for progress
+5. **RLS-ready schema** — Tables designed for Supabase Row Level Security (not yet fully enabled in V1)
+6. **Lazy-load Monaco** — Editor chunk loaded only on lesson view with code activity
+7. **Flyway migrations only** — `ddl-auto: validate`; never `update` or `create-drop`
+
+---
+
+## Common Tasks
+
+### Add a new content block type
+1. Update `ContentBlock` entity `type` CHECK constraint (V1 migration + new migration)
+2. Add case in `ContentBlock.tsx` renderer
+3. Add editor UI in `CourseBuilder`/`LessonEditor`
+
+### Add a new activity type
+1. Add type to `activities.type` CHECK constraint
+2. Define `config_json` structure in README/docs
+3. Create `ActivityBlock` variant component
+4. Add submission handling in `ProgressService` + controller
+
+### Run a single backend test with Testcontainers
+```bash
+./mvnw test -Dtest=CourseServiceTest -DfailIfNoTests=false
+```
+
+### Debug Flyway migration issues
+```bash
+./mvnw flyway:info          # Show migration status
+./mvnw flyway:repair        # Repair checksums
+./mvnw flyway:clean flyway:migrate -Plocal  # Full reset (local profile)
+```
+
+---
+
+## Environment Variables (Backend)
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL JDBC URL | `jdbc:postgresql://localhost:5432/aktibolms` |
+| `DATABASE_USER` | DB username | `postgres` |
+| `DATABASE_PASSWORD` | DB password | `postgres` |
+| `JWT_SECRET` | HS256 signing key (256+ bits) | **required in prod** |
+| `SUPABASE_URL` | Supabase project URL | — |
+| `SUPABASE_ANON_KEY` | Supabase anon key | — |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | — |
+| `SUPABASE_JWT_SECRET` | Supabase JWT secret (for JWKS) | — |
+| `PISTON_API_URL` | Piston API base URL | `https://emkc.org/api/v2/piston` |
+| `CORS_ALLOWED_ORIGINS` | Comma-separated origins | `http://localhost:3000,http://localhost:5173` |
+
+---
+
+## Git Workflow
+
+- **Main branch**: `main` (protected)
+- **Feature branches**: `feat/<short-name>`, `fix/<short-name>`
+- **Commit style**: Conventional Commits (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`)
+- **PRs**: Required for all changes to `main`
+
+---
+
+## Useful Files to Reference
+
+- `README.md` — Full design doc with architecture decisions, API spec, DB schema, implementation plan
+- `AktiboLMS/frontend/vite.config.ts` — Vite config (proxy, aliases, build)
+- `AktiboLMS/backend/pom.xml` — Maven dependencies, profiles (local/supabase), Flyway config
+- `AktiboLMS/backend/src/main/resources/application.yml` — All Spring configuration
+- `AktiboLMS/backend/src/main/resources/db/migration/V1__initial_schema.sql` — Canonical DB schema
+- `AktiboLMS/frontend/src/services/api.ts` — Axios instance + auth interceptor
+- `AktiboLMS/frontend/src/hooks/useAuth.tsx` — Auth context + token management

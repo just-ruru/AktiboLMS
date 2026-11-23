@@ -1,35 +1,34 @@
-import type { HTMLAttributes } from 'react'
-
-export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'info' | 'danger'
+import { HTMLAttributes, forwardRef, memo } from 'react'
+import { clsx } from 'clsx'
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  tone?: BadgeTone
-  children: React.ReactNode
+  variant?: 'primary' | 'success' | 'warning' | 'error' | 'info' | 'gray'
 }
 
-const TONES: Record<BadgeTone, string> = {
-  neutral: 'bg-aktibo-canvas text-aktibo-muted border-aktibo-border',
-  accent: 'bg-aktibo-gold text-aktibo-ink-on-gold border-aktibo-ink-on-gold',
-  success: 'bg-aktibo-success-bg text-aktibo-success-fg border-aktibo-success-bg',
-  warning: 'bg-aktibo-warning-bg text-aktibo-warning-fg border-aktibo-warning-bg',
-  info: 'bg-aktibo-info-bg text-aktibo-info-fg border-aktibo-info-bg',
-  danger: 'bg-aktibo-danger-bg text-aktibo-danger-fg border-aktibo-danger-bg',
-}
+const BadgeComponent = forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ className, variant = 'primary', children, ...props }, ref) => {
+    const variantClasses = {
+      primary: 'badge-primary',
+      success: 'badge-success',
+      warning: 'badge-warning',
+      error: 'badge-error',
+      info: 'badge-info',
+      gray: 'badge-gray',
+    }
 
-export function Badge({ tone = 'neutral', children, className = '', ...props }: BadgeProps) {
-  return (
-    <span
-      className={[
-        'inline-flex items-center gap-1 rounded-[6px] border px-2.5 py-1',
-        'font-display text-[10px] font-bold uppercase tracking-[0.08em] leading-none',
-        TONES[tone],
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      {...props}
-    >
-      {children}
-    </span>
-  )
-}
+    return (
+      <span
+        ref={ref}
+        className={clsx('badge', variantClasses[variant], className)}
+        {...props}
+      >
+        {children}
+      </span>
+    )
+  }
+)
+
+const Badge = memo(BadgeComponent)
+Badge.displayName = 'Badge'
+
+export { Badge }
