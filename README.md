@@ -97,7 +97,7 @@ Johnler Cabo
 | **Timeline**                   | ~4 weeks (1 month)                        |
 | **Budget**                     | $0 (free tiers only)                      |
 | **Frontend**                   | React 18 + Vite + TypeScript              |
-| **Backend**                    | Spring Boot 3.x + Maven                   |
+| **Backend**                    | Spring Boot 4.1.2 + Maven                 |
 | **State Management**           | TanStack Query (React Query)              |
 | **Database**                   | PostgreSQL (Supabase free tier)           |
 | **Migrations**                 | Flyway                                    |
