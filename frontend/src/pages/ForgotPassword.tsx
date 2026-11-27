@@ -1,71 +1,89 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '../components/ui/Button'
-import { Input } from '../components/ui/Input'
-import { Label } from '../components/ui/Label'
-import { Card } from '../components/ui/Card'
-import { Navbar } from '../components/ui/Navbar'
-import { LavaLampBg } from '../components/ui/LavaLampBg'
+import { useState, type FormEvent } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { Navbar } from "../components/ui/Navbar"
+import { SiteFooter } from "../components/ui/SiteFooter"
+
+const SAMPLE_EMAIL = "student@example.invalid"
+const PROTOTYPE_NOTICE = "If an account exists, a reset link would be sent. No email is sent in this prototype."
 
 export function ForgotPassword() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("")
+  const [notice, setNotice] = useState(PROTOTYPE_NOTICE)
+  const [noticeIsLive, setNoticeIsLive] = useState(false)
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    // The backend has no reset-request endpoint, so nothing is transmitted.
+    // The confirmation screen states that plainly.
+    navigate("/forgot-password/sent", { state: { email: email.trim() } })
+  }
+
+  function fillSampleEmail() {
+    setEmail(SAMPLE_EMAIL)
+    setNotice("TEST-ONLY sample address filled. It cannot receive email.")
+    setNoticeIsLive(true)
+  }
+
+  function updateEmail(value: string) {
+    setEmail(value)
+    setNotice(PROTOTYPE_NOTICE)
+    setNoticeIsLive(false)
+  }
 
   return (
-    <div className="bg-[#000e53] flex flex-col gap-[10px] items-center pb-[898px] pt-[10px] px-[10px] relative size-full">
-      <LavaLampBg />
-      <Navbar className="w-[1420px]" />
-      <main className="flex flex-col items-center justify-center overflow-clip py-[47px] relative shrink-0 w-full animate-page-fade">
-        <Card
-          className="h-[621px] rounded-[28px] px-[20px] py-[60px] shrink-0 w-[550px] items-center overflow-clip"
+    <div className="flex min-h-screen flex-col bg-aktif-navy animate-page-fade">
+      <Navbar className="mx-auto" />
+      <main className="flex flex-1 items-center justify-center px-4">
+        <form
+          onSubmit={handleSubmit}
+          aria-labelledby="recovery-title"
+          className="flex h-[560px] w-full max-w-[620px] flex-col gap-4 rounded-[24px] bg-surface-white p-6 text-text-primary sm:p-8"
         >
-          <div className="flex flex-col items-start overflow-clip p-[10px] relative w-full">
-            <h1 className="text-[40px] font-['Castoro Titling'] text-black text-center w-full leading-[normal]">
-              Forgot Password
-            </h1>
-          </div>
-          <div className="flex flex-col items-start overflow-clip p-[10px] relative w-full">
-            <Label htmlFor="email" className="text-[24px] text-black whitespace-nowrap">
-              Email:
-            </Label>
-          </div>
-          <div className="flex flex-col items-center justify-center overflow-clip p-[10px] relative w-full">
-            <Input
-              id="email"
+          <header className="flex h-[100px] flex-col gap-2">
+            <h1 id="recovery-title" className="font-['Castoro_Titling'] text-[32px] leading-[1.5] text-aktif-navy">Forgot password?</h1>
+            <p className="font-display text-[12px] text-text-secondary">Enter the email address associated with your account.</p>
+          </header>
+
+          <label className="block h-[74px] font-display text-[12px] font-bold text-[#15203a]" htmlFor="recovery-email">
+            Email address <span aria-hidden="true">*</span>
+            <input
+              id="recovery-email"
+              name="email"
+              autoComplete="email"
+              required
               type="email"
-              inputSize="auth"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@cit.edu"
-              className="w-full"
+              onChange={(event) => updateEmail(event.target.value)}
+              placeholder="name@example.com"
+              className="mt-2 h-12 w-full rounded-lg border border-[#dfe5f0] bg-white px-3 font-display text-[12px] font-normal text-text-primary placeholder:text-text-secondary focus:border-aktif-navy focus:outline-none focus:ring-2 focus:ring-border-focus"
             />
-          </div>
-          <div className="flex h-[27px] items-center justify-center p-[10px] relative w-full" />
-          <div className="flex h-[67px] items-center justify-center overflow-clip p-[10px] relative w-full">
-            <Button
-              variant="primary"
-              onClick={() => navigate('/login')}
-              className="w-full max-w-[490px] h-[42px] px-[179px] py-[8px] border border-black hover:bg-amber-400 active:bg-amber-500 transition-colors duration-200"
-            >
-              Send Reset Link
-            </Button>
-          </div>
-          {/* Footer per Figma frame 54:2 */}
-          <footer className="bg-white flex gap-[239px] h-[20px] items-center justify-center leading-[normal] overflow-clip relative shrink-0 text-[12px] text-black text-center w-[490px] whitespace-nowrap">
-            <p className="font-['Lexend Exa'] font-normal relative shrink-0">
-              Remember your password?
-            </p>
-            <p className="font-['Lexend Exa'] font-bold relative shrink-0">
-              <Link
-                to="/login"
-                className="hover:text-aktif-gold transition-colors duration-200"
-              >
-                Log in
-              </Link>
-            </p>
-          </footer>
-        </Card>
+          </label>
+
+          <button
+            type="button"
+            onClick={fillSampleEmail}
+            className="h-11 w-full rounded-[9px] border border-border-light bg-white font-display text-[11px] font-bold text-aktif-navy transition-colors hover:bg-surface-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+          >
+            USE SAMPLE EMAIL
+          </button>
+          <button
+            type="submit"
+            className="h-11 w-full rounded-[9px] border border-aktif-navy bg-aktif-gold font-display text-[11px] font-bold text-aktif-navy transition-colors hover:bg-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+          >
+            SEND RESET LINK
+          </button>
+
+          <Link to="/login" className="flex h-7 items-center justify-center font-display text-[11px] font-bold text-text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus">Log in</Link>
+
+          <p role={noticeIsLive ? "status" : undefined} aria-live={noticeIsLive ? "polite" : undefined} className="flex h-[72px] items-center rounded-lg bg-[#fff4cd] p-[14px] font-display text-[11px] text-text-secondary">
+            {notice}
+          </p>
+
+          <Link to="/help" className="block text-center font-display text-[11px] font-bold text-aktif-navy underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus">Need help? Visit Help &amp; support</Link>
+        </form>
       </main>
+      <SiteFooter />
     </div>
   )
 }

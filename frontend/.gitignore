@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-
-frontend/test-results
-frontend/tests
+# Consolidated AI artifacts and test files
+ai-artifacts/
+.impeccable
+scripts

@@ -1,373 +1,135 @@
 import { Link } from "react-router-dom";
 import { Navbar } from "../components/ui/Navbar";
 
+const benefits = [
+  { number: "01", title: "Your courses, together", description: "Spend less time looking around and more time finding the learning that matters to you." },
+  { number: "02", title: "A clear place to start", description: "From exploring a course to returning to your account, know where to go next." },
+  { number: "03", title: "Your own learning space", description: "Keep your profile and contact details organised, so you can focus on your next step." },
+];
+
+const steps = [
+  { number: "01", title: "Create your account", description: "Start with a profile that is yours." },
+  { number: "02", title: "Explore a course", description: "Find the right next step for your goals." },
+  { number: "03", title: "Keep coming back", description: "Make learning part of your routine." },
+];
+
+const faqs = [
+  { question: "How do I get started?", answer: "Choose Create an account, then complete your registration." },
+  { question: "Already have an account?", answer: "Use Log in to return to your AKTIBO account." },
+  { question: "What if I forget my password?", answer: "Choose Forgot Password on the login page to request a reset link." },
+];
+
+function WorkspacePreview() {
+  return (
+    <div className="relative h-[426px] w-full max-w-[620px] overflow-hidden rounded-[14px] bg-white text-text-primary">
+      <div className="flex h-[52px] items-center justify-between bg-surface-light px-5 font-sans text-[13px] font-semibold text-aktif-navy">
+        <span>AKTIBO / My learning</span><span className="text-[10px] text-text-secondary">EXAMPLE</span>
+      </div>
+      <div className="grid h-[374px] grid-cols-1 gap-6 sm:grid-cols-[140px_minmax(0,1fr)]">
+        <aside className="hidden space-y-4 bg-surface-light px-3 pt-7 font-sans text-[12px] text-text-secondary sm:block">
+          <p className="pl-1.5 text-[9px] font-bold">WORKSPACE</p>
+          <p className="flex h-[38px] items-center rounded-[6px] bg-aktif-navy px-3 font-semibold text-white">My learning</p>
+          <p className="pl-3">My account</p><p className="pl-3">Get help</p>
+        </aside>
+        <div className="min-w-0 pr-5 pt-6 font-sans">
+          <h2 className="text-[23px] font-semibold leading-[1.45]">Welcome back.</h2>
+          <p className="text-[13px] leading-[1.45] text-text-secondary">A small step forward starts here.</p>
+          <article className="mt-5 flex h-[226px] flex-col items-start rounded-[10px] border border-[#dee4ee] bg-white px-5 pt-[18px]">
+            <p className="text-[9px] font-bold text-text-secondary">YOUR LEARNING SPACE</p>
+            <h3 className="mt-3 text-[19px] font-semibold">Courses in one place</h3>
+            <p className="mt-2 max-w-[330px] text-[12px] leading-[1.45] text-text-secondary">Explore courses and find the right next step for you.</p>
+            <Link to="/courses" className="mt-4 mb-4 inline-flex h-9 shrink-0 items-center rounded-[6px] bg-aktif-navy px-4 text-[12px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#162a75]">Explore courses</Link>
+          </article>
+        </div>
+      </div>
+      <div className="absolute bottom-[10px] right-2 h-[100px] w-[min(266px,calc(100%-16px))] rounded-[12px] bg-aktif-gold px-6 py-[18px] text-[21px] font-semibold leading-[1.45] text-aktif-navy shadow-md sm:right-6">
+        <p>A little progress.</p><p>Every day.</p>
+      </div>
+    </div>
+  );
+}
+
 export function LandingPage() {
   return (
-    <div className="bg-[#000e53] content-stretch flex flex-col items-center relative size-full animate-page-fade">
-      <Navbar className="w-[1440px]" />
-
-      {/* Hero */}
-      <div className="bg-[#000e53] h-[656px] overflow-clip relative shrink-0 w-[1440px]">
-        <p className="font-sans font-bold leading-[1.45] absolute left-[72px] not-italic text-[#ffb700] text-[12px] top-[72px] whitespace-nowrap">
-          A MORE FOCUSED WAY TO LEARN
-        </p>
-        <div
-          className="font-sans font-semibold leading-[0] absolute left-[72px] not-italic text-[64px] text-white top-[112px] tracking-[-1.92px] w-[600px] whitespace-nowrap"
-        >
-          <p className="leading-[1.1] mb-0">Less searching.</p>
-          <p className="leading-[1.1] text-[#ffb700]">More learning.</p>
-        </div>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[72px] not-italic text-[#d1d8ee] text-[20px] top-[286px] w-[520px] whitespace-nowrap">
-          Make room for your next step. Bring your courses and your learning journey together with AKTIBO LMS.
-        </p>
-        <Link
-          to="/register"
-          className="bg-[#ffb700] flex h-[56px] items-center justify-center absolute left-[72px] overflow-clip rounded-[8px] top-[416px] w-[216px]"
-        >
-          <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[#000e53] text-[16px] whitespace-nowrap">
-            Create an account
-          </p>
-        </Link>
-        <div className="border border-[#5d6994] border-solid flex h-[56px] items-center justify-center absolute left-[304px] overflow-clip rounded-[8px] top-[416px] w-[200px]">
-          <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[16px] text-white whitespace-nowrap">
-            Explore courses
-          </p>
-        </div>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[72px] not-italic text-[#d1d8ee] text-[14px] top-[494px] whitespace-nowrap">
-          Already learning with us? Log in to continue.
-        </p>
-        <p className="font-sans font-medium leading-[1.45] absolute left-[748px] not-italic text-[#d1d8ee] text-[11px] top-[76px] whitespace-nowrap">
-          AN EXAMPLE OF YOUR LEARNING SPACE
-        </p>
-        <div className="bg-white h-[426px] absolute left-[748px] overflow-clip rounded-[14px] top-[110px] w-[620px]">
-          <div className="bg-[#f4f6fa] h-[52px] absolute left-0 overflow-clip top-0 w-[620px] whitespace-nowrap">
-            <p className="absolute left-[20px] text-[#000e53] text-[13px] top-[16px]">AKTIBO / My learning</p>
-            <p className="absolute left-[518px] text-[#596579] text-[10px] top-[18px]">EXAMPLE</p>
-          </div>
-          <div className="bg-[#f4f6fa] h-[374px] absolute left-0 overflow-clip top-[52px] w-[140px]">
-            <p className="font-sans font-bold leading-[1.45] absolute left-[18px] not-italic text-[#596579] text-[9px] top-[28px] whitespace-nowrap">
-              WORKSPACE
-            </p>
-            <div className="bg-[#000e53] flex h-[38px] items-center justify-center absolute left-[12px] overflow-clip rounded-[6px] top-[58px] w-[116px]">
-              <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[14px] text-white whitespace-nowrap">
-                My learning
-              </p>
+    <div className="min-h-screen bg-white font-sans text-text-primary animate-page-fade">
+      <Navbar />
+      <main>
+        <section className="min-h-[656px] bg-aktif-navy px-6 pb-12 pt-10 text-text-inverse md:px-[72px] md:pt-[72px]">
+          <div className="mx-auto max-w-page">
+            <div className="mb-[18px] flex max-w-[895px] items-center justify-between gap-4">
+              <p className="text-[12px] font-bold leading-[1.45] text-aktif-gold">A MORE FOCUSED WAY TO LEARN</p>
+              <p className="hidden text-[11px] font-medium leading-[1.45] text-[#d1d8ee] sm:block">AN EXAMPLE OF YOUR LEARNING SPACE</p>
             </div>
-            <p className="font-sans font-normal leading-[1.45] absolute left-[24px] not-italic text-[#596579] text-[12px] top-[112px] whitespace-nowrap">
-              My account
-            </p>
-            <p className="font-sans font-normal leading-[1.45] absolute left-[24px] not-italic text-[#596579] text-[12px] top-[150px] whitespace-nowrap">
-              Get help
-            </p>
-          </div>
-          <div className="absolute h-[324px] left-[164px] overflow-clip top-[76px] w-[432px]">
-            <p className="font-sans font-semibold leading-[1.45] absolute left-0 not-italic text-[#15203a] text-[23px] top-0 whitespace-nowrap">
-              Welcome back.
-            </p>
-            <p className="font-sans font-normal leading-[1.45] absolute left-0 not-italic text-[#596579] text-[13px] top-[38px] whitespace-nowrap">
-              A small step forward starts here.
-            </p>
-            <div className="bg-white border border-[#dee4ee] border-solid h-[226px] absolute left-0 overflow-clip rounded-[10px] top-[82px] w-[432px]">
-              <p className="font-sans font-bold leading-[1.45] absolute left-[19px] not-italic text-[#596579] text-[9px] top-[17px] whitespace-nowrap">
-                CONTINUE LEARNING
-              </p>
-              <p className="font-sans font-semibold leading-[1.45] absolute left-[19px] not-italic text-[#15203a] text-[19px] top-[41px] whitespace-nowrap">
-                Learning essentials
-              </p>
-              <p className="font-sans font-normal leading-[1.45] absolute left-[19px] not-italic text-[#596579] text-[12px] top-[75px] whitespace-nowrap">
-                Lesson 3 of 5
-              </p>
-              <div className="bg-[#e7ebf3] h-[6px] absolute left-[19px] overflow-clip rounded-[3px] top-[106px] w-[392px]">
-                <div className="bg-[#ffb700] h-[6px] absolute left-0 rounded-[3px] top-0 w-[235px]" />
+            <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,600fr)_minmax(0,620fr)] xl:gap-[clamp(24px,5.27vw,76px)]">
+              <div className="flex flex-col items-start pt-0.5">
+                <h1 className="text-[clamp(44px,4.45vw,64px)] font-semibold leading-[1.1] tracking-[-1.92px]">
+                  Less searching.<br /><span className="text-aktif-gold">More learning.</span>
+                </h1>
+                <p className="mt-[22px] max-w-[520px] pt-3 text-[18px] leading-[1.45] text-[#d1d8ee] sm:text-[20px]">Make room for your next step. Bring your courses and your learning journey together with AKTIBO LMS.</p>
+                <div className="mt-[50px] flex flex-wrap gap-4">
+                  <Link to="/register" className="flex h-14 w-[216px] items-center justify-center rounded-lg bg-aktif-gold px-4 text-center text-[16px] font-semibold text-aktif-navy transition hover:-translate-y-0.5 hover:bg-amber-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aktif-gold">Create an account</Link>
+                  <Link to="/courses" className="flex h-14 w-[200px] items-center justify-center rounded-lg border border-[#5d6994] px-4 text-center text-[16px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aktif-gold">Explore courses</Link>
+                </div>
+                <Link to="/login" className="mt-3 text-[14px] leading-[1.45] text-[#d1d8ee] underline-offset-4 hover:underline">Already learning with us? Log in to continue.</Link>
+                <div className="mt-7 flex items-center gap-3"><span className="flex h-6 w-16 items-center justify-center rounded-full bg-[#ffb600] text-[10px] font-medium text-aktif-navy">NEW</span><span className="text-[12px] text-[#cfd6e5]">Start your learning journey</span></div>
               </div>
-              <p className="font-sans font-normal leading-[1.45] absolute left-[19px] not-italic text-[#596579] text-[11px] top-[130px] whitespace-nowrap">
-                Up next
-              </p>
-              <p className="font-sans font-medium leading-[1.45] absolute left-[19px] not-italic text-[#15203a] text-[14px] top-[152px] whitespace-nowrap">
-                Build your learning routine
-              </p>
-              <div className="bg-[#000e53] flex h-[36px] items-center justify-center absolute left-[247px] overflow-clip rounded-[6px] top-[170px] w-[164px]">
-                <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[14px] text-white whitespace-nowrap">
-                  Continue lesson
-                </p>
-              </div>
+              <div className="relative mt-1"><WorkspacePreview /></div>
             </div>
           </div>
-        </div>
-        <div className="bg-[#ffb700] h-[100px] absolute left-[1078px] overflow-clip rounded-[12px] top-[500px] w-[266px]">
-          <div className="font-sans font-semibold leading-[0] absolute left-[24px] not-italic text-[#000e53] text-[21px] top-[18px] whitespace-nowrap">
-            <p className="leading-[1.45] mb-0">A little progress.</p>
-            <p className="leading-[1.45]">Every day.</p>
+        </section>
+        <section className="bg-aktif-gold px-6 py-7 md:px-[72px]">
+          <div className="mx-auto grid max-w-page gap-6 md:grid-cols-3 md:gap-0">
+            {[["Find your direction.", "Explore what comes next."], ["Build your momentum.", "Make time for learning."], ["Keep moving forward.", "One step at a time."]].map(([title, description], index) => <article key={title} className={`min-h-[66px] md:px-8 ${index === 0 ? "md:pl-0" : "md:border-l md:border-[#c28b00]"}`}><h2 className="text-[20px] font-semibold text-aktif-navy">{title}</h2><p className="mt-1 text-[14px] text-aktif-navy">{description}</p></article>)}
           </div>
-        </div>
-      </div>
-
-      {/* Learning principles */}
-      <div className="bg-[#ffb700] h-[124px] overflow-clip relative shrink-0 w-[1440px]">
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[72px] not-italic text-[#000e53] text-[20px] top-[29px] whitespace-nowrap">
-          Find your direction.
-        </p>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[72px] not-italic text-[#000e53] text-[14px] top-[65px] whitespace-nowrap">
-          Explore what comes next.
-        </p>
-        <div className="absolute bg-[#c28b00] h-[68px] left-[480px] top-[28px] w-[1px]" />
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[520px] not-italic text-[#000e53] text-[20px] top-[29px] whitespace-nowrap">
-          Build your momentum.
-        </p>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[520px] not-italic text-[#000e53] text-[14px] top-[65px] whitespace-nowrap">
-          Make time for learning.
-        </p>
-        <div className="absolute bg-[#c28b00] h-[68px] left-[928px] top-[28px] w-[1px]" />
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[968px] not-italic text-[#000e53] text-[20px] top-[29px] whitespace-nowrap">
-          Keep moving forward.
-        </p>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[968px] not-italic text-[#000e53] text-[14px] top-[65px] whitespace-nowrap">
-          One step at a time.
-        </p>
-      </div>
-
-      {/* Benefits */}
-      <div className="bg-white h-[480px] leading-[1.45] not-italic overflow-clip relative shrink-0 w-[1440px]">
-        <p className="font-sans font-bold absolute left-[72px] text-[#596579] text-[12px] top-[58px] whitespace-nowrap">
-          LEARNING, WITH LESS FRICTION
-        </p>
-        <p className="font-sans font-semibold absolute left-[72px] text-[#15203a] text-[38px] top-[88px] whitespace-nowrap">
-          More focus. Fewer distractions.
-        </p>
-        <p className="font-sans font-normal absolute left-[72px] text-[#596579] text-[18px] top-[148px] whitespace-nowrap">
-          A simpler starting point for the things that matter.
-        </p>
-        <div className="bg-[#f4f6fa] h-[208px] absolute left-[72px] overflow-clip rounded-[12px] top-[218px] w-[416px]">
-          <p className="font-sans font-bold absolute left-[24px] text-[#000e53] text-[14px] top-[22px] whitespace-nowrap">
-            01
-          </p>
-          <p className="font-sans font-semibold absolute left-[24px] text-[#15203a] text-[23px] top-[60px] whitespace-nowrap">
-            Your courses, together
-          </p>
-          <p className="font-sans font-normal absolute left-[24px] text-[#596579] text-[16px] top-[106px] w-[368px] whitespace-nowrap">
-            Spend less time looking around and more time finding the learning that matters to you.
-          </p>
-        </div>
-        <div className="bg-[#f4f6fa] h-[208px] absolute left-[512px] overflow-clip rounded-[12px] top-[218px] w-[416px]">
-          <p className="font-sans font-bold absolute left-[24px] text-[#000e53] text-[14px] top-[22px] whitespace-nowrap">
-            02
-          </p>
-          <p className="font-sans font-semibold absolute left-[24px] text-[#15203a] text-[23px] top-[60px] whitespace-nowrap">
-            A clear place to start
-          </p>
-          <p className="font-sans font-normal absolute left-[24px] text-[#596579] text-[16px] top-[106px] w-[368px] whitespace-nowrap">
-            From exploring a course to returning to your account, know where to go next.
-          </p>
-        </div>
-        <div className="bg-[#f4f6fa] h-[208px] absolute left-[952px] overflow-clip rounded-[12px] top-[218px] w-[416px]">
-          <p className="font-sans font-bold absolute left-[24px] text-[#000e53] text-[14px] top-[22px] whitespace-nowrap">
-            03
-          </p>
-          <p className="font-sans font-semibold absolute left-[24px] text-[#15203a] text-[23px] top-[60px] whitespace-nowrap">
-            Your own learning space
-          </p>
-          <p className="font-sans font-normal absolute left-[24px] text-[#596579] text-[16px] top-[106px] w-[368px] whitespace-nowrap">
-            Keep your profile and contact details organised, so you can focus on your next step.
-          </p>
-        </div>
-      </div>
-
-      {/* How it works */}
-      <div className="bg-[#f4f6fa] h-[400px] overflow-clip relative shrink-0 w-[1440px]">
-        <p className="font-sans font-bold leading-[1.45] absolute left-[72px] not-italic text-[#596579] text-[12px] top-[54px] whitespace-nowrap">
-          MAKE YOUR NEXT MOVE
-        </p>
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[72px] not-italic text-[#15203a] text-[38px] top-[84px] whitespace-nowrap">
-          A simple start. A steady rhythm.
-        </p>
-        <div className="absolute bg-[#cad2e2] h-[1px] left-[98px] top-[194px] w-[894px]" />
-        <div className="bg-[#000e53] absolute left-[72px] overflow-clip rounded-[10px] size-[48px] top-[170px]">
-          <p className="font-sans font-semibold leading-[1.45] absolute left-[14px] not-italic text-[16px] text-white top-[12px] whitespace-nowrap">
-            01
-          </p>
-        </div>
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[72px] not-italic text-[#15203a] text-[24px] top-[244px] whitespace-nowrap">
-          Create your account
-        </p>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[72px] not-italic text-[#596579] text-[16px] top-[288px] w-[370px] whitespace-nowrap">
-          Start with a profile that is yours.
-        </p>
-        <div className="bg-[#000e53] absolute left-[520px] overflow-clip rounded-[10px] size-[48px] top-[170px]">
-          <p className="font-sans font-semibold leading-[1.45] absolute left-[14px] not-italic text-[16px] text-white top-[12px] whitespace-nowrap">
-            02
-          </p>
-        </div>
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[520px] not-italic text-[#15203a] text-[24px] top-[244px] whitespace-nowrap">
-          Explore a course
-        </p>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[520px] not-italic text-[#596579] text-[16px] top-[288px] w-[370px] whitespace-nowrap">
-          Find the right next step for your goals.
-        </p>
-        <div className="bg-[#000e53] absolute left-[968px] overflow-clip rounded-[10px] size-[48px] top-[170px]">
-          <p className="font-sans font-semibold leading-[1.45] absolute left-[14px] not-italic text-[16px] text-white top-[12px] whitespace-nowrap">
-            03
-          </p>
-        </div>
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[968px] not-italic text-[#15203a] text-[24px] top-[244px] whitespace-nowrap">
-          Keep coming back
-        </p>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[968px] not-italic text-[#596579] text-[16px] top-[288px] w-[370px] whitespace-nowrap">
-          Make learning part of your routine.
-        </p>
-      </div>
-
-      {/* Explore AKTIBO */}
-      <div className="bg-white h-[440px] overflow-clip relative shrink-0 w-[1440px]">
-        <div className="bg-[#000e53] h-[336px] absolute left-[72px] overflow-clip rounded-[16px] top-[52px] w-[632px]">
-          <p className="font-sans font-bold leading-[1.45] absolute left-[32px] not-italic text-[#ffb700] text-[11px] top-[28px] whitespace-nowrap">
-            EXPLORE AKTIBO
-          </p>
-          <div className="font-sans font-semibold leading-[0] absolute left-[32px] not-italic text-[34px] text-white top-[62px] whitespace-nowrap">
-            <p className="leading-[1.45] mb-0">Make space for</p>
-            <p className="leading-[1.45]">something new.</p>
+        </section>
+        <section className="bg-white px-6 py-[58px] md:px-[72px]">
+          <div className="mx-auto max-w-page">
+            <p className="text-[12px] font-bold text-text-secondary">LEARNING, WITH LESS FRICTION</p>
+            <h2 className="mt-3 text-[32px] font-semibold sm:text-[38px]">More focus. Fewer distractions.</h2>
+            <p className="mt-1 text-[18px] text-text-secondary">A simpler starting point for the things that matter.</p>
+            <div className="mt-[39px] grid gap-6 md:grid-cols-3">
+              {benefits.map((benefit) => <article key={benefit.number} className="min-h-[208px] rounded-[12px] bg-surface-light px-6 py-[22px]"><p className="text-[14px] font-bold text-aktif-navy">{benefit.number}</p><h3 className="mt-3 text-[21px] font-semibold">{benefit.title}</h3><p className="mt-3 text-[16px] leading-[1.45] text-text-secondary">{benefit.description}</p></article>)}
+            </div>
           </div>
-          <div className="font-sans font-normal leading-[0] absolute left-[32px] not-italic text-[#d1d8ee] text-[16px] top-[176px] whitespace-nowrap">
-            <p className="leading-[1.45] mb-0">Your next chapter starts with curiosity.</p>
-            <p className="leading-[1.45]">Take a look at the courses on AKTIBO.</p>
+        </section>
+        <section className="bg-surface-light px-6 py-[54px] md:px-[72px]">
+          <div className="mx-auto max-w-page">
+            <p className="text-[12px] font-bold text-text-secondary">MAKE YOUR NEXT MOVE</p>
+            <h2 className="mt-2 text-[32px] font-semibold sm:text-[38px]">A simple start. A steady rhythm.</h2>
+            <div className="mt-8 grid gap-8 md:grid-cols-3">
+              {steps.map((step) => <article key={step.number} className="relative"><span className="relative z-[1] inline-flex size-12 items-center justify-center rounded-[10px] bg-aktif-navy text-[16px] font-semibold text-white">{step.number}</span><h3 className="mt-4 text-[22px] font-semibold">{step.title}</h3><p className="mt-2 text-[16px] text-text-secondary">{step.description}</p></article>)}
+            </div>
           </div>
-          <div className="bg-[#ffb700] flex h-[52px] items-center justify-center absolute left-[32px] overflow-clip rounded-[8px] top-[252px] w-[188px]">
-            <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[#000e53] text-[16px] whitespace-nowrap">
-              Explore courses
-            </p>
+        </section>
+        <section className="bg-white px-6 py-[52px] md:px-[72px]">
+          <div className="mx-auto grid max-w-page gap-8 md:grid-cols-2 md:gap-8">
+            <article className="min-h-[336px] rounded-2xl bg-aktif-navy p-8 text-white"><p className="text-[11px] font-bold text-aktif-gold">EXPLORE AKTIBO</p><h2 className="mt-4 text-[32px] font-semibold leading-[1.45]">Make space for<br />something new.</h2><p className="mt-3 text-[16px] leading-[1.45] text-[#d1d8ee]">Your next chapter starts with curiosity.<br />Take a look at the courses on AKTIBO.</p><Link to="/courses" className="mt-4 inline-flex h-[52px] items-center rounded-lg bg-aktif-gold px-5 font-semibold text-aktif-navy transition hover:-translate-y-0.5 hover:bg-amber-400">Explore courses</Link></article>
+            <article className="min-h-[336px] rounded-2xl bg-surface-light p-8"><p className="text-[11px] font-bold text-text-secondary">FIND YOUR FIT</p><h2 className="mt-4 text-[32px] font-semibold leading-[1.45]">Your goals.<br />Your next step.</h2><p className="mt-3 text-[16px] leading-[1.45] text-text-secondary">Review pricing before you get started<br />and choose what works for you.</p><Link to="/pricing" className="mt-4 inline-flex h-[52px] items-center rounded-lg border border-[#dee4ee] bg-white px-5 font-semibold text-aktif-navy transition hover:-translate-y-0.5 hover:bg-slate-50">View pricing</Link></article>
           </div>
-        </div>
-        <div className="bg-[#f4f6fa] h-[336px] absolute left-[736px] overflow-clip rounded-[16px] top-[52px] w-[632px]">
-          <p className="font-sans font-bold leading-[1.45] absolute left-[32px] not-italic text-[#596579] text-[11px] top-[28px] whitespace-nowrap">
-            FIND YOUR FIT
-          </p>
-          <div className="font-sans font-semibold leading-[0] absolute left-[32px] not-italic text-[#15203a] text-[34px] top-[62px] whitespace-nowrap">
-            <p className="leading-[1.45] mb-0">Your goals.</p>
-            <p className="leading-[1.45]">Your next step.</p>
+        </section>
+        <section className="bg-surface-light px-6 py-[56px] md:px-[72px]">
+          <div className="mx-auto grid max-w-page gap-8 md:grid-cols-[217px_minmax(0,1fr)] md:gap-[75px]">
+            <div><p className="text-[12px] font-bold text-text-secondary">A LITTLE CLARITY</p><h2 className="mt-4 text-[34px] font-semibold leading-[1.35]">Before you<br />get started.</h2><p className="mt-4 text-[16px] leading-[1.45] text-text-secondary">A few helpful answers for your first steps on AKTIBO.</p></div>
+            <div>{faqs.map((faq, index) => <article key={faq.question} className={`min-h-[112px] py-5 ${index < faqs.length - 1 ? "border-b border-[#dee4ee]" : ""}`}><h3 className="text-[20px] font-semibold">{faq.question}</h3><p className="mt-2 text-[16px] text-text-secondary">{faq.answer}</p></article>)}</div>
           </div>
-          <div className="font-sans font-normal leading-[0] absolute left-[32px] not-italic text-[#596579] text-[16px] top-[176px] whitespace-nowrap">
-            <p className="leading-[1.45] mb-0">Review pricing before you get started</p>
-            <p className="leading-[1.45]">and choose what works for you.</p>
+        </section>
+        <section className="bg-aktif-navy px-6 py-[52px] text-white md:px-[72px]">
+          <div className="mx-auto max-w-page">
+            <p className="text-[12px] font-bold text-aktif-gold">YOUR NEXT CHAPTER</p>
+            <div className="mt-4 flex flex-col gap-5 md:flex-row md:items-center md:justify-between"><h2 className="text-[36px] font-semibold sm:text-[44px]">Start small. Go further.</h2><Link to="/register" className="flex h-14 w-full items-center justify-center rounded-lg bg-aktif-gold px-6 font-semibold text-aktif-navy transition hover:-translate-y-0.5 hover:bg-amber-400 md:w-[288px]">Create an account</Link></div>
+            <div className="mt-3 flex flex-col gap-3 text-[16px] text-[#d1d8ee] sm:flex-row sm:items-center sm:justify-between"><p>Make your next step a learning step with AKTIBO.</p><Link to="/login" className="text-[14px] underline underline-offset-4">Already registered? Log in</Link></div>
           </div>
-          <div className="bg-white border border-[#dee4ee] border-solid flex h-[52px] items-center justify-center absolute left-[32px] overflow-clip rounded-[8px] top-[252px] w-[174px]">
-            <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[#000e53] text-[16px] whitespace-nowrap">
-              View pricing
-            </p>
+        </section>
+      </main>
+      <footer className="bg-aktif-navy px-6 pb-8 pt-8 text-white md:px-[72px]">
+        <div className="mx-auto max-w-page border-t border-[#304074] pt-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <Link to="/" className="flex items-center gap-3"><img src="/assets/aktibo-symbol.png" alt="" className="size-10 object-contain" /><span className="font-display text-[18px]">AKTIBO LMS</span></Link>
+            <nav aria-label="Footer navigation" className="flex flex-wrap gap-2">{[{ to: "/", label: "Home" }, { to: "/courses", label: "Courses" }, { to: "/pricing", label: "Pricing" }, { to: "/login", label: "Log in" }].map((item) => <Link key={item.label} to={item.to} className="flex min-h-11 items-center justify-center rounded-lg px-4 text-[14px] font-medium hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-aktif-gold">{item.label}</Link>)}</nav>
           </div>
+          <div className="mt-3 flex flex-col gap-2 text-[14px] text-[#d1d8ee] sm:flex-row sm:items-center sm:justify-between"><p>A more focused way to learn.</p><p>Learning, with focus.</p></div>
         </div>
-      </div>
-
-      {/* Common questions */}
-      <div className="bg-[#f4f6fa] h-[448px] overflow-clip relative shrink-0 w-[1440px]">
-        <p className="font-sans font-bold leading-[1.45] absolute left-[72px] not-italic text-[#596579] text-[12px] top-[60px] whitespace-nowrap">
-          A LITTLE CLARITY
-        </p>
-        <div className="font-sans font-semibold leading-[0] absolute left-[72px] not-italic text-[#15203a] text-[38px] top-[92px] whitespace-nowrap">
-          <p className="leading-[1.45] mb-0">Before you</p>
-          <p className="leading-[1.45]">get started.</p>
-        </div>
-        <div className="font-sans font-normal leading-[0] absolute left-[72px] not-italic text-[#596579] text-[17px] top-[220px] whitespace-nowrap">
-          <p className="leading-[1.45] mb-0">A few helpful answers for</p>
-          <p className="leading-[1.45]">your first steps on AKTIBO.</p>
-        </div>
-        <div className="absolute h-[112px] left-[536px] overflow-clip top-[56px] w-[832px]">
-          <p className="font-sans font-semibold leading-[1.45] absolute left-0 not-italic text-[#15203a] text-[20px] top-[10px] whitespace-nowrap">
-            How do I get started?
-          </p>
-          <p className="font-sans font-normal leading-[1.45] absolute left-0 not-italic text-[#596579] text-[16px] top-[49px] w-[800px] whitespace-nowrap">
-            Choose Create an account, then complete your registration.
-          </p>
-          <div className="absolute bg-[#dee4ee] h-[1px] left-0 top-[110px] w-[832px]" />
-        </div>
-        <div className="absolute h-[112px] left-[536px] overflow-clip top-[168px] w-[832px]">
-          <p className="font-sans font-semibold leading-[1.45] absolute left-0 not-italic text-[#15203a] text-[20px] top-[10px] whitespace-nowrap">
-            Already have an account?
-          </p>
-          <p className="font-sans font-normal leading-[1.45] absolute left-0 not-italic text-[#596579] text-[16px] top-[49px] w-[800px] whitespace-nowrap">
-            Use Log in to return to your AKTIBO account.
-          </p>
-          <div className="absolute bg-[#dee4ee] h-[1px] left-0 top-[110px] w-[832px]" />
-        </div>
-        <div className="font-sans font-normal leading-[1.45] absolute h-[112px] left-[536px] not-italic overflow-clip top-[280px] w-[832px] whitespace-nowrap">
-          <p className="font-sans font-semibold absolute left-0 text-[#15203a] text-[20px] top-[10px] whitespace-nowrap">
-            What if I forget my password?
-          </p>
-          <p className="font-sans font-normal absolute left-0 text-[#596579] text-[16px] top-[49px] w-[800px] whitespace-nowrap">
-            Choose Forgot Password on the login page to request a reset link.
-          </p>
-        </div>
-      </div>
-
-      {/* Get started */}
-      <div className="bg-[#000e53] h-[300px] overflow-clip relative shrink-0 w-[1440px]">
-        <p className="font-sans font-bold leading-[1.45] absolute left-[72px] not-italic text-[#ffb700] text-[12px] top-[52px] whitespace-nowrap">
-          YOUR NEXT CHAPTER
-        </p>
-        <p className="font-sans font-semibold leading-[1.45] absolute left-[72px] not-italic text-[44px] text-white top-[86px] whitespace-nowrap">
-          Start small. Go further.
-        </p>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[72px] not-italic text-[#d1d8ee] text-[18px] top-[164px] whitespace-nowrap">
-          Make your next step a learning step with AKTIBO.
-        </p>
-        <Link
-          to="/register"
-          className="bg-[#ffb700] flex h-[56px] items-center justify-center absolute left-[1080px] overflow-clip rounded-[8px] top-[94px] w-[288px]"
-        >
-          <p className="font-sans font-semibold leading-[1.45] not-italic relative shrink-0 text-[#000e53] text-[16px] whitespace-nowrap">
-            Create an account
-          </p>
-        </Link>
-        <p className="font-sans font-normal leading-[1.45] absolute left-[1128px] not-italic text-[#d1d8ee] text-[14px] top-[173px] whitespace-nowrap">
-          Already registered? Log in
-        </p>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-[#000e53] h-[194px] overflow-clip relative shrink-0 w-[1440px]">
-        <div className="absolute bg-[#304074] h-[1px] left-[72px] top-0 w-[1296px]" />
-        <div className="absolute flex gap-[12px] h-[48px] items-center left-[72px] overflow-clip top-[32px] w-[256px]">
-          <div className="relative shrink-0 size-[40px]">
-            <img
-              src="/assets/aktibo-symbol.png"
-              alt="AKTIBO symbol"
-              className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
-            />
-          </div>
-          <p className="font-display font-normal leading-[normal] relative shrink-0 text-[18px] text-white whitespace-nowrap">
-            AKTIBO LMS
-          </p>
-        </div>
-        <p className="font-sans font-normal leading-[1.4] absolute left-[72px] not-italic text-[#d1d8ee] text-[14px] top-[94px] whitespace-nowrap">
-          A more focused way to learn.
-        </p>
-        <div className="absolute flex gap-[12px] h-[44px] items-center left-[884px] overflow-clip top-[34px] w-[484px]">
-          <div className="flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[96px]">
-            <p className="font-sans font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-white whitespace-nowrap">
-              Home
-            </p>
-          </div>
-          <div className="flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[112px]">
-            <p className="font-sans font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-white whitespace-nowrap">
-              Courses
-            </p>
-          </div>
-          <div className="flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[96px]">
-            <p className="font-sans font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-white whitespace-nowrap">
-              Pricing
-            </p>
-          </div>
-          <Link
-            to="/login"
-            className="flex h-[44px] items-center justify-center overflow-clip relative rounded-[8px] shrink-0 w-[144px]"
-          >
-            <p className="font-sans font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-white whitespace-nowrap">
-              Log in
-            </p>
-          </Link>
-        </div>
-        <p className="font-sans font-normal leading-[1.4] absolute left-[1230px] not-italic text-[#d1d8ee] text-[14px] top-[94px] whitespace-nowrap">
-          Learning, with focus.
-        </p>
-      </div>
+      </footer>
     </div>
   );
 }

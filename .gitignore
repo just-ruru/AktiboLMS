@@ -3,8 +3,11 @@ backend/target/
 frontend/node_modules/
 frontend/dist/
 frontend/*.log
-frontend/test-results
-frontend/tests
+frontend/test-results/
+frontend/test-results-*/
+frontend/playwright-report/
+frontend/blob-report/
+frontend/.playwright/
 
 # Environment files
 .env
@@ -16,6 +19,9 @@ frontend/tests
 .vscode/
 *.swp
 *.swo
+
+# Local tool caches
+frontend/.impeccable/hook.cache.json
 
 # OS
 .DS_Store

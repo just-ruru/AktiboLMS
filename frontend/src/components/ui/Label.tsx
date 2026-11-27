@@ -8,7 +8,7 @@ export function Label({ children, className = '', ...props }: LabelProps) {
   return (
     <label
       className={[
-        'block mb-2 text-[24px] font-["Lexend Exa"] text-black',
+        'block mb-2 text-[12px] font-semibold font-["Inter"] text-text-secondary uppercase tracking-wide',
         className,
       ].filter(Boolean).join(' ')}
       {...props}

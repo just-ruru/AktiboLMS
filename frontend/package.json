@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "test:e2e": "playwright test",
+    "test:e2e:disconnected": "playwright test --config=playwright.disconnected.config.ts",
+    "screenshots": "node scripts/capture-screenshots.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
